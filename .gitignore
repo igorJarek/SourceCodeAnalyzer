@@ -38,3 +38,4 @@
 *.db
 *.suo
 *.ipch
+/libclangAPITest/x64/Release
