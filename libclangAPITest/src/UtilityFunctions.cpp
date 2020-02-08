@@ -57,10 +57,7 @@ void dumpAST(string& strData, const CXCursor& cursor)
     CXString cursorTypeSpelling = clang_getTypeSpelling(cursorType);
 
     strData += "<" + _11_CXString2String(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", col:" + to_string(endColumn) + ">" + " col:" + to_string(cursorColumn);
-    strData += " used " + _11_CXString2String(cursorSpelling) + " '" + _11_CXString2String(cursorTypeSpelling) + "'";
-
-    CXString USRString = clang_getCursorUSR(cursor);
-    strData += " -> " + _11_CXString2String(USRString) + '\n';
+    strData += " used " + _11_CXString2String(cursorSpelling) + " '" + _11_CXString2String(cursorTypeSpelling) + "'\n";
 }
 
 string CXDiagnosticSeverity2String(const CXDiagnosticSeverity diagnosticSeverity)
