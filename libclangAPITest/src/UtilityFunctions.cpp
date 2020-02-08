@@ -25,6 +25,55 @@ string tabOffset(uint32_t offset)
     return str;
 }
 
+bool processFolder(const string& path)
+{
+    bool ret = recursiveFolderSearch(path);
+    if (!ret)
+    {
+        cout << "\tError : " << "Unable to open directory (Error code : " << GetLastError() << ") : " << path << endl;
+        return false;
+    }
+
+    return true;
+}
+
+void processFile(const string& folderPath, const string& fileName)
+{
+    string fileWithExtension{ fileName };
+    string fileWithoutExtension{ fileWithExtension.substr(0, fileWithExtension.find_first_of(".")) };
+    string absoluteFilePath{ folderPath + fileWithExtension };
+    string fileExtension{ fileWithExtension.substr(fileWithExtension.find_last_of(".") + 1) };
+
+    if (isFileHeader(fileExtension) || isFileSource(fileExtension))
+    {
+        CXIndex index = clang_createIndex(0, 0);
+        const char* argsInclude = "-I";
+        const char* argsPath = "C:\\Users\\Igor\\Desktop\\libclangAPITest\\libclangAPITest\\testLib\\include\\";
+        const char* args[2] = { argsInclude, argsPath };
+        CXTranslationUnit translationUnit = clang_parseTranslationUnit(index, absoluteFilePath.c_str(), args, 2, nullptr, 0, CXTranslationUnit_None);
+        _2_diagnostic_reporting(translationUnit, folderPath + fileWithExtension);
+
+        Arguments arguments;
+        CXCursor cursor = clang_getTranslationUnitCursor(translationUnit);
+        clang_visitChildren(cursor, visitor, &arguments);
+
+        clang_disposeTranslationUnit(translationUnit);
+        clang_disposeIndex(index);
+
+        fstream stream;
+        stream.open(folderPath + fileWithExtension + ".ast", std::fstream::out | std::fstream::trunc);
+        if (stream.is_open())
+        {
+            stream << arguments.strData;
+            stream.close();
+        }
+        else
+        {
+
+        }
+    }
+}
+
 void dumpAST(string& strData, const CXCursor& cursor)
 {
     CXCursorKind kind = clang_getCursorKind(cursor);

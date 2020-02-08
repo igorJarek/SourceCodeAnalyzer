@@ -2,6 +2,7 @@
 
 #include "UtilityFunctions.h"
 #include "11_String_manipulation_routines.h"
+#include "StructsEnums2String.h"
 #include <clang-c/Index.h>
 #include <fstream>
 #include <string>

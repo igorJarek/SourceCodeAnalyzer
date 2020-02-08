@@ -2,6 +2,7 @@
 
 #include <clang-c/Index.h>
 #include "11_String_manipulation_routines.h"
+#include "UtilityFunctions.h"
 #include <string>
 #include <ostream>
 
