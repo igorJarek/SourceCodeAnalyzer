@@ -2,22 +2,11 @@
 
 using namespace std;
 
-CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data)
+int main(int argc, char* argv[])
 {
-    Arguments* arguments = reinterpret_cast<Arguments*>(client_data);
-    string& strData = arguments->strData;
-    uint32_t curLevel = arguments->treeLevel;
+    bool ret = recursiveFolderSearch(LIB_PATH);
 
-    strData += tabOffset(curLevel);
-
-    dumpAST(strData, cursor);
-    printCursor(cursor, curLevel);
-
-    Arguments nextArguments(curLevel + 1);
-    clang_visitChildren(cursor, visitor, &nextArguments);
-    strData += nextArguments.strData;
-
-    return CXChildVisit_Continue;
+    return EXIT_SUCCESS;
 }
 
 bool recursiveFolderSearch(const string& folderPath)
@@ -41,7 +30,8 @@ bool recursiveFolderSearch(const string& folderPath)
         if (findDataStruct.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
         {
             string nextDir{ folderPath + fileName + "\\" };
-            return processFolder(nextDir);
+            if (!processFolder(nextDir))
+                return false;
         }
         else
             processFile(folderPath, fileName);
@@ -52,10 +42,20 @@ bool recursiveFolderSearch(const string& folderPath)
     return true;
 }
 
-int main(int argc, char* argv[])
+CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data)
 {
-    const string libPath = "C:\\Users\\Igor\\Desktop\\libclangAPITest\\libclangAPITest\\testLib\\";
-    bool ret = recursiveFolderSearch(libPath);
+    Arguments* arguments = reinterpret_cast<Arguments*>(client_data);
+    string& strData = arguments->strData;
+    uint32_t curLevel = arguments->treeLevel;
 
-    return EXIT_SUCCESS;
+    strData += tabOffset(curLevel);
+
+    dumpAST(strData, cursor);
+    printCursor(cursor, curLevel);
+
+    Arguments nextArguments(curLevel + 1);
+    clang_visitChildren(cursor, visitor, &nextArguments);
+    strData += nextArguments.strData;
+
+    return CXChildVisit_Continue;
 }

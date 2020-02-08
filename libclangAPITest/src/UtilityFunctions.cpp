@@ -47,11 +47,8 @@ void processFile(const string& folderPath, const string& fileName)
     if (isFileHeader(fileExtension) || isFileSource(fileExtension))
     {
         CXIndex index = clang_createIndex(0, 0);
-        const char* argsInclude = "-I";
-        const char* argsPath = "C:\\Users\\Igor\\Desktop\\libclangAPITest\\libclangAPITest\\testLib\\include\\";
-        const char* args[2] = { argsInclude, argsPath };
-        CXTranslationUnit translationUnit = clang_parseTranslationUnit(index, absoluteFilePath.c_str(), args, 2, nullptr, 0, CXTranslationUnit_None);
-        _2_diagnostic_reporting(translationUnit, folderPath + fileWithExtension);
+        CXTranslationUnit translationUnit = clang_parseTranslationUnit(index, absoluteFilePath.c_str(), COMPILATION_ARGS, sizeof(COMPILATION_ARGS) / sizeof(const char*), nullptr, 0, CXTranslationUnit_None);
+        _2_diagnostic_reporting(translationUnit, absoluteFilePath);
 
         Arguments arguments;
         CXCursor cursor = clang_getTranslationUnitCursor(translationUnit);

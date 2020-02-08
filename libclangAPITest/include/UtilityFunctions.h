@@ -7,6 +7,7 @@
 #include <string>
 #include <windows.h>
 
+#include "LibPath.h"
 #include "2_Diagnostic_Reporting.h"
 #include "11_String_manipulation_routines.h"
 
