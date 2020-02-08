@@ -1,9 +1,8 @@
 #pragma once
 
 #include <clang-c/Index.h>
-#include "11_String_manipulation_routines.h"
 #include <string>
-#include <ostream>
+#include "11_String_manipulation_routines.h"
 
 using namespace std;
 
@@ -31,9 +30,4 @@ bool isFileHeader(const string& extension);
 bool isFileSource(const string& extension);
 
 void dumpAST(string& strData, const CXCursor& cursor);
-
-string CXDiagnosticSeverity2String(const CXDiagnosticSeverity diagnosticSeverity);
-string CXDiagnosticDisplayOptions2String(uint32_t options);
-
-string CXSourceLocation2String(const CXSourceLocation sourceLocation, uint32_t offset);
-string CXSourceRange2String(const CXSourceRange sourceRange, uint32_t offset);
+void printCursor(const CXCursor& cursor, uint32_t curLevel);

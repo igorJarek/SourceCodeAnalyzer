@@ -15,7 +15,9 @@ CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client
     uint32_t curLevel = arguments->treeLevel;
 
     strData += tabOffset(curLevel);
+
     dumpAST(strData, cursor);
+    printCursor(cursor, curLevel);
 
     Arguments nextArguments(curLevel + 1);
     clang_visitChildren(cursor, visitor, &nextArguments);
