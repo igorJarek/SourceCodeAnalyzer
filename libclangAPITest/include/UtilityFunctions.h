@@ -13,22 +13,23 @@
 
 using namespace std;
 
-class Arguments
+class ClientData
 {
 public:
 
-    Arguments(uint32_t level = 0)
+    ClientData(uint32_t level = 0)
     {
         treeLevel = level;
     }
 
-    ~Arguments()
+    ~ClientData()
     {
 
     }
 
     uint32_t treeLevel{ 0 };
-    string strData{};
+    string astStringData{};
+    string astExtStringData{};
 };
 
 string tabOffset(uint32_t offset);
@@ -42,5 +43,7 @@ bool recursiveFolderSearch(const string& folderPath);
 bool processFolder(const string& path);
 void processFile(const string& folderPath, const string& fileName);
 
+bool saveToFile(const string& path, const string& data);
+
 void dumpAST(string& strData, const CXCursor& cursor);
-void printCursor(const CXCursor& cursor, uint32_t curLevel);
+void printCursor(string& strData, const CXCursor& cursor);

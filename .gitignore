@@ -43,3 +43,4 @@
 /libclangAPITest/Release
 *.ast
 *.diagnostic
+*.astext

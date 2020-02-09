@@ -5,7 +5,6 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     bool ret = recursiveFolderSearch(LIB_PATH);
-
     return EXIT_SUCCESS;
 }
 
@@ -40,22 +39,4 @@ bool recursiveFolderSearch(const string& folderPath)
 
     FindClose(hFind);
     return true;
-}
-
-CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data)
-{
-    Arguments* arguments = reinterpret_cast<Arguments*>(client_data);
-    string& strData = arguments->strData;
-    uint32_t curLevel = arguments->treeLevel;
-
-    strData += tabOffset(curLevel);
-
-    dumpAST(strData, cursor);
-    printCursor(cursor, curLevel);
-
-    Arguments nextArguments(curLevel + 1);
-    clang_visitChildren(cursor, visitor, &nextArguments);
-    strData += nextArguments.strData;
-
-    return CXChildVisit_Continue;
 }

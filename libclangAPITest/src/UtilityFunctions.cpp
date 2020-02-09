@@ -25,6 +25,20 @@ string tabOffset(uint32_t offset)
     return str;
 }
 
+bool saveToFile(const string& path, const string& data)
+{
+    fstream stream;
+    stream.open(path, std::fstream::out | std::fstream::trunc);
+    if (stream.is_open())
+    {
+        stream << data;
+        stream.close();
+        return true;
+    }
+    else
+        return false;
+}
+
 bool processFolder(const string& path)
 {
     bool ret = recursiveFolderSearch(path);
@@ -40,7 +54,6 @@ bool processFolder(const string& path)
 void processFile(const string& folderPath, const string& fileName)
 {
     string fileWithExtension{ fileName };
-    string fileWithoutExtension{ fileWithExtension.substr(0, fileWithExtension.find_first_of(".")) };
     string absoluteFilePath{ folderPath + fileWithExtension };
     string fileExtension{ fileWithExtension.substr(fileWithExtension.find_last_of(".") + 1) };
 
@@ -50,25 +63,37 @@ void processFile(const string& folderPath, const string& fileName)
         CXTranslationUnit translationUnit = clang_parseTranslationUnit(index, absoluteFilePath.c_str(), COMPILATION_ARGS, sizeof(COMPILATION_ARGS) / sizeof(const char*), nullptr, 0, CXTranslationUnit_None);
         _2_diagnostic_reporting(translationUnit, absoluteFilePath);
 
-        Arguments arguments;
+        ClientData clientData;
         CXCursor cursor = clang_getTranslationUnitCursor(translationUnit);
-        clang_visitChildren(cursor, visitor, &arguments);
+        clang_visitChildren(cursor, visitor, &clientData);
 
         clang_disposeTranslationUnit(translationUnit);
         clang_disposeIndex(index);
 
-        fstream stream;
-        stream.open(folderPath + fileWithExtension + ".ast", std::fstream::out | std::fstream::trunc);
-        if (stream.is_open())
-        {
-            stream << arguments.strData;
-            stream.close();
-        }
-        else
-        {
-
-        }
+        bool ret;
+        ret = saveToFile(absoluteFilePath + ".ast", clientData.astStringData);
+        ret = saveToFile(absoluteFilePath + ".astext", clientData.astExtStringData);
     }
+}
+
+CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data)
+{
+    ClientData* clientData = reinterpret_cast<ClientData*>(client_data);
+    string& astStringData = clientData->astStringData;
+    string& astExtStringData = clientData->astExtStringData;
+    uint32_t curLevel = clientData->treeLevel;
+
+    astStringData += tabOffset(curLevel);
+    astExtStringData += tabOffset(curLevel);
+
+    dumpAST(astStringData, cursor);
+    printCursor(astExtStringData, cursor);
+
+    ClientData nextClientData(curLevel + 1);
+    clang_visitChildren(cursor, visitor, &nextClientData);
+    astStringData += nextClientData.astStringData;
+
+    return CXChildVisit_Continue;
 }
 
 void dumpAST(string& strData, const CXCursor& cursor)
@@ -106,7 +131,7 @@ void dumpAST(string& strData, const CXCursor& cursor)
     strData += " used " + _11_CXString2String(cursorSpelling) + " '" + _11_CXString2String(cursorTypeSpelling) + "'\n";
 }
 
-void printCursor(const CXCursor& cursor, uint32_t curLevel)
+void printCursor(string& strData, const CXCursor& cursor)
 {
     
 }
