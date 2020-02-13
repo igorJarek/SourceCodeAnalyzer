@@ -13,6 +13,7 @@ void _1_printMangling(string& strData, const CXCursor& cursor, uint32_t curLevel
 	for (string str : CXXManglingsStrings)
 		strData += tabOffset(curLevel + 3) + str + '\n';
 
-	// _11_releaseCXStringSet(CXXManglings); CXXManglings == NULL !!
+	if(CXXManglings)
+		_11_releaseCXStringSet(CXXManglings);
 }
 
