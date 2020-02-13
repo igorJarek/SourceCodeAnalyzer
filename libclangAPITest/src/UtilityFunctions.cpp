@@ -78,20 +78,22 @@ void processFile(const string& folderPath, const string& fileName)
 
 CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data)
 {
-    ClientData* clientData = reinterpret_cast<ClientData*>(client_data);
-    string& astStringData = clientData->astStringData;
-    string& astExtStringData = clientData->astExtStringData;
-    uint32_t curLevel = clientData->treeLevel;
+    ClientData* clientDataPtr = reinterpret_cast<ClientData*>(client_data);
+    string& astStringData = clientDataPtr->astStringData;
+    string& astExtStringData = clientDataPtr->astExtStringData;
+    uint32_t curLevel = clientDataPtr->treeLevel;
 
     astStringData += tabOffset(curLevel);
     astExtStringData += tabOffset(curLevel);
 
     dumpAST(astStringData, cursor);
-    printCursor(astExtStringData, cursor);
+    printCursor(astExtStringData, cursor, curLevel);
 
     ClientData nextClientData(curLevel + 1);
     clang_visitChildren(cursor, visitor, &nextClientData);
+
     astStringData += nextClientData.astStringData;
+    astExtStringData += nextClientData.astExtStringData;
 
     return CXChildVisit_Continue;
 }
@@ -131,7 +133,11 @@ void dumpAST(string& strData, const CXCursor& cursor)
     strData += " used " + _11_CXString2String(cursorSpelling) + " '" + _11_CXString2String(cursorTypeSpelling) + "'\n";
 }
 
-void printCursor(string& strData, const CXCursor& cursor)
+void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel)
 {
-    
+    strData += "Token str : \n";
+    _1_printMangling(strData, cursor, curLevel);
+
+
+    strData += '\n';
 }

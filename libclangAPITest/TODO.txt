@@ -2,3 +2,4 @@
 
 1. Change folder browsing functions to boost or C++17 filesystem
 2. Rewrite  dumpAST func
+3. Do something with '\n' in strData
