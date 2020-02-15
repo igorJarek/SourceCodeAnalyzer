@@ -38,9 +38,12 @@
 *.db
 *.suo
 *.ipch
-/libclangAPITest/x64/Release
-/libclangAPITest/Release/libclangAPITest.tlog
-/libclangAPITest/Release
 *.ast
 *.diagnostic
 *.astext
+*.tlog
+*.pdb
+*.txt
+*.log
+*.ipdb
+*.iobj
