@@ -26,6 +26,11 @@
 *.a
 *.lib
 
+# Application files
+*.ast
+*.diagnostic
+*.astext
+
 # Executables
 *.exe
 *.out
@@ -38,12 +43,13 @@
 *.db
 *.suo
 *.ipch
-*.ast
-*.diagnostic
-*.astext
 *.tlog
 *.pdb
 *.txt
 *.log
 *.ipdb
 *.iobj
+*.idb
+*.ilk
+*.db-shm
+*.db-wal
