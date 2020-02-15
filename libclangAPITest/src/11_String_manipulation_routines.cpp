@@ -33,7 +33,12 @@ vector<string> _11_CXStringSet2StringVec(CXStringSet* stringSet)
     return {};
 }
 
+// VS2019 throws Heap problem
 void _11_releaseCXStringSet(CXStringSet* stringSet)
 {
-    clang_disposeStringSet(stringSet); // 3
+    /*
+    if (stringSet)
+    if (stringSet->Count)
+        clang_disposeStringSet(stringSet); // 3
+    */
 }
