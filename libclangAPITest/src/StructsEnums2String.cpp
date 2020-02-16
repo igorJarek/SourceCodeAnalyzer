@@ -97,7 +97,7 @@ string CXSourceRange2String(const CXSourceRange sourceRange, uint32_t offset)
     return str;
 }
 
-string CXCursorKind2String(enum CXCursorKind cursorKind)
+string CXCursorKind2String(CXCursorKind cursorKind)
 {
     switch (cursorKind)
     {
@@ -589,4 +589,63 @@ string CXCursorKind2String(enum CXCursorKind cursorKind)
 		default:     
 			return "Undefined CXCursorKind";
     }
+}
+
+string CXTUResourceUsage2String(const CXTUResourceUsage& TUResourceUsage, uint32_t offset)
+{
+	string str;
+
+	if (TUResourceUsage.numEntries)
+	{
+		for (uint32_t index{ 0 }; index < TUResourceUsage.numEntries; ++index)
+		{
+			CXTUResourceUsageEntry resourceUsageEntry = TUResourceUsage.entries[index];
+			CXTUResourceUsageKind kind = resourceUsageEntry.kind;
+			uint64_t amount = resourceUsageEntry.amount;
+
+			str += tabOffset(offset) +
+				_6_CXTUResourceUsageKind2constChar(kind) + '\n';
+			str += tabOffset(offset) + "Amount: " + to_string(amount) + "\n\n";
+		}
+	}
+
+	return str;
+}
+
+string CXErrorCode2String(CXErrorCode errorCode)
+{
+	switch (errorCode)
+	{
+		case CXError_Success:
+			return "CXError_Success";
+		case CXError_Failure:
+			return "CXError_Failure";
+		case CXError_Crashed:
+			return "CXError_Crashed";
+		case CXError_InvalidArguments:
+			return "CXError_InvalidArguments";
+		case CXError_ASTReadError:
+			return "CXError_ASTReadError";
+
+		default:
+			return "Undefined CXErrorCode";
+	}
+}
+
+string CXSaveError2String(int32_t saveError)
+{
+	switch (saveError)
+	{
+		case CXSaveError_None:
+			return "CXSaveError_None";
+		case CXSaveError_Unknown:
+			return "CXSaveError_Unknown";
+		case CXSaveError_TranslationErrors:
+			return "CXSaveError_TranslationErrors";
+		case CXSaveError_InvalidTU:
+			return "CXSaveError_InvalidTU";
+
+		default:
+			return "Undefined CXSaveError";
+	}
 }

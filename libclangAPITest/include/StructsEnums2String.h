@@ -2,6 +2,7 @@
 
 #include <clang-c/Index.h>
 #include "11_String_manipulation_routines.h"
+#include "6_Translation_unit_manipulation.h"
 #include "UtilityFunctions.h"
 #include <string>
 #include <ostream>
@@ -14,4 +15,8 @@ string CXDiagnosticDisplayOptions2String(uint32_t options);
 string CXSourceLocation2String(const CXSourceLocation sourceLocation, uint32_t offset);
 string CXSourceRange2String(const CXSourceRange sourceRange, uint32_t offset);
 
-string CXCursorKind2String(enum CXCursorKind cursorKind);
+string CXCursorKind2String(CXCursorKind cursorKind);
+
+string CXTUResourceUsage2String(const CXTUResourceUsage& TUResourceUsage, uint32_t offset);
+string CXErrorCode2String(CXErrorCode errorCode);
+string CXSaveError2String(int32_t saveError);
