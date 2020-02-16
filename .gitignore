@@ -53,3 +53,5 @@
 *.ilk
 *.db-shm
 *.db-wal
+*.tunit
+*.tunitLog
