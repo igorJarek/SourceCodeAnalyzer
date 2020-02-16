@@ -10,6 +10,7 @@
 #include "LibPath.h"
 #include "1_Name_Mangling_API_Functions.h"
 #include "2_Diagnostic_Reporting.h"
+#include "3_C++_AST_introspection.h"
 #include "11_String_manipulation_routines.h"
 
 using namespace std;
@@ -21,11 +22,6 @@ public:
     ClientData(uint32_t level = 0)
     {
         treeLevel = level;
-    }
-
-    ~ClientData()
-    {
-
     }
 
     uint32_t treeLevel{ 0 };

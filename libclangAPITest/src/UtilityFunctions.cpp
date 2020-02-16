@@ -137,7 +137,7 @@ void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel)
 {
     strData += "Token str : \n";
     _1_printMangling(strData, cursor, curLevel);
-
+    _3_printASTIntrospection(strData, cursor, curLevel);
 
     strData += '\n';
 }
