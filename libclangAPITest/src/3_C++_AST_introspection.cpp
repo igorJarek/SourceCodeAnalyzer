@@ -4,20 +4,20 @@ void _3_printASTIntrospection(string& strData, const CXCursor& cursor, uint32_t 
 {
 	strData += tabOffset(curLevel + 1) + "ASTIntrospection : " + '\n';
 
-    uint32_t isConvertingConstructor = clang_CXXConstructor_isConvertingConstructor(cursor);
-    uint32_t isCopyConstructor = clang_CXXConstructor_isCopyConstructor(cursor);
-    uint32_t isDefaultConstructor = clang_CXXConstructor_isDefaultConstructor(cursor);
-    uint32_t isMoveConstructor = clang_CXXConstructor_isMoveConstructor(cursor);
-    uint32_t isMutable = clang_CXXField_isMutable(cursor);
-    uint32_t isDefaulted = clang_CXXMethod_isDefaulted(cursor);
-    uint32_t isPureVirtual = clang_CXXMethod_isPureVirtual(cursor);
-    uint32_t isStatic = clang_CXXMethod_isStatic(cursor);
-    uint32_t isVirtual = clang_CXXMethod_isVirtual(cursor);
-    uint32_t isAbstract = clang_CXXRecord_isAbstract(cursor);
-    uint32_t isScoped = clang_EnumDecl_isScoped(cursor);
-    uint32_t isConst = clang_CXXMethod_isConst(cursor);
+    uint32_t isConvertingConstructor = clang_CXXConstructor_isConvertingConstructor(cursor); // 1.
+    uint32_t isCopyConstructor = clang_CXXConstructor_isCopyConstructor(cursor); // 2.
+    uint32_t isDefaultConstructor = clang_CXXConstructor_isDefaultConstructor(cursor); // 3.
+    uint32_t isMoveConstructor = clang_CXXConstructor_isMoveConstructor(cursor); // 4.
+    uint32_t isMutable = clang_CXXField_isMutable(cursor); // 5.
+    uint32_t isDefaulted = clang_CXXMethod_isDefaulted(cursor); // 6.
+    uint32_t isPureVirtual = clang_CXXMethod_isPureVirtual(cursor); // 7. 
+    uint32_t isStatic = clang_CXXMethod_isStatic(cursor); // 8.
+    uint32_t isVirtual = clang_CXXMethod_isVirtual(cursor); // 9.
+    uint32_t isAbstract = clang_CXXRecord_isAbstract(cursor); // 10.
+    uint32_t isScoped = clang_EnumDecl_isScoped(cursor); // 11.
+    uint32_t isConst = clang_CXXMethod_isConst(cursor);  // 12.
 
-    enum CXCursorKind templateCursorKind = clang_getTemplateCursorKind(cursor);
+    enum CXCursorKind templateCursorKind = clang_getTemplateCursorKind(cursor); // 13.
     // CXCursor specializedCursorTemplate = clang_getSpecializedCursorTemplate(cursor);
 
     // check last parameter

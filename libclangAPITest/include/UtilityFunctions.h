@@ -7,10 +7,10 @@
 #include <string>
 #include <windows.h>
 
-#include "LibPath.h"
 #include "1_Name_Mangling_API_Functions.h"
 #include "2_Diagnostic_Reporting.h"
 #include "3_C++_AST_introspection.h"
+#include "6_Translation_unit_manipulation.h"
 #include "11_String_manipulation_routines.h"
 
 using namespace std;

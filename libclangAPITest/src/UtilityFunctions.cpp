@@ -60,19 +60,21 @@ void processFile(const string& folderPath, const string& fileName)
     if (isFileHeader(fileExtension) || isFileSource(fileExtension))
     {
         CXIndex index = clang_createIndex(0, 0);
-        CXTranslationUnit translationUnit = clang_parseTranslationUnit(index, absoluteFilePath.c_str(), COMPILATION_ARGS, sizeof(COMPILATION_ARGS) / sizeof(const char*), nullptr, 0, CXTranslationUnit_None);
-        _2_diagnostic_reporting(translationUnit, absoluteFilePath);
+        CXTranslationUnit* translationUnit = _6_translation_unit_manipulation(index, absoluteFilePath);
+        if (translationUnit)
+        {
+            ClientData clientData;
+            CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
+            clang_visitChildren(cursor, visitor, &clientData);
 
-        ClientData clientData;
-        CXCursor cursor = clang_getTranslationUnitCursor(translationUnit);
-        clang_visitChildren(cursor, visitor, &clientData);
+            _6_releaseTranslationUnit(translationUnit);
 
-        clang_disposeTranslationUnit(translationUnit);
+            bool ret;
+            ret = saveToFile(absoluteFilePath + ".ast", clientData.astStringData);
+            ret = saveToFile(absoluteFilePath + ".astext", clientData.astExtStringData);
+        }
+
         clang_disposeIndex(index);
-
-        bool ret;
-        ret = saveToFile(absoluteFilePath + ".ast", clientData.astStringData);
-        ret = saveToFile(absoluteFilePath + ".astext", clientData.astExtStringData);
     }
 }
 
