@@ -63,6 +63,8 @@ void processFile(const string& folderPath, const string& fileName)
         CXTranslationUnit* translationUnit = _6_translation_unit_manipulation(index, absoluteFilePath);
         if (translationUnit)
         {
+            cout << "Parse file : " << absoluteFilePath << endl;
+
             ClientData clientData;
             CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
             clang_visitChildren(cursor, visitor, &clientData);
@@ -71,7 +73,7 @@ void processFile(const string& folderPath, const string& fileName)
 
             bool ret;
             ret = saveToFile(absoluteFilePath + ".ast", clientData.astStringData);
-            ret = saveToFile(absoluteFilePath + ".astext", clientData.astExtStringData);
+            ret = saveToFile(absoluteFilePath + ".astExt", clientData.astExtStringData);
         }
 
         clang_disposeIndex(index);
@@ -140,6 +142,7 @@ void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel)
     strData += "Token str : \n";
     _1_printMangling(strData, cursor, curLevel);
     _3_printASTIntrospection(strData, cursor, curLevel);
+    _7_printInformationForAttributes(strData, cursor, curLevel);
 
     strData += '\n';
 }

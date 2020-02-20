@@ -11,6 +11,7 @@
 #include "2_Diagnostic_Reporting.h"
 #include "3_C++_AST_introspection.h"
 #include "6_Translation_unit_manipulation.h"
+#include "7_Information_for_attributes.h"
 #include "11_String_manipulation_routines.h"
 
 using namespace std;
