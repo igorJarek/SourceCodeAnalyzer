@@ -9,14 +9,22 @@
 
 using namespace std;
 
-string CXDiagnosticSeverity2String(const CXDiagnosticSeverity diagnosticSeverity);
-string CXDiagnosticDisplayOptions2String(uint32_t options);
+string CXDiagnosticSeverity2String			(const CXDiagnosticSeverity diagnosticSeverity);
+string CXDiagnosticDisplayOptions2String	(uint32_t options);
 
-string CXSourceLocation2String(const CXSourceLocation sourceLocation, uint32_t offset);
-string CXSourceRange2String(const CXSourceRange sourceRange, uint32_t offset);
+string CXSourceLocation2String				(const CXSourceLocation sourceLocation,		uint32_t offset);
+string CXSourceRange2String					(const CXSourceRange sourceRange,			uint32_t offset);
 
-string CXCursorKind2String(CXCursorKind cursorKind);
+string CXCursorKind2String					(CXCursorKind cursorKind);
 
-string CXTUResourceUsage2String(const CXTUResourceUsage& TUResourceUsage, uint32_t offset);
-string CXErrorCode2String(CXErrorCode errorCode);
-string CXSaveError2String(int32_t saveError);
+string CXTUResourceUsage2String				(const CXTUResourceUsage& TUResourceUsage,	uint32_t offset);
+string CXErrorCode2String					(CXErrorCode errorCode);
+string CXSaveError2String					(int32_t saveError);
+
+string CXTemplateArgumentKind2String		(CXTemplateArgumentKind templateArgumentKind);
+string CXCallingConv2String					(CXCallingConv callingConv);
+string CXTypeLayoutError2String				(CXTypeLayoutError typeLayoutError);
+string CXTypeNullabilityKind2String			(CXTypeNullabilityKind typeNullabilityKind);
+string CXRefQualifierKind2String			(const CXRefQualifierKind refQualifierKind);
+string CX_CXXAccessSpecifier2String			(const CX_CXXAccessSpecifier accessSpecifier);
+string CX_StorageClass2String				(const CX_StorageClass storageClass);

@@ -143,6 +143,7 @@ void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel)
     _1_printMangling(strData, cursor, curLevel);
     _3_printASTIntrospection(strData, cursor, curLevel);
     _7_printInformationForAttributes(strData, cursor, curLevel);
+    _15_printTypeInformationForCXCursors(strData, cursor, curLevel);
 
     strData += '\n';
 }

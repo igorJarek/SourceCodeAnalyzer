@@ -649,3 +649,189 @@ string CXSaveError2String(int32_t saveError)
 			return "Undefined CXSaveError";
 	}
 }
+
+string CXTemplateArgumentKind2String(CXTemplateArgumentKind templateArgumentKind)
+{
+	switch (templateArgumentKind)
+	{
+		case CXTemplateArgumentKind_Null:
+			return "CXTemplateArgumentKind_Null";
+		case CXTemplateArgumentKind_Type:
+			return "CXTemplateArgumentKind_Type";
+		case CXTemplateArgumentKind_Declaration:
+			return "CXTemplateArgumentKind_Declaration";
+		case CXTemplateArgumentKind_NullPtr:
+			return "CXTemplateArgumentKind_NullPtr";
+		case CXTemplateArgumentKind_Integral:
+			return "CXTemplateArgumentKind_Integral";
+		case CXTemplateArgumentKind_Template:
+			return "CXTemplateArgumentKind_Template";
+		case CXTemplateArgumentKind_TemplateExpansion:
+			return "CXTemplateArgumentKind_TemplateExpansion";
+		case CXTemplateArgumentKind_Expression:
+			return "CXTemplateArgumentKind_Expression";
+		case CXTemplateArgumentKind_Pack:
+			return "CXTemplateArgumentKind_Pack";
+		case CXTemplateArgumentKind_Invalid:
+			return "CXTemplateArgumentKind_Invalid";
+
+		default:
+			return "Undefined CXTemplateArgumentKind";
+	}
+	
+}
+
+string CXCallingConv2String(CXCallingConv callingConv)
+{
+	switch (callingConv)
+	{
+		case CXCallingConv_Default:
+			return "CXCallingConv_Default";
+		case CXCallingConv_C:
+			return "CXCallingConv_C";
+		case CXCallingConv_X86StdCall:
+			return "CXCallingConv_X86StdCall";
+		case CXCallingConv_X86FastCall:
+			return "CXCallingConv_X86FastCall";
+		case CXCallingConv_X86ThisCall:
+			return "CXCallingConv_X86ThisCall";
+		case CXCallingConv_X86Pascal:
+			return "CXCallingConv_X86Pascal";
+		case CXCallingConv_AAPCS:
+			return "CXCallingConv_AAPCS";
+		case CXCallingConv_AAPCS_VFP:
+			return "CXCallingConv_AAPCS_VFP";
+		case CXCallingConv_X86RegCall:
+			return "CXCallingConv_X86RegCall";
+		case CXCallingConv_IntelOclBicc:
+			return "CXCallingConv_IntelOclBicc";
+		case CXCallingConv_Win64:
+			return "CXCallingConv_Win64";
+		
+		/* OLD API
+		case CXCallingConv_X86_64Win64:
+			return "CXCallingConv_X86_64Win64";
+		*/
+
+		case CXCallingConv_X86_64SysV:
+			return "CXCallingConv_X86_64SysV";
+		case CXCallingConv_X86VectorCall:
+			return "CXCallingConv_X86VectorCall";
+		case CXCallingConv_Swift:
+			return "CXCallingConv_Swift";
+		case CXCallingConv_PreserveMost:
+			return "CXCallingConv_PreserveMost";
+		case CXCallingConv_PreserveAll:
+			return "CXCallingConv_PreserveAll";
+		case CXCallingConv_AArch64VectorCall:
+			return "CXCallingConv_AArch64VectorCall";
+		case CXCallingConv_Invalid:
+			return "CXCallingConv_Invalid";
+		case CXCallingConv_Unexposed:
+			return "CXCallingConv_Unexposed";
+
+		default:
+			return "Undefined CXCallingConv";
+	}
+
+}
+
+string CXTypeLayoutError2String(CXTypeLayoutError typeLayoutError)
+{
+	switch (typeLayoutError)
+	{
+		case CXTypeLayoutError_Invalid:
+			return "CXTypeLayoutError_Invalid";
+		case CXTypeLayoutError_Incomplete:
+			return "CXTypeLayoutError_Incomplete";
+		case CXTypeLayoutError_Dependent:
+			return "CXTypeLayoutError_Dependent";
+		case CXTypeLayoutError_NotConstantSize:
+			return "CXTypeLayoutError_NotConstantSize";
+		case CXTypeLayoutError_InvalidFieldName:
+			return "CXTypeLayoutError_InvalidFieldName";
+		case CXTypeLayoutError_Undeduced:
+			return "CXTypeLayoutError_Undeduced";
+
+		default:
+			return "Undefined CXTypeLayoutError";
+	}
+}
+
+string CXTypeNullabilityKind2String(CXTypeNullabilityKind typeNullabilityKind)
+{
+	switch (typeNullabilityKind)
+	{
+		case CXTypeNullability_NonNull:
+			return "CXTypeNullability_NonNull";
+		case CXTypeNullability_Nullable:
+			return "CXTypeNullability_Nullable ";
+		case CXTypeNullability_Unspecified:
+			return "CXTypeNullability_Unspecified";
+		case CXTypeNullability_Invalid:
+			return "CXTypeNullability_Invalid";
+
+		default:
+			return "Undefined CXTypeNullabilityKind";
+	}
+}
+
+string CXRefQualifierKind2String(const CXRefQualifierKind refQualifierKind)
+{
+	switch (refQualifierKind)
+	{
+		case CXRefQualifier_None:
+			return "CXRefQualifier_None";
+		case CXRefQualifier_LValue:
+			return "CXRefQualifier_LValue";
+		case CXRefQualifier_RValue:
+			return "CXRefQualifier_RValue";
+
+		default:
+			return "Undefined CXRefQualifierKind";
+	}
+}
+
+string CX_CXXAccessSpecifier2String(const CX_CXXAccessSpecifier accessSpecifier)
+{
+	switch (accessSpecifier)
+	{
+		case CX_CXXInvalidAccessSpecifier:
+			return "CX_CXXInvalidAccessSpecifier";
+		case CX_CXXPublic:
+			return "CX_CXXPublic";
+		case CX_CXXProtected:
+			return "CX_CXXProtected";
+		case CX_CXXPrivate:
+			return "CX_CXXPrivate";
+
+		default:
+			return "Undefined CX_CXXAccessSpecifier";
+	}
+}
+
+string CX_StorageClass2String(const CX_StorageClass storageClass)
+{
+	switch (storageClass)
+	{
+		case CX_SC_Invalid:
+			return "CX_SC_Invalid";
+		case CX_SC_None:
+			return "CX_SC_None";
+		case CX_SC_Extern:
+			return "CX_SC_Extern";
+		case CX_SC_Static:
+			return "CX_SC_Static";
+		case CX_SC_PrivateExtern:
+			return "CX_SC_PrivateExtern";
+		case CX_SC_OpenCLWorkGroupLocal:
+			return "CX_SC_OpenCLWorkGroupLocal";
+		case CX_SC_Auto:
+			return "CX_SC_Auto";
+		case CX_SC_Register:
+			return "CX_SC_Register";
+
+		default:
+			return "Undefined CX_StorageClass";
+	}
+}

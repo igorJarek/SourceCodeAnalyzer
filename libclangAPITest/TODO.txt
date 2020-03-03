@@ -4,6 +4,7 @@
 2. Rewrite  dumpAST func
 3. Do something with '\n' in strData
 4. Change CXCursorKind2String to CXCursorKingSpelling()
+5. Check CXType == isNull in _15_CXType2String()
 
 Fix :
 1. _11_releaseCXStringSet // VS2019 throws Heap problem
