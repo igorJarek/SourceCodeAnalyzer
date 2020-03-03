@@ -5,6 +5,7 @@
 3. Do something with '\n' in strData
 4. Change CXCursorKind2String to CXCursorKingSpelling()
 5. Check CXType == isNull in _15_CXType2String()
+6. Optimize process that prints variables to the files
 
 Fix :
 1. _11_releaseCXStringSet // VS2019 throws Heap problem
