@@ -2,8 +2,8 @@
 
 void _1_printMangling(string& strData, const CXCursor& cursor, uint32_t curLevel)
 {
-	CXString mangling = clang_Cursor_getMangling(cursor);
-	CXStringSet* CXXManglings = clang_Cursor_getCXXManglings(cursor);
+	CXString mangling = clang_Cursor_getMangling(cursor);				// 1.
+	CXStringSet* CXXManglings = clang_Cursor_getCXXManglings(cursor);	// 2.
 
 	strData += tabOffset(curLevel + 1) + "Mangling : " + '\n';
 	strData += tabOffset(curLevel + 2) + "clang_Cursor_getMangling : " + _11_CXString2String(mangling) + '\n';

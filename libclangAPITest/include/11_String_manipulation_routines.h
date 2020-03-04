@@ -9,9 +9,14 @@
 using namespace std;
 
 /*
-	1. const char*  clang_getCString        (CXString string)
-    2. void         clang_disposeString     (CXString string)
-    3. void         clang_disposeStringSet  (CXStringSet *set)
+    Used:
+
+	        1. const char*  clang_getCString        (CXString string)
+            2. void         clang_disposeString     (CXString string)
+            3. void         clang_disposeStringSet  (CXStringSet *set)
+
+    Unused:
+
 */
 
 string _11_CXString2String(const CXString& str);
