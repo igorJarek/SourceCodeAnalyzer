@@ -32,6 +32,7 @@ bool saveToFile(const string& path, const string& data)
     if (stream.is_open())
     {
         stream << data;
+        stream.flush();
         stream.close();
         return true;
     }
