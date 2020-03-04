@@ -203,12 +203,12 @@ void _15_printTypeInformationForCXCursors(string& strData, const CXCursor& curso
 
 string _15_CXCursor2String(const CXCursor& cursor)
 {
-	CXType cursorType = clang_getCursorType (cursor); // 1.
+	CXType cursorType = clang_getCursorType (cursor);																										// 1.
 	return _15_CXType2String(cursorType);
 }
 
 string _15_CXType2String(const CXType& type)
 {
-	CXString typeSpelling = clang_getTypeSpelling (type); // 2.
+	CXString typeSpelling = clang_getTypeSpelling (type);																									// 2.
 	return _11_CXString2String(typeSpelling);
 }
