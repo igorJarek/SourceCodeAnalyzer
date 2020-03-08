@@ -2,48 +2,43 @@
 
 void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& filePath)
 {
-    fstream stream;
-    stream.open(filePath + ".diagnostic", std::fstream::out | std::fstream::trunc);
-    if (stream.is_open())
-    {
-        uint32_t errorNumber = clang_getNumDiagnostics(translationUnit);                                                                                    // 6.
+    string strData;
+
+    uint32_t errorNumber = clang_getNumDiagnostics(translationUnit);                                                                                    // 6.
         
-        stream << "clang_getNumDiagnostics : " << errorNumber << endl;
-        stream << "-------------------------------------------" << endl;
+    strData += "clang_getNumDiagnostics : " + to_string(errorNumber) + '\n';
+    strData += "-------------------------------------------" + '\n';
 
-        for (uint32_t index = 0; index < errorNumber; ++index)
-        {
-            stream << "Current Diagnostic : " << index << endl;
-            CXDiagnostic currentDiagnostic = clang_getDiagnostic(translationUnit, index);                                                                   // 7.
-            _2_printDiagnostic(stream, currentDiagnostic);
-            clang_disposeDiagnostic(currentDiagnostic);                                                                                                     // 9.
-        }
-
-
-        CXDiagnosticSet	diagnosticSet = clang_getDiagnosticSetFromTU(translationUnit);                                                                      // 8.
-        uint32_t errorNumberInSet = clang_getNumDiagnosticsInSet(diagnosticSet);                                                                            // 1.
-
-        stream << "clang_getNumDiagnosticsInSet : " << errorNumberInSet << endl;
-        stream << "-------------------------------------------" << endl;
-
-        for (uint32_t index = 0; index < errorNumber; ++index)
-        {
-            stream << "Current Diagnostic : " << index << endl;
-            CXDiagnostic currentDiagnostic = clang_getDiagnosticInSet(diagnosticSet, index);                                                                // 2.
-            _2_printDiagnostic(stream, currentDiagnostic);
-            clang_disposeDiagnostic(currentDiagnostic);                                                                                                     // 9.
-        }
-
-        if(errorNumberInSet)
-            clang_disposeDiagnosticSet(diagnosticSet);                                                                                                      // 4.
-
-        stream.close();
+    for (uint32_t index = 0; index < errorNumber; ++index)
+    {
+        strData += "Current Diagnostic : " + to_string(index) + '\n';
+        CXDiagnostic currentDiagnostic = clang_getDiagnostic(translationUnit, index);                                                                   // 7.
+        _2_printDiagnostic(strData, currentDiagnostic);
+        clang_disposeDiagnostic(currentDiagnostic);                                                                                                     // 9.
     }
-    else
+
+    CXDiagnosticSet	diagnosticSet = clang_getDiagnosticSetFromTU(translationUnit);                                                                      // 8.
+    uint32_t errorNumberInSet = clang_getNumDiagnosticsInSet(diagnosticSet);                                                                            // 1.
+
+    strData += "clang_getNumDiagnosticsInSet : " + to_string(errorNumberInSet) + '\n';
+    strData += "-------------------------------------------" + '\n';
+
+    for (uint32_t index = 0; index < errorNumber; ++index)
+    {
+        strData += "Current Diagnostic : " + to_string(index) + '\n';
+        CXDiagnostic currentDiagnostic = clang_getDiagnosticInSet(diagnosticSet, index);                                                                // 2.
+        _2_printDiagnostic(strData, currentDiagnostic);
+        clang_disposeDiagnostic(currentDiagnostic);                                                                                                     // 9.
+    }
+
+    if(errorNumberInSet)
+        clang_disposeDiagnosticSet(diagnosticSet);                                                                                                      // 4.        
+
+    if(!saveToFile(filePath + ".diagnostic", strData))
         cout << "Couldn't create file : " << filePath << endl;
 }
 
-void _2_printDiagnostic(fstream& stream, const CXDiagnostic& currentDiagnostic)
+void _2_printDiagnostic(string& strData, const CXDiagnostic& currentDiagnostic)
 {
     uint32_t defaultDiagnosticDisplayOption = clang_defaultDiagnosticDisplayOptions();                                                                      // 11.
 
@@ -62,33 +57,33 @@ void _2_printDiagnostic(fstream& stream, const CXDiagnostic& currentDiagnostic)
     uint32_t                diagnosticNumRanges     = clang_getDiagnosticNumRanges(currentDiagnostic);                                                      // 19.
     uint32_t                diagnosticNumFixIts     = clang_getDiagnosticNumFixIts(currentDiagnostic);                                                      // 21.
 
-    stream << tabOffset(1) + "clang_defaultDiagnosticDisplayOptions : " << CXDiagnosticDisplayOptions2String(defaultDiagnosticDisplayOption) << endl;
-    stream << tabOffset(1) + "clang_formatDiagnostic : "                << formatDiagnostic << endl;
+    strData += tabOffset(1) + "clang_defaultDiagnosticDisplayOptions : " + CXDiagnosticDisplayOptions2String(defaultDiagnosticDisplayOption) + '\n';
+    strData += tabOffset(1) + "clang_formatDiagnostic : "                + _11_CXString2String(formatDiagnostic) + '\n';
 
-    stream << tabOffset(1) + "clang_getDiagnosticSeverity : "           << CXDiagnosticSeverity2String(diagnosticSeverity) << endl;
-    stream << tabOffset(1) + "clang_getDiagnosticLocation : "           << endl << CXSourceLocation2String(sourceLocation, 2);
-    stream << tabOffset(1) + "clang_getDiagnosticSpelling : "           << diagnosticSpelling << endl;
+    strData += tabOffset(1) + "clang_getDiagnosticSeverity : "           + CXDiagnosticSeverity2String(diagnosticSeverity) + '\n';
+    strData += tabOffset(1) + "clang_getDiagnosticLocation : "           + '\n' + CXSourceLocation2String(sourceLocation, 2);
+    strData += tabOffset(1) + "clang_getDiagnosticSpelling : "           + _11_CXString2String(diagnosticSpelling) + '\n';
 
-    stream << tabOffset(1) + "clang_getDiagnosticOption Enable : "      << diagnosticOption << endl;
-    stream << tabOffset(1) + "clang_getDiagnosticOption Disable : "     << disableDiagnosticString << endl;
+    strData += tabOffset(1) + "clang_getDiagnosticOption Enable : "      + _11_CXString2String(diagnosticOption) + '\n';
+    strData += tabOffset(1) + "clang_getDiagnosticOption Disable : "     + _11_CXString2String(disableDiagnosticString) + '\n';
 
-    stream << tabOffset(1) + "clang_getDiagnosticCategory : "           << diagnosticCategory << endl;
-    stream << tabOffset(1) + "clang_getDiagnosticCategoryText : "       << diagnosticCategoryText << endl;
+    strData += tabOffset(1) + "clang_getDiagnosticCategory : "           + to_string(diagnosticCategory) + '\n';
+    strData += tabOffset(1) + "clang_getDiagnosticCategoryText : "       + _11_CXString2String(diagnosticCategoryText) + '\n';
 
-    stream << tabOffset(1) + "clang_getDiagnosticNumRanges : "          << diagnosticNumRanges << endl;
+    strData += tabOffset(1) + "clang_getDiagnosticNumRanges : "          + to_string(diagnosticNumRanges) + '\n';
     for (uint32_t index{ 0 }; index < diagnosticNumRanges; ++index)
     {
         CXSourceRange diagnosticRange = clang_getDiagnosticRange(currentDiagnostic, index);                                                                 // 20.
-        stream << tabOffset(2) + "clang_getDiagnosticRange " << index << " : " << endl << CXSourceRange2String(diagnosticRange, 3);
+        strData += tabOffset(2) + "clang_getDiagnosticRange " + to_string(index) + " : " +'\n' + CXSourceRange2String(diagnosticRange, 3);
     }
 
-    stream << tabOffset(1) + "clang_getDiagnosticNumFixIts : " << diagnosticNumFixIts << endl;
+    strData += tabOffset(1) + "clang_getDiagnosticNumFixIts : " + to_string(diagnosticNumFixIts) + '\n';
     for (uint32_t index{ 0 }; index < diagnosticNumFixIts; ++index)
     {
         CXSourceRange diagnosticFixItSourceRange;
         CXString diagnosticFixIt = clang_getDiagnosticFixIt(currentDiagnostic, index, &diagnosticFixItSourceRange);                                         // 22.
-        stream << tabOffset(2) + "clang_getDiagnosticFixIt "    << index << " : " << endl;
-        stream << tabOffset(3) + "CXString : "                  << diagnosticFixIt << endl;
-        stream << tabOffset(3) + "Range : "                     << endl << CXSourceRange2String(diagnosticFixItSourceRange, 4);
+        strData += tabOffset(2) + "clang_getDiagnosticFixIt "    + to_string(index) + " : " + '\n';
+        strData += tabOffset(3) + "CXString : "                  + _11_CXString2String(diagnosticFixIt) + '\n';
+        strData += tabOffset(3) + "Range : "                     +'\n' + CXSourceRange2String(diagnosticFixItSourceRange, 4);
     }
 }

@@ -41,4 +41,4 @@ using namespace std;
 */
 
 void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& filePath);
-void _2_printDiagnostic(fstream& stream, const CXDiagnostic& diagnostic);
+void _2_printDiagnostic(string& stream, const CXDiagnostic& diagnostic);
