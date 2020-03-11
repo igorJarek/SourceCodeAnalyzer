@@ -55,3 +55,4 @@
 *.db-wal
 *.tunit
 *.tunitLog
+*.file

@@ -2,10 +2,11 @@
 
 1. Change folder browsing functions to boost or C++17 filesystem
 2. Rewrite  dumpAST func
-3. Do something with '\n' in strData
+3. Optimize process that prints variables to the files (something like table, maybe HTML table ?)
 4. Change CXCursorKind2String to CXCursorKingSpelling()
 5. Check CXType == isNull in _15_CXType2String()
-6. Optimize process that prints variables to the files
+7. Change print values to this pattern -> "clang_getFileContents [size] : ";
+									   -> "clang_getFileContents [return value] : ";						
 
 Fix :
 1. _11_releaseCXStringSet // VS2019 throws Heap problem
