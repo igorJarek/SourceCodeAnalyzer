@@ -5,14 +5,39 @@
 #include <string>
 #include <fstream>
 #include <initializer_list>
+#include <vector>
 
 using namespace std;
+
+enum class DivDescriptorType
+{
+	DCT_TABLE,
+	DCT_TREE
+};
+
+struct DivDescriptor
+{
+	DivDescriptorType type;
+	string containerHeader;
+	size_t vectorIndex;
+};
+
+struct TableContent
+{
+	vector<string> columnNames;
+	vector<vector<string>> rows;
+};
+
+struct TreeContent
+{
+
+};
 
 class HTMLBuilder
 {
 public:
-	HTMLBuilder();
-	~HTMLBuilder();
+	HTMLBuilder() {}
+	~HTMLBuilder() {}
 
 	HTMLBuilder(const HTMLBuilder&)				= delete;
 	HTMLBuilder(HTMLBuilder&&) noexcept			= delete;
@@ -24,23 +49,36 @@ public:
 	void setFileNameHeader(const string& fileName)	{ m_fileNameHeader = fileName; }
 	void setFilePathHeader(const string& filePath)	{ m_filePathHeader = filePath; }
 
-	void addTableColumns(const string& contentTitle, initializer_list<string> columnNames);
+	void addTable(const string& contentTitle, vector<string> columnNames);
+	void addTableRow(vector<string> rowsContent);
 
 	bool saveFile(const string& path);
 
 private:
-	void buildPage(string& content);
-	void buildContent(string& content, size_t contentPos);
+	void buildPage(string& pageContent);
+	void buildContent(string& divContent);
+
+	void buildTable(string& divContainer, const DivDescriptor& divDescriptor);
+	void buildTree(string& divContainer, const DivDescriptor& divDescriptor);
+
+	void replaceKeyword(string& source, const string& keyword, const string& newContent);
 
 private:
 	string m_indexTitle;
 	string m_fileNameHeader;
 	string m_filePathHeader;
 
-	static const string m_indexTemplate;
-	static const string m_containerTemplate;
+	vector<DivDescriptor>	m_divDescriptorVec;
 
-	static const string m_tableTemplate;
-	static const string m_tableColumnTemplate;
-	static const string m_tableRowTemplate;
+	vector<TableContent>	m_tableContentVec;
+	vector<TreeContent>		m_rreeContentVec;
+
+	static const string		m_indexTemplate;
+	static const string		m_containerTemplate;
+
+	static const string		m_tableTemplate;
+	static const string		m_tableColumnTrTemplate;
+	static const string		m_tableColumnThTemplate;
+	static const string		m_tableRowTrTemplate;
+	static const string		m_tableRowTdTemplate;
 };

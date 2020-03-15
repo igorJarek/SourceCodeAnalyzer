@@ -10,204 +10,277 @@ string const HTMLBuilder::m_indexTemplate
 
 		"\t<title><?title?></title>\n\n"
 
-		"<style>\n"
-			"@font-face {\n"
-				"font-family: 'JetBrainsMono-Regular';\n"
-				"src: url('https://raw.githubusercontent.com/igorJarek/SourceCodeAnalyzer/master/html/fonts/JetBrainsMono-Regular.woff') format('woff');\n"
-				"font-weight: normal;\n"
-				"font-style: normal;\n"
-			"}\n"
+		"\t<style>\n"
+			"\t\t@font-face {\n"
+				"\t\t\tfont-family: 'JetBrainsMono-Regular';\n"
+				"\t\t\tsrc: url('https://raw.githubusercontent.com/igorJarek/SourceCodeAnalyzer/master/html/fonts/JetBrainsMono-Regular.woff') format('woff');\n"
+				"\t\t\tfont-weight: normal;\n"
+				"\t\t\tfont-style: normal;\n"
+			"\t\t}\n\n"
 
-			"@font-face {\n"
-				"font-family: 'JetBrainsMono-Bold';\n"
-				"src: url('https://raw.githubusercontent.com/igorJarek/SourceCodeAnalyzer/master/html/fonts/JetBrainsMono-Bold.woff') format('woff');\n"
-				"font-weight: bold;\n"
-				"font-style: normal;\n"
-			"}\n\n"
+			"\t\t@font-face {\n"
+				"\t\t\tfont-family: 'JetBrainsMono-Bold';\n"
+				"\t\t\tsrc: url('https://raw.githubusercontent.com/igorJarek/SourceCodeAnalyzer/master/html/fonts/JetBrainsMono-Bold.woff') format('woff');\n"
+				"\t\t\tfont-weight: bold;\n"
+				"\t\t\tfont-style: normal;\n"
+			"\t\t}\n\n"
 
-			"body {\n"
-				"background-color: rgb(255, 255, 220);\n"
-				"font-family: 'JetBrainsMono-Regular';\n"
-			"}\n\n"
+			"\t\tbody {\n"
+				"\t\t\tbackground-color: rgb(255, 255, 220);\n"
+				"\t\t\tfont-family: 'JetBrainsMono-Regular';\n"
+			"\t\t}\n\n"
 
-			"#site {\n"
-				"width: 80%;\n"
-				"margin-left: auto;\n"
-				"margin-right: auto;\n"
-				"min-width: 1000px;\n"
-			"}\n\n"
+			"\t\t#site {\n"
+				"\t\t\twidth: 80%;\n"
+				"\t\t\tmargin-left: auto;\n"
+				"\t\t\tmargin-right: auto;\n"
+				"\t\t\tmin-width: 1000px;\n"
+			"\t\t}\n\n"
 
-			"#site-logo {\n"
-				"text-align: center;\n"
-				"-webkit-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-				"-moz-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-				"box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-				"background-color: rgb(255, 255, 150);\n"
-				"padding: 10px;\n"
-				"border-radius: 10px;\n"
-				"margin: 10px 0 0 0;\n"
-				"font-family: 'JetBrainsMono-Bold';\n"
-			"}\n\n"
+			"\t\t#site-logo {\n"
+				"\t\t\ttext-align: center;\n"
+				"\t\t\t-webkit-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
+				"\t\t\t-moz-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
+				"\t\t\tbox-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
+				"\t\t\tbackground-color: rgb(255, 255, 150);\n"
+				"\t\t\tpadding: 10px;\n"
+				"\t\t\tborder-radius: 10px;\n"
+				"\t\t\tmargin: 10px 0 0 0;\n"
+				"\t\t\tfont-family: 'JetBrainsMono-Bold';\n"
+			"\t\t}\n\n"
 
-			"#site-logo-fileName {\n"
-				"color: rgb(255, 50, 50);\n"
-				"height: 60px;\n"
-				"font-size: 40px;\n"
-			"}\n\n"
+			"\t\t#site-logo-fileName {\n"
+				"\t\t\tcolor: rgb(255, 50, 50);\n"
+				"\t\t\theight: 60px;\n"
+				"\t\t\tfont-size: 40px;\n"
+			"\t\t}\n\n"
 
-			"#site-logo-filePath {\n"
-				"height: 30px;\n"
-				"font-size: 18px;\n"
-			"}\n\n"
+			"\t\t#site-logo-filePath {\n"
+				"\t\t\theight: 30px;\n"
+				"\t\t\tfont-size: 18px;\n"
+			"\t\t}\n\n"
 
-			".site-content-container {\n"
-				"-webkit-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-				"-moz-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-				"box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-				"background-color: rgb(255, 255, 200);\n"
-				"padding: 10px;\n"
-				"border-radius: 10px;\n"
-				"margin: 10px 0 0 0;\n"
-			"}\n\n"
+			"\t\t.site-content-container {\n"
+				"\t\t\t-webkit-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
+				"\t\t\t-moz-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
+				"\t\t\tbox-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
+				"\t\t\tbackground-color: rgb(255, 255, 200);\n"
+				"\t\t\tpadding: 10px;\n"
+				"\t\t\tborder-radius: 10px;\n"
+				"\t\t\tmargin: 10px 0 0 0;\n"
+			"\t\t}\n\n"
 
-			".site-content-container-containerHeader {\n"
-				"font-family: 'JetBrainsMono-Bold';\n"
-				"background-color: rgb(248, 207, 125);\n"
-				"font-size: 20px;\n"
-				"text-align: center;\n"
-				"padding: 7px 0;\n"
-			"}\n\n"
+			"\t\t.site-content-container-containerHeader {\n"
+				"\t\t\tfont-family: 'JetBrainsMono-Bold';\n"
+				"\t\t\tbackground-color: rgb(248, 207, 125);\n"
+				"\t\t\tfont-size: 20px;\n"
+				"\t\t\ttext-align: center;\n"
+				"\t\t\tpadding: 7px 0;\n"
+			"\t\t}\n\n"
 
-			".site-content-container-containerBody {\n"
-				"padding: 10px 0;\n"
-			"}\n\n"
+			"\t\t.site-content-container-containerBody {\n"
+				"\t\t\tpadding: 10px 0;\n"
+			"\t\t}\n\n"
 
-			"table, th, td {\n"
-				"border: 1px solid black;\n"
-				"border-collapse: collapse;\n"
-			"}\n\n"
+			"\t\ttable, th, td {\n"
+				"\t\t\tborder: 1px solid black;\n"
+				"\t\t\tborder-collapse: collapse;\n"
+			"\t\t}\n\n"
 
-			"#footer {\n"
-				"margin: 10px 0 0 0;\n"
-				"text-align: center;\n"
-			"}\n\n"
+			"\t\t#footer {\n"
+				"\t\t\tmargin: 10px 0 0 0;\n"
+				"\t\t\ttext-align: center;\n"
+			"\t\t}\n\n"
 
-		"</style>\n"
+		"\t</style>\n"
 	"</head>\n\n"
 
 	"<body>\n"
-		"<div id =\"site\">\n"
-			"<div id =\"site-logo\">\n"
-				"<div id =\"site-logo-fileName\">\n"
-					"<?fileName?>\n"
-				"</div>\n"
-				"<div id =\"site-logo-filePath\">\n"
-					"<?filePath?>\n"
-				"</div>\n"
-			"</div>\n\n"
+		"\t<div id =\"site\">\n"
+			"\t\t<div id =\"site-logo\">\n"
+				"\t\t\t<div id =\"site-logo-fileName\">\n"
+					"\t\t\t\t<?fileName?>\n"
+				"\t\t\t</div>\n"
+				"\t\t\t<div id =\"site-logo-filePath\">\n"
+					"\t\t\t\t<?filePath?>\n"
+				"\t\t\t</div>\n"
+			"\t\t</div>\n\n"
 
-			"<div id =\"site-content\">\n"
-				"<?content?>\n"
-			"</div>\n\n"
+			"\t\t<div id =\"site-content\">\n"
+				"\t\t\t<?content?>\n"
+			"\t\t</div>\n\n"
 
-			"<div id =\"footer\">\n"
-				"Created by : Igor Jarek, <a href =\"https://github.com/igorJarek\" target = \"_blank\">GitHub</a><br/>\n"
-				"Font : <a href =\"https://www.jetbrains.com/lp/mono/\" target = \"_blank\">JetBrains Mono</a>\n"
-				"</div>\n"
-			"</div>\n"
+			"\t\t<div id =\"footer\">\n"
+				"\t\t\tCreated by : Igor Jarek, <a href =\"https://github.com/igorJarek\" target = \"_blank\">GitHub</a><br/>\n"
+				"\t\t\tFont : <a href =\"https://www.jetbrains.com/lp/mono/\" target = \"_blank\">JetBrains Mono</a>\n"
+				"\t\t\t</div>\n"
+			"\t\t</div>\n"
 	"</body>\n"
 	"</html>"
 };
 
 string const HTMLBuilder::m_containerTemplate
 {
-	"<div class = \"site-content-container\">"
-		"<div class = \"site-content-container-containerHeader\">"
-			"<?containerHeader?>"
-		"</div>"
-		"<div class = \"site-content-container-containerBody\">"
-			"<?containerBody?>"
-		"</div>"
-	"</div>"
+	"<div class =\"site-content-container\">\n"
+		"<div class =\"site-content-container-containerHeader\">\n"
+			"<?containerHeader?>\n"
+		"</div>\n"
+		"<div class =\"site-content-container-containerBody\">\n"
+			"<?containerBody?>\n"
+		"</div>\n"
+	"</div>\n\n"
 };
 
 string const HTMLBuilder::m_tableTemplate
 {
-	"<table style = \"width:100%\">"
-		"<?tableBody?>"
-	"</table>"
+	"<table style = \"width:100%\">\n"
+		"<?tableBody?>\n"
+	"</table>\n"
 };
 
-string const HTMLBuilder::m_tableColumnTemplate
+const string HTMLBuilder::m_tableColumnTrTemplate
 {
-
+	"<tr>\n"
+		"<?tableColumnTr?>\n"
+	"</tr>\n"
 };
 
-string const HTMLBuilder::m_tableRowTemplate
+const string HTMLBuilder::m_tableColumnThTemplate
 {
-	
+	"<th><?tableColumnTh?></th>\n"
 };
 
-HTMLBuilder::HTMLBuilder()
+const string HTMLBuilder::m_tableRowTrTemplate
 {
-	
+	"<tr>\n"
+		"<?tableRowTr?>\n"
+	"</tr>\n"
+};
+
+const string HTMLBuilder::m_tableRowTdTemplate
+{
+	"<td style =\"text-align:center;\"><?tableRowTd?></td>\n"
+};
+
+void HTMLBuilder::addTable(const string& contentTitle, vector<string> columnNames)
+{
+	DivDescriptor divDescriptor;
+	divDescriptor.type = DivDescriptorType::DCT_TABLE;
+	divDescriptor.containerHeader = contentTitle;
+	divDescriptor.vectorIndex = m_tableContentVec.size();
+
+	TableContent tableContent;
+	tableContent.columnNames = columnNames;
+
+	m_divDescriptorVec.push_back(divDescriptor);
+	m_tableContentVec.push_back(tableContent);
 }
 
-HTMLBuilder::~HTMLBuilder()
+void HTMLBuilder::addTableRow(vector<string> rowsContent)
 {
-
+	TableContent& tableContent = m_tableContentVec.back();
+	tableContent.rows.push_back(rowsContent);
 }
 
-void HTMLBuilder::buildPage(string& content)
+void HTMLBuilder::buildPage(string& pageContent)
 {
-	content = m_indexTemplate;
+	pageContent = m_indexTemplate;
 
 	string titleKeyword		{ "<?title?>" };
 	string fileNameKeyword	{ "<?fileName?>" };
 	string filePathKeyword	{ "<?filePath?>" };
 	string contentKeyword	{ "<?content?>" };
 
-	size_t titlePos = content.find(titleKeyword);
-	if (titlePos != std::string::npos)
-	{
-		content.erase(titlePos, titleKeyword.size());
-		if(m_indexTitle.empty())
-			content.insert(titlePos, "--NULL--");
-		else
-			content.insert(titlePos, m_indexTitle);
-	}
+	replaceKeyword(pageContent, titleKeyword,	 m_indexTitle);
+	replaceKeyword(pageContent, fileNameKeyword, m_fileNameHeader);
+	replaceKeyword(pageContent, filePathKeyword, m_filePathHeader);
 
-	size_t fileNamePos = content.find(fileNameKeyword);
-	if (fileNamePos != std::string::npos)
-	{
-		content.erase(fileNamePos, fileNameKeyword.size());
-		if (m_fileNameHeader.empty())
-			content.insert(fileNamePos, "--NULL--");
-		else
-			content.insert(fileNamePos, m_fileNameHeader);
-	}
+	string divContent;
+	buildContent(divContent);
 
-	size_t filePathPos = content.find(filePathKeyword);
-	if (filePathPos != std::string::npos)
-	{
-		content.erase(filePathPos, filePathKeyword.size());
-		if (m_filePathHeader.empty())
-			content.insert(filePathPos, "--NULL--");
-		else
-			content.insert(filePathPos, m_filePathHeader);
-	}
+	replaceKeyword(pageContent, contentKeyword, divContent);
+}
 
-	size_t contentPos = content.find(contentKeyword);
-	if (contentPos != std::string::npos)
+void HTMLBuilder::buildContent(string& divContent)
+{
+	for (DivDescriptor& divDescriptor : m_divDescriptorVec)
 	{
-		content.erase(contentPos, contentKeyword.size());
-		buildContent(content, contentPos);
+		string divContainer				{ m_containerTemplate };
+		string containerHeaderKeyword	{ "<?containerHeader?>" };
+		string containerBodyKeyword		{ "<?containerBody?>" };
+
+		replaceKeyword(divContainer, containerHeaderKeyword, divDescriptor.containerHeader);
+
+		string divContainerContent;
+		switch (divDescriptor.type)
+		{
+			case DivDescriptorType::DCT_TABLE:
+				buildTable(divContainerContent, divDescriptor);
+				break;
+
+			case DivDescriptorType::DCT_TREE:
+				buildTree(divContainerContent, divDescriptor);
+				break;
+		}
+
+		replaceKeyword(divContainer, containerBodyKeyword, divContainerContent);
+		
+		divContent += divContainer;
 	}
 }
 
-void HTMLBuilder::buildContent(string& content, size_t contentPos)
+void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescriptor)
 {
-	
+	const TableContent& tableContentVecElem = m_tableContentVec.at(divDescriptor.vectorIndex);
+
+	string tableContent			{ m_tableTemplate };
+	string tableBodyKeyword		{ "<?tableBody?>" };
+
+	string tableColumnTrKeyword	{ "<?tableColumnTr?>" };
+	string tableColumnThKeyword	{ "<?tableColumnTh?>" };
+	string tableRowTrKeyword	{ "<?tableRowTr?>" };
+	string tableRowTdKeyword	{ "<?tableRowTd?>" };
+
+	// Columns
+	string tableColumnsTr{ m_tableColumnTrTemplate };
+	string tableColumnsThs;
+	for (const string& columnName : tableContentVecElem.columnNames)
+	{
+		string tableColumnsTh{ m_tableColumnThTemplate };
+		replaceKeyword(tableColumnsTh, tableColumnThKeyword, columnName);
+		tableColumnsThs += tableColumnsTh;
+	}
+
+	replaceKeyword(tableColumnsTr, tableColumnTrKeyword, tableColumnsThs);
+
+	// Rowsa
+	string tableRowsTrs;
+	for (const vector<string>& row : tableContentVecElem.rows)
+	{
+		string tableRowsTr{ m_tableRowTrTemplate };
+		string tableRowsTds;
+		for (const string& rowName : row)
+		{
+			string tableRowsTd{ m_tableRowTdTemplate };
+
+			replaceKeyword(tableRowsTd, tableRowTdKeyword, rowName);
+
+			tableRowsTds += tableRowsTd;
+		}
+
+		replaceKeyword(tableRowsTr, tableRowTrKeyword, tableRowsTds);
+
+		tableRowsTrs += tableRowsTr;
+	}
+
+	replaceKeyword(tableContent, tableBodyKeyword, tableColumnsTr + tableRowsTrs);
+
+	divContainer += tableContent;
+}
+
+void HTMLBuilder::buildTree(string& divContainer, const DivDescriptor& divDescriptor)
+{
+
 }
 
 bool HTMLBuilder::saveFile(const string& path)
@@ -226,4 +299,17 @@ bool HTMLBuilder::saveFile(const string& path)
 	}
 	else
 		return false;
+}
+
+void HTMLBuilder::replaceKeyword(string& source, const string& keyword, const string& newContent)
+{
+	size_t pos = source.find(keyword);
+	if (pos != std::string::npos)
+	{
+		source.erase(pos, keyword.size());
+		if (newContent.empty())
+			source.insert(pos, "--NULL--");
+		else
+			source.insert(pos, newContent);
+	}
 }
