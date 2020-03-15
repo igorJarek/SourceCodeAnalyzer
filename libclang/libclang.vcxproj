@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{DE909C41-0EB8-4268-9DCB-C8275E28C5DF}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\extlib\include;include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\extlib\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libclang.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\10_Mapping_between_cursors_and_source_code.cpp" />
+    <ClCompile Include="src\11_String_manipulation_routines.cpp" />
+    <ClCompile Include="src\12_CompilationDatabase_functions.cpp" />
+    <ClCompile Include="src\13_Module_introspection.cpp" />
+    <ClCompile Include="src\14_Higher_level_API_functions.cpp" />
+    <ClCompile Include="src\15_Type_information_for_CXCursors.cpp" />
+    <ClCompile Include="src\16_Traversing_the_AST_with_cursors.cpp" />
+    <ClCompile Include="src\17_Debugging_facilities.cpp" />
+    <ClCompile Include="src\18_Miscellaneous_utility_functions.cpp" />
+    <ClCompile Include="src\19_Cursor_manipulations.cpp" />
+    <ClCompile Include="src\1_Name_Mangling_API_Functions.cpp" />
+    <ClCompile Include="src\20_Code_completion.cpp" />
+    <ClCompile Include="src\21_Physical_source_locations.cpp" />
+    <ClCompile Include="src\2_Diagnostic_Reporting.cpp" />
+    <ClCompile Include="src\3_C++_AST_introspection.cpp" />
+    <ClCompile Include="src\4_Remapping_functions.cpp" />
+    <ClCompile Include="src\5_Token_extraction_and_manipulation.cpp" />
+    <ClCompile Include="src\6_Translation_unit_manipulation.cpp" />
+    <ClCompile Include="src\7_Information_for_attributes.cpp" />
+    <ClCompile Include="src\8_File_manipulation_routines.cpp" />
+    <ClCompile Include="src\9_Cross-referencing_in_the_AST.cpp" />
+    <ClCompile Include="src\LibPath.cpp" />
+    <ClCompile Include="src\StructsEnums2String.cpp" />
+    <ClCompile Include="src\UtilityFunctions.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\10_Mapping_between_cursors_and_source_code.h" />
+    <ClInclude Include="include\11_String_manipulation_routines.h" />
+    <ClInclude Include="include\12_CompilationDatabase_functions.h" />
+    <ClInclude Include="include\13_Module_introspection.h" />
+    <ClInclude Include="include\14_Higher_level_API_functions.h" />
+    <ClInclude Include="include\15_Type_information_for_CXCursors.h" />
+    <ClInclude Include="include\16_Traversing_the_AST_with_cursors.h" />
+    <ClInclude Include="include\17_Debugging_facilities.h" />
+    <ClInclude Include="include\18_Miscellaneous_utility_functions.h" />
+    <ClInclude Include="include\19_Cursor_manipulations.h" />
+    <ClInclude Include="include\1_Name_Mangling_API_Functions.h" />
+    <ClInclude Include="include\20_Code_completion.h" />
+    <ClInclude Include="include\21_Physical_source_locations.h" />
+    <ClInclude Include="include\2_Diagnostic_Reporting.h" />
+    <ClInclude Include="include\3_C++_AST_introspection.h" />
+    <ClInclude Include="include\4_Remapping_functions.h" />
+    <ClInclude Include="include\5_Token_extraction_and_manipulation.h" />
+    <ClInclude Include="include\6_Translation_unit_manipulation.h" />
+    <ClInclude Include="include\7_Information_for_attributes.h" />
+    <ClInclude Include="include\8_File_manipulation_routines.h" />
+    <ClInclude Include="include\9_Cross-referencing_in_the_AST.h" />
+    <ClInclude Include="include\LibPath.h" />
+    <ClInclude Include="include\StructsEnums2String.h" />
+    <ClInclude Include="include\UtilityFunctions.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

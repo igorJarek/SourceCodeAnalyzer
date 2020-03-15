@@ -24,21 +24,19 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Application files
 *.ast
 *.diagnostic
 *.astext
+*.tunit
+*.tunitLog
+*.file
 
 # Executables
 *.exe
 *.out
 *.app
-*.user
-*.filters
-*.vcxproj
-*.sln
 *.opendb
 *.db
 *.suo
@@ -53,6 +51,3 @@
 *.ilk
 *.db-shm
 *.db-wal
-*.tunit
-*.tunitLog
-*.file
