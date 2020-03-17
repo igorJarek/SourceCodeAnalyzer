@@ -107,7 +107,7 @@ string const HTMLBuilder::m_indexTemplate
 	"		</div>\n\n"
 
 	"		<div id =\"site-content\">\n"
-	"			<?content?>\n"
+	"			<?content?>"
 	"		</div>\n\n"
 
 	"		<div id =\"footer\">\n"
@@ -127,16 +127,16 @@ string const HTMLBuilder::m_containerTemplate
 	"		<?containerHeader?>\n"
 	"	</div>\n"
 	"	<div class =\"site-content-container-containerBody\">\n"
-	"		<?containerBody?>\n"
+	"		<?containerBody?>"
 	"	</div>\n"
-	"</div>\n\n"
+	"</div>\n"
 };
 
 string const HTMLBuilder::m_tableTemplate
 {
 	// Fix formatting
 	"<table style = \"width:100%\">\n"
-	"	<?tableBody?>\n"
+	"	<?tableBody?>"
 	"</table>\n"
 };
 
@@ -144,7 +144,7 @@ const string HTMLBuilder::m_tableColumnTrTemplate
 {
 	// Fix formatting
 	"<tr>\n"
-	"	<?tableColumnTr?>\n"
+	"	<?tableColumnTr?>"
 	"</tr>\n"
 };
 
@@ -158,7 +158,7 @@ const string HTMLBuilder::m_tableRowTrTemplate
 {
 	// Fix formatting
 	"<tr>\n"
-	"	<?tableRowTr?>\n"
+	"	<?tableRowTr?>"
 	"</tr>\n"
 };
 
@@ -307,11 +307,24 @@ bool HTMLBuilder::saveFile(const string& path)
 		return false;
 }
 
-void HTMLBuilder::replaceKeyword(string& source, const string& keyword, const string& newContent)
+void HTMLBuilder::replaceKeyword(string& source, const string& keyword, const string& newContent, size_t* tabsInLineCount /* = nullptr */)
 {
 	size_t pos = source.find(keyword);
 	if (pos != std::string::npos)
 	{
+		if (tabsInLineCount)
+		{
+			*tabsInLineCount = 0;
+			for (size_t index{ pos - 1 }; index >= 0; --index)
+			{
+				char c{ source.at(index) };
+				if (c == '\n' || c != '\t')
+					break;
+				else
+					++(*tabsInLineCount);
+			}
+		}
+
 		source.erase(pos, keyword.size());
 		if (newContent.empty())
 			source.insert(pos, "--NULL--");

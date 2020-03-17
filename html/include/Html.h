@@ -61,7 +61,7 @@ private:
 	void buildTable(string& divContainer, const DivDescriptor& divDescriptor);
 	void buildTree(string& divContainer, const DivDescriptor& divDescriptor);
 
-	void replaceKeyword(string& source, const string& keyword, const string& newContent);
+	void replaceKeyword(string& source, const string& keyword, const string& newContent, size_t* tabsInLineCount = nullptr);
 
 private:
 	string m_indexTitle;
