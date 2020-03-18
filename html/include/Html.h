@@ -56,12 +56,15 @@ public:
 
 private:
 	void buildPage(string& pageContent);
-	void buildContent(string& divContent);
+	void buildContent(string& divContent, const size_t tabsCount);
 
-	void buildTable(string& divContainer, const DivDescriptor& divDescriptor);
-	void buildTree(string& divContainer, const DivDescriptor& divDescriptor);
+	void buildTable(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount);
+	void buildTree(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount);
 
-	void replaceKeyword(string& source, const string& keyword, const string& newContent, size_t* tabsInLineCount = nullptr);
+	void replaceKeyword(string& source, const string& keyword, const string& newContent, bool move = false, size_t moveOffset = 0);
+
+	size_t countTabs(const string& source, const string& keyword);
+	void addTabsInTemplate(string& source, const size_t tabsCount);
 
 private:
 	string m_indexTitle;
