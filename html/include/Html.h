@@ -1,5 +1,7 @@
 #pragma once
 
+#include "HtmlTemplates.h"
+
 #include <iostream>
 
 #include <string>
@@ -76,12 +78,4 @@ private:
 	vector<TableContent>	m_tableContentVec;
 	vector<TreeContent>		m_rreeContentVec;
 
-	static const string		m_indexTemplate;
-	static const string		m_containerTemplate;
-
-	static const string		m_tableTemplate;
-	static const string		m_tableColumnTrTemplate;
-	static const string		m_tableColumnThTemplate;
-	static const string		m_tableRowTrTemplate;
-	static const string		m_tableRowTdTemplate;
 };
