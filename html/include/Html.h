@@ -7,6 +7,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -20,7 +21,7 @@ struct DivDescriptor
 {
 	DivDescriptorType m_type;
 	string m_containerHeader;
-	size_t m_tableVecrIndex;
+	size_t m_vectorIndex;
 };
 
 struct TableContent
@@ -29,9 +30,25 @@ struct TableContent
 	vector<vector<string>> m_rows;
 };
 
+struct TreeNode
+{
+	TreeNode() = default;
+
+	TreeNode(uint32_t level, string data) :
+		m_level(level), m_data(data)
+	{
+
+	}
+
+	uint32_t m_level{0};
+	string m_data;
+	
+	list<shared_ptr<TreeNode>> m_children;
+};
+
 struct TreeContent
 {
-
+	shared_ptr<TreeNode> m_root;
 };
 
 class HTMLBuilder
@@ -53,6 +70,9 @@ public:
 	void addTable(const string& contentTitle, vector<string> columnNames);
 	void addTableRow(vector<string> rowsContent);
 
+	void addTree(const string& contentTitle);
+	void addTreeElement(pair<uint32_t, string> treeElement);
+
 	bool saveFile(const string& path);
 
 private:
@@ -73,5 +93,7 @@ private:
 	string m_filePathHeader;
 
 	vector<DivDescriptor>	m_divDescriptorVec;
+	
 	vector<TableContent>	m_tableContentVec;
+	vector<TreeContent>		m_treeContentVec;
 };

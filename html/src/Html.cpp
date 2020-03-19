@@ -5,7 +5,7 @@ void HTMLBuilder::addTable(const string& contentTitle, vector<string> columnName
 	DivDescriptor divDescriptor;
 	divDescriptor.m_type = DivDescriptorType::DCT_TABLE;
 	divDescriptor.m_containerHeader = contentTitle;
-	divDescriptor.m_tableVecrIndex = m_tableContentVec.size();
+	divDescriptor.m_vectorIndex = m_tableContentVec.size();
 
 	TableContent tableContent;
 	tableContent.m_columnNames = columnNames;
@@ -19,6 +19,38 @@ void HTMLBuilder::addTableRow(vector<string> rowsContent)
 	TableContent& tableContent = m_tableContentVec.back();
 	tableContent.m_rows.push_back(rowsContent);
 }
+
+void HTMLBuilder::addTree(const string& contentTitle)
+{
+	DivDescriptor divDescriptor;
+	divDescriptor.m_type = DivDescriptorType::DCT_TREE;
+	divDescriptor.m_containerHeader = contentTitle;
+	divDescriptor.m_vectorIndex = m_treeContentVec.size();
+
+	TreeContent treeContent;
+	treeContent.m_root = std::make_shared<TreeNode>();
+		
+	m_divDescriptorVec.push_back(divDescriptor);
+	m_treeContentVec.push_back(treeContent);
+}
+
+void HTMLBuilder::addTreeElement(pair<uint32_t, string> treeElement)
+{
+	uint32_t& treeLevel = treeElement.first;
+	string& str			= treeElement.second;
+
+	TreeContent& treeContent = m_treeContentVec.back();
+	shared_ptr<TreeNode> parentNode = treeContent.m_root;
+	uint32_t currentLevel{ 0 };
+
+	while (treeLevel > currentLevel)
+	{
+		parentNode = parentNode->m_children.back();
+		++currentLevel;
+	}
+
+	shared_ptr<TreeNode> newNode(new TreeNode(treeLevel, str));
+	parentNode->m_children.push_back(newNode);
 }
 
 void HTMLBuilder::buildPage(string& pageContent)
@@ -72,7 +104,7 @@ void HTMLBuilder::buildContent(string& divContent, const size_t tabsCount)
 
 void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount)
 {
-	const TableContent& tableContentVecElem = m_tableContentVec.at(divDescriptor.m_tableVecrIndex);
+	const TableContent& tableContentVecElem = m_tableContentVec.at(divDescriptor.m_vectorIndex);
 
 	string tableContent			{ TABLE_TEMPLATE };
 	string tableBodyKeyword		{ "<?tableBody?>" };
