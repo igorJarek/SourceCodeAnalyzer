@@ -8,6 +8,7 @@
 #include <fstream>
 #include <vector>
 #include <list>
+#include <map>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ struct DivDescriptor
 {
 	DivDescriptorType m_type;
 	string m_containerHeader;
-	size_t m_vectorIndex;
+	string m_id;
 };
 
 struct TableContent
@@ -65,12 +66,11 @@ public:
 	void setFileNameHeader(const string& fileName)	{ m_fileNameHeader = fileName; }
 	void setFilePathHeader(const string& filePath)	{ m_filePathHeader = filePath; }
 
-	void addTable(const string& contentTitle, vector<string> columnNames);
-	void addTableRow(vector<string> rowsContent);
+	void addTable(const string& contentTitle, const string& id, vector<string> columnNames);
+	void addTableRow(const string& id, vector<string> rowsContent);
 
-	void addTree(const string& contentTitle);
-	void addTreeElement(pair<uint32_t, string> treeElement);
-	void iterateTree(shared_ptr<TreeNode> node, string& rootContent, const size_t tabsCount);
+	void addTree(const string& contentTitle, const string& id);
+	void addTreeElement(const string& id, pair<uint32_t, string> treeElement);
 
 	bool saveFile(const string& path);
 
@@ -80,6 +80,8 @@ private:
 
 	void buildTable(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount);
 	void buildTree(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount);
+
+	void iterateTree(shared_ptr<TreeNode> node, string& rootContent, const size_t tabsCount);
 
 	void replaceKeyword(string& source, const string& keyword, const string& newContent, bool move = false, size_t moveOffset = 0);
 
@@ -91,8 +93,8 @@ private:
 	string m_fileNameHeader;
 	string m_filePathHeader;
 
-	vector<DivDescriptor>	m_divDescriptorVec;
+	vector<DivDescriptor>		m_divDescriptorVec;
 	
-	vector<TableContent>	m_tableContentVec;
-	vector<TreeContent>		m_treeContentVec;
+	map<string, TableContent>	m_tableContentMap;
+	map<string, TreeContent>	m_treeContentMap;
 };

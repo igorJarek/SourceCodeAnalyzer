@@ -1,45 +1,45 @@
 #include "Html.h"
 
-void HTMLBuilder::addTable(const string& contentTitle, vector<string> columnNames)
+void HTMLBuilder::addTable(const string& contentTitle, const string& id, vector<string> columnNames)
 {
 	DivDescriptor divDescriptor;
 	divDescriptor.m_type = DivDescriptorType::DCT_TABLE;
 	divDescriptor.m_containerHeader = contentTitle;
-	divDescriptor.m_vectorIndex = m_tableContentVec.size();
+	divDescriptor.m_id = id;
 
 	TableContent tableContent;
 	tableContent.m_columnNames = columnNames;
 
 	m_divDescriptorVec.push_back(divDescriptor);
-	m_tableContentVec.push_back(tableContent);
+	m_tableContentMap.insert({ id, tableContent });
 }
 
-void HTMLBuilder::addTableRow(vector<string> rowsContent)
+void HTMLBuilder::addTableRow(const string& id, vector<string> rowsContent)
 {
-	TableContent& tableContent = m_tableContentVec.back();
+	TableContent& tableContent = m_tableContentMap.at(id);
 	tableContent.m_rows.push_back(rowsContent);
 }
 
-void HTMLBuilder::addTree(const string& contentTitle)
+void HTMLBuilder::addTree(const string& contentTitle, const string& id)
 {
 	DivDescriptor divDescriptor;
 	divDescriptor.m_type = DivDescriptorType::DCT_TREE;
 	divDescriptor.m_containerHeader = contentTitle;
-	divDescriptor.m_vectorIndex = m_treeContentVec.size();
+	divDescriptor.m_id = id;
 
 	TreeContent treeContent;
 	treeContent.m_root = std::make_shared<TreeNode>();
 		
 	m_divDescriptorVec.push_back(divDescriptor);
-	m_treeContentVec.push_back(treeContent);
+	m_treeContentMap.insert({id ,treeContent });
 }
 
-void HTMLBuilder::addTreeElement(pair<uint32_t, string> treeElement)
+void HTMLBuilder::addTreeElement(const string& id, pair<uint32_t, string> treeElement)
 {
 	uint32_t& treeLevel = treeElement.first;
 	string& str			= treeElement.second;
 
-	TreeContent& treeContent = m_treeContentVec.back();
+	TreeContent& treeContent = m_treeContentMap.at(id);
 	shared_ptr<TreeNode> parentNode = treeContent.m_root;
 	uint32_t currentLevel{ 0 };
 
@@ -104,7 +104,7 @@ void HTMLBuilder::buildContent(string& divContent, const size_t tabsCount)
 
 void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount)
 {
-	const TableContent& tableContentVecElem = m_tableContentVec.at(divDescriptor.m_vectorIndex);
+	const TableContent& tableContentVecElem = m_tableContentMap.at(divDescriptor.m_id);
 
 	string tableContent			{ TABLE_TEMPLATE };
 	string tableBodyKeyword		{ "<?tableBody?>" };
@@ -158,7 +158,7 @@ void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescr
 
 void HTMLBuilder::buildTree(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount)
 {
-	const TreeContent& TreeContentVecElem = m_treeContentVec.at(divDescriptor.m_vectorIndex);
+	const TreeContent& TreeContentVecElem = m_treeContentMap.at(divDescriptor.m_id);
 
 	string treeRoot{ TREE_ROOT_UL_TEMPLATE };
 	string treeRootKeyword{ "<?rootBody?>" };

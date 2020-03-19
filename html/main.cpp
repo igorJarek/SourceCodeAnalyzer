@@ -9,24 +9,27 @@ int main()
     htmlBuilder.setFileNameHeader("main.cpp");
     htmlBuilder.setFilePathHeader("libclangAPITest\\testLib\\main.cpp");
 
-    htmlBuilder.addTable("1. File manipulation routines", {"ID", "Function name", "Value type", "Value"});
-    htmlBuilder.addTableRow({ "1", "clang_getFileName", "return", "C:\\Users\\Igor\\Desktop\\libclangAPITest\\testLib\\main.cpp" });
-    htmlBuilder.addTableRow({ "2", "clang_getFileTime", "return", "Thu Feb 20 00:22:35 2020" });
+    string tableID{ "FMR" };
+    string treeID{ "AST" };
 
-    htmlBuilder.addTree("2. AST");
+    htmlBuilder.addTable("1. File manipulation routines", tableID, {"ID", "Function name", "Value type", "Value"});
+    htmlBuilder.addTableRow(tableID, { "1", "clang_getFileName", "return", "C:\\Users\\Igor\\Desktop\\libclangAPITest\\testLib\\main.cpp" });
+    htmlBuilder.addTableRow(tableID, { "2", "clang_getFileTime", "return", "Thu Feb 20 00:22:35 2020" });
 
-    htmlBuilder.addTreeElement({ 0, "1" });
-    htmlBuilder.addTreeElement({ 0, "2" });
-    htmlBuilder.addTreeElement({ 0, "3" });
-        htmlBuilder.addTreeElement({ 1, "4" });
-        htmlBuilder.addTreeElement({ 1, "5" });
-        htmlBuilder.addTreeElement({ 1, "6" });
-            htmlBuilder.addTreeElement({ 2, "7" });
-                htmlBuilder.addTreeElement({ 3, "8" });
-    htmlBuilder.addTreeElement({ 0, "9" });
-        htmlBuilder.addTreeElement({ 1, "10" });
-            htmlBuilder.addTreeElement({ 2, "11" });
-            htmlBuilder.addTreeElement({ 2, "12" });
+    htmlBuilder.addTree("2. AST", treeID);
+
+    htmlBuilder.addTreeElement(treeID, { 0, "1" });
+    htmlBuilder.addTreeElement(treeID, { 0, "2" });
+    htmlBuilder.addTreeElement(treeID, { 0, "3" });
+        htmlBuilder.addTreeElement(treeID, { 1, "4" });
+        htmlBuilder.addTreeElement(treeID, { 1, "5" });
+        htmlBuilder.addTreeElement(treeID, { 1, "6" });
+            htmlBuilder.addTreeElement(treeID, { 2, "7" });
+                htmlBuilder.addTreeElement(treeID, { 3, "8" });
+    htmlBuilder.addTreeElement(treeID, { 0, "9" });
+        htmlBuilder.addTreeElement(treeID, { 1, "10" });
+            htmlBuilder.addTreeElement(treeID, { 2, "11" });
+            htmlBuilder.addTreeElement(treeID, { 2, "12" });
 
     htmlBuilder.saveFile("main.cpp.html");
 
