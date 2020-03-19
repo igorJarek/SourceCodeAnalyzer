@@ -3,12 +3,13 @@
 void HTMLBuilder::addTable(const string& contentTitle, vector<string> columnNames)
 {
 	DivDescriptor divDescriptor;
-	divDescriptor.type = DivDescriptorType::DCT_TABLE;
-	divDescriptor.containerHeader = contentTitle;
-	divDescriptor.vectorIndex = m_tableContentVec.size();
+	divDescriptor.m_type = DivDescriptorType::DCT_TABLE;
+	divDescriptor.m_containerHeader = contentTitle;
+	divDescriptor.m_tableVecrIndex = m_tableContentVec.size();
 
 	TableContent tableContent;
 	tableContent.columnNames = columnNames;
+	tableContent.m_columnNames = columnNames;
 
 	m_divDescriptorVec.push_back(divDescriptor);
 	m_tableContentVec.push_back(tableContent);
@@ -17,7 +18,8 @@ void HTMLBuilder::addTable(const string& contentTitle, vector<string> columnName
 void HTMLBuilder::addTableRow(vector<string> rowsContent)
 {
 	TableContent& tableContent = m_tableContentVec.back();
-	tableContent.rows.push_back(rowsContent);
+	tableContent.m_rows.push_back(rowsContent);
+}
 }
 
 void HTMLBuilder::buildPage(string& pageContent)
@@ -49,10 +51,10 @@ void HTMLBuilder::buildContent(string& divContent, const size_t tabsCount)
 
 		size_t containerBodyTabsCount	{ tabsCount + countTabs(divContainer, containerBodyKeyword) };
 
-		replaceKeyword(divContainer, containerHeaderKeyword, divDescriptor.containerHeader);
+		replaceKeyword(divContainer, containerHeaderKeyword, divDescriptor.m_containerHeader);
 
 		string divContainerContent;
-		switch (divDescriptor.type)
+		switch (divDescriptor.m_type)
 		{
 			case DivDescriptorType::DCT_TABLE:
 				buildTable(divContainerContent, divDescriptor, containerBodyTabsCount);
@@ -71,7 +73,7 @@ void HTMLBuilder::buildContent(string& divContent, const size_t tabsCount)
 
 void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount)
 {
-	const TableContent& tableContentVecElem = m_tableContentVec.at(divDescriptor.vectorIndex);
+	const TableContent& tableContentVecElem = m_tableContentVec.at(divDescriptor.m_tableVecrIndex);
 
 	string tableContent			{ TABLE_TEMPLATE };
 	string tableBodyKeyword		{ "<?tableBody?>" };
@@ -88,7 +90,7 @@ void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescr
 	size_t tableColumnTrTabsCount{ countTabs(tableColumnsTr, tableColumnTrKeyword) };
 
 	string tableColumnsThs;
-	for (const string& columnName : tableContentVecElem.columnNames)
+	for (const string& columnName : tableContentVecElem.m_columnNames)
 	{
 		string tableColumnsTh{ TABLE_COLUMN_TH_TEMPLATE };
 		replaceKeyword(tableColumnsTh, tableColumnThKeyword, columnName, true, tableBodyTabsCount + tableColumnTrTabsCount);
@@ -99,7 +101,7 @@ void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescr
 
 	// Rows
 	string tableRowsTrs;
-	for (const vector<string>& row : tableContentVecElem.rows)
+	for (const vector<string>& row : tableContentVecElem.m_rows)
 	{
 		string tableRowsTr{ TABLE_ROW_TR_TEMPLATE };
 		size_t tableRowsTrTabsCount{ countTabs(tableRowsTr, tableRowTrKeyword) };

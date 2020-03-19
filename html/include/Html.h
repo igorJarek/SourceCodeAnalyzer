@@ -6,7 +6,6 @@
 
 #include <string>
 #include <fstream>
-#include <initializer_list>
 #include <vector>
 
 using namespace std;
@@ -19,15 +18,15 @@ enum class DivDescriptorType
 
 struct DivDescriptor
 {
-	DivDescriptorType type;
-	string containerHeader;
-	size_t vectorIndex;
+	DivDescriptorType m_type;
+	string m_containerHeader;
+	size_t m_tableVecrIndex;
 };
 
 struct TableContent
 {
-	vector<string> columnNames;
-	vector<vector<string>> rows;
+	vector<string> m_columnNames;
+	vector<vector<string>> m_rows;
 };
 
 struct TreeContent
@@ -74,8 +73,5 @@ private:
 	string m_filePathHeader;
 
 	vector<DivDescriptor>	m_divDescriptorVec;
-
 	vector<TableContent>	m_tableContentVec;
-	vector<TreeContent>		m_rreeContentVec;
-
 };
