@@ -34,13 +34,11 @@ struct TreeNode
 {
 	TreeNode() = default;
 
-	TreeNode(uint32_t level, string data) :
-		m_level(level), m_data(data)
+	TreeNode(string data) : m_data(data)
 	{
 
 	}
 
-	uint32_t m_level{0};
 	string m_data;
 	
 	list<shared_ptr<TreeNode>> m_children;
@@ -72,6 +70,7 @@ public:
 
 	void addTree(const string& contentTitle);
 	void addTreeElement(pair<uint32_t, string> treeElement);
+	void iterateTree(shared_ptr<TreeNode> node, string& rootContent, const size_t tabsCount);
 
 	bool saveFile(const string& path);
 

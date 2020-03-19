@@ -177,7 +177,7 @@ const string TABLE_ROW_TD_TEMPLATE
 const string TREE_ROOT_UL_TEMPLATE
 {
 	"<ul>\n"
-	"	<?rootBody?>"		
+	"	<?rootBody?>\n"		
 	"</ul>\n"
 };
 
@@ -185,7 +185,7 @@ const string TREE_UL_LI_TEMPLATE
 {
 	"<li><?ulluHeader?>\n"
 	"<ul>\n"
-	"	<?ulliBody?>"
+	"	<?ulliBody?>\n"
 	"</ul>\n"
 	"</li>\n"
 };

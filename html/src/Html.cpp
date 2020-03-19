@@ -49,7 +49,7 @@ void HTMLBuilder::addTreeElement(pair<uint32_t, string> treeElement)
 		++currentLevel;
 	}
 
-	shared_ptr<TreeNode> newNode(new TreeNode(treeLevel, str));
+	shared_ptr<TreeNode> newNode(new TreeNode(str));
 	parentNode->m_children.push_back(newNode);
 }
 
@@ -158,7 +158,49 @@ void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescr
 
 void HTMLBuilder::buildTree(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount)
 {
+	const TreeContent& TreeContentVecElem = m_treeContentVec.at(divDescriptor.m_vectorIndex);
 
+	string treeRoot{ TREE_ROOT_UL_TEMPLATE };
+	string treeRootKeyword{ "<?rootBody?>" };
+
+	size_t treeRootTabsCount{ tabsCount + countTabs(treeRoot, treeRootKeyword) };
+
+	string rootContent;
+	iterateTree(TreeContentVecElem.m_root, rootContent, treeRootTabsCount);
+
+	replaceKeyword(treeRoot, treeRootKeyword, rootContent, true, tabsCount);
+
+	divContainer += treeRoot;
+}
+
+void HTMLBuilder::iterateTree(shared_ptr<TreeNode> parent, string& rootContent, const size_t tabsCount)
+{
+	string treeLiBodyKeyword	{ "<?liBody?>" };
+	string treeUlLiHeaderKeyword{ "<?ulluHeader?>" };
+	string treeUlLiBodyKeyword	{ "<?ulliBody?>" };
+
+	for (shared_ptr<TreeNode> node : parent->m_children)
+	{
+		if (node->m_children.size())
+		{
+			string treeUlLi{ TREE_UL_LI_TEMPLATE };
+			replaceKeyword(treeUlLi, treeUlLiHeaderKeyword, node->m_data);
+			size_t treeUlLiTabsCount = tabsCount + countTabs(treeUlLi, treeUlLiBodyKeyword);
+
+			string treeUlLiChildren;
+			iterateTree(node, treeUlLiChildren, treeUlLiTabsCount);
+
+			replaceKeyword(treeUlLi, treeUlLiBodyKeyword, treeUlLiChildren, true, tabsCount);
+
+			rootContent += treeUlLi;
+		}
+		else
+		{
+			string treeLi{ TREE_LI_TEMPLATE };
+			replaceKeyword(treeLi, treeLiBodyKeyword, node->m_data, true, tabsCount);
+			rootContent += treeLi;
+		}
+	}
 }
 
 bool HTMLBuilder::saveFile(const string& path)
