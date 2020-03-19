@@ -4,6 +4,8 @@
 
 using namespace std;
 
+// ------- INDEX ------- //
+
 const string INDEX_TEMPLATE
 {
 	"<!DOCTYPE html>\n"
@@ -123,6 +125,8 @@ const string INDEX_TEMPLATE
 	"</html>"
 };
 
+// ------- CONTAINER ------- //
+
 const string CONTAINER_TEMPLATE
 {
 	"<div class =\"site-content-container\">\n"
@@ -134,6 +138,8 @@ const string CONTAINER_TEMPLATE
 	"	</div>\n"
 	"</div>\n"
 };
+
+// ------- TABLE ------- //
 
 const string TABLE_TEMPLATE
 {
@@ -164,4 +170,27 @@ const string TABLE_ROW_TR_TEMPLATE
 const string TABLE_ROW_TD_TEMPLATE
 {
 	"<td style =\"text-align:center;\"><?tableRowTd?></td>\n"
+};
+
+// ------- TREE ------- //
+
+const string TREE_ROOT_UL_TEMPLATE
+{
+	"<ul>\n"
+	"	<?rootBody?>"		
+	"</ul>\n"
+};
+
+const string TREE_UL_LI_TEMPLATE
+{
+	"<li><?ulluHeader?>\n"
+	"<ul>\n"
+	"	<?ulliBody?>"
+	"</ul>\n"
+	"</li>\n"
+};
+
+const string TREE_LI_TEMPLATE
+{
+	"<li><?liBody?></li>\n"
 };
