@@ -8,7 +8,6 @@ void HTMLBuilder::addTable(const string& contentTitle, vector<string> columnName
 	divDescriptor.m_tableVecrIndex = m_tableContentVec.size();
 
 	TableContent tableContent;
-	tableContent.columnNames = columnNames;
 	tableContent.m_columnNames = columnNames;
 
 	m_divDescriptorVec.push_back(divDescriptor);
