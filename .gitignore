@@ -53,3 +53,5 @@
 *.db-shm
 *.db-wal
 *.enc
+x64/Release/html.lib
+x64/Debug/html.lib
