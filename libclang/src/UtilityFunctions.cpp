@@ -18,11 +18,7 @@ bool isFileSource(const string& extension)
 
 string tabOffset(uint32_t offset)
 {
-    string str;
-    for (uint32_t index{ 0 }; index < offset; ++index)
-        str += '\t';
-
-    return str;
+    return string(offset, '\t');
 }
 
 bool saveToFile(const string& path, const string& data)
