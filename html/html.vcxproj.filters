@@ -26,5 +26,8 @@
     <ClInclude Include="include\Html.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\HtmlTemplates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
