@@ -7,6 +7,8 @@
 #include <string>
 #include <windows.h>
 
+#include "Html.h"
+
 #include "1_Name_Mangling_API_Functions.h"
 #include "2_Diagnostic_Reporting.h"
 #include "3_C++_AST_introspection.h"
@@ -21,14 +23,19 @@ class ClientData
 {
 public:
 
-    ClientData(uint32_t level = 0)
+    ClientData()
+    {
+        htmlBuilder = make_shared<HTMLBuilder>();
+    }
+
+    ClientData(shared_ptr<HTMLBuilder> html, uint32_t level)
     {
         treeLevel = level;
+        htmlBuilder = html;
     }
 
     uint32_t treeLevel{ 0 };
-    string astStringData{};
-    string astExtStringData{};
+    shared_ptr<HTMLBuilder> htmlBuilder = nullptr;
 };
 
 string tabOffset(uint32_t offset);
@@ -44,5 +51,5 @@ void processFile(const string& folderPath, const string& fileName);
 
 bool saveToFile(const string& path, const string& data);
 
-void dumpAST(string& strData, const CXCursor& cursor);
-void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel);
+void dumpAST(shared_ptr<HTMLBuilder> html, uint32_t curLevel, const CXCursor& cursor);
+void printCursor(shared_ptr<HTMLBuilder> html, uint32_t curLevel, const CXCursor& cursor);

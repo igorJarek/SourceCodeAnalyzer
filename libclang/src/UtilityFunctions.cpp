@@ -63,6 +63,12 @@ void processFile(const string& folderPath, const string& fileName)
             cout << "Parse file : " << absoluteFilePath << endl;
 
             ClientData clientData;
+            clientData.htmlBuilder->setIndexTitle(fileWithExtension);
+            clientData.htmlBuilder->setFileNameHeader(fileWithExtension);
+            clientData.htmlBuilder->setFilePathHeader(absoluteFilePath);
+
+            clientData.htmlBuilder->addTree("1. AST", "AST");
+
             CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
             _8_file_manipulation(*translationUnit, absoluteFilePath);
 
@@ -70,9 +76,7 @@ void processFile(const string& folderPath, const string& fileName)
 
             _6_releaseTranslationUnit(translationUnit);
 
-            bool ret;
-            ret = saveToFile(absoluteFilePath + ".ast", clientData.astStringData);
-            ret = saveToFile(absoluteFilePath + ".astExt", clientData.astExtStringData);
+            clientData.htmlBuilder->saveFile(absoluteFilePath + ".html");
         }
 
         clang_disposeIndex(index);
@@ -82,27 +86,24 @@ void processFile(const string& folderPath, const string& fileName)
 CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data)
 {
     ClientData* clientDataPtr = reinterpret_cast<ClientData*>(client_data);
-    string& astStringData = clientDataPtr->astStringData;
-    string& astExtStringData = clientDataPtr->astExtStringData;
-    uint32_t curLevel = clientDataPtr->treeLevel;
+    if (!clientDataPtr)
+        return CXChildVisit_Break;
 
-    astStringData += tabOffset(curLevel);
-    astExtStringData += tabOffset(curLevel);
+    uint32_t curLevel               = clientDataPtr->treeLevel;
+    shared_ptr<HTMLBuilder> html    = clientDataPtr->htmlBuilder;
 
-    dumpAST(astStringData, cursor);
-    printCursor(astExtStringData, cursor, curLevel);
+    dumpAST(html, curLevel, cursor);
+    printCursor(html, curLevel, cursor);
 
-    ClientData nextClientData(curLevel + 1);
+    ClientData nextClientData(html, curLevel + 1);
     clang_visitChildren(cursor, visitor, &nextClientData);
-
-    astStringData += nextClientData.astStringData;
-    astExtStringData += nextClientData.astExtStringData;
 
     return CXChildVisit_Continue;
 }
 
-void dumpAST(string& strData, const CXCursor& cursor)
+void dumpAST(shared_ptr<HTMLBuilder> html, uint32_t curLevel, const CXCursor& cursor)
 {
+    string strData;
     CXCursorKind kind = clang_getCursorKind(cursor);
     CXString kindSpelling = clang_getCursorKindSpelling(kind);
     strData += _11_CXString2String(kindSpelling) + " ";
@@ -133,16 +134,15 @@ void dumpAST(string& strData, const CXCursor& cursor)
     CXString cursorTypeSpelling = clang_getTypeSpelling(cursorType);
 
     strData += "<" + _11_CXString2String(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", col:" + to_string(endColumn) + ">" + " col:" + to_string(cursorColumn);
-    strData += " used " + _11_CXString2String(cursorSpelling) + " '" + _11_CXString2String(cursorTypeSpelling) + "'\n";
+    strData += " used " + _11_CXString2String(cursorSpelling) + " '" + _11_CXString2String(cursorTypeSpelling);
+
+    html->addTreeElement("AST", { curLevel, strData });
 }
 
-void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel)
+void printCursor(shared_ptr<HTMLBuilder> html, uint32_t curLevel, const CXCursor& cursor)
 {
-    strData += "Token str : \n";
-    _1_printMangling(strData, cursor, curLevel);
-    _3_printASTIntrospection(strData, cursor, curLevel);
-    _7_printInformationForAttributes(strData, cursor, curLevel);
-    _15_printTypeInformationForCXCursors(strData, cursor, curLevel);
-
-    strData += '\n';
+    _1_printMangling(html, curLevel, cursor);
+    _3_printASTIntrospection(html, curLevel, cursor);
+    _7_printInformationForAttributes(html, curLevel, cursor);
+    _15_printTypeInformationForCXCursors(html, curLevel, cursor);
 }

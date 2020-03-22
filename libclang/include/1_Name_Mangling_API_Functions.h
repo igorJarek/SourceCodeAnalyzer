@@ -20,4 +20,4 @@ using namespace std;
 		ObjC 3. CXStringSet* 	clang_Cursor_getObjCManglings	(CXCursor)
 */
 
-void _1_printMangling(string& strData, const CXCursor& cursor, uint32_t curLevel);
+void _1_printMangling(shared_ptr<HTMLBuilder> html, uint32_t curLevel, const CXCursor& cursor);
