@@ -64,6 +64,7 @@ void processFile(const string& folderPath, const string& fileName)
 
             ClientData clientData;
             CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
+            _5_token_extraction(*translationUnit, absoluteFilePath);
             _8_file_manipulation(*translationUnit, absoluteFilePath);
 
             clang_visitChildren(cursor, visitor, &clientData);
