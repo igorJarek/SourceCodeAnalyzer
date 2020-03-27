@@ -173,6 +173,7 @@
     <ClInclude Include="include\UtilityFunctions.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="LibClangFunctions.txt" />
     <Text Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>

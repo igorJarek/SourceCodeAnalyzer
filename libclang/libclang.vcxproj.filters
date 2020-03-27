@@ -167,5 +167,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="TODO.txt" />
+    <Text Include="LibClangFunctions.txt" />
   </ItemGroup>
 </Project>

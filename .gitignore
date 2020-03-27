@@ -32,6 +32,7 @@
 *.tunit
 *.tunitLog
 *.file
+
 *.html
 
 # Executables
