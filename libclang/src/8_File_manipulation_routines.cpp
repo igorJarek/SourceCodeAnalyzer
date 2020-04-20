@@ -44,3 +44,8 @@ void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string
 	if (!saveToFile(saveFilePath, strData))
 		cout << "Couldn't create file : " << saveFilePath << endl;
 }
+
+CXFile _8_getFile(const CXTranslationUnit& translationUnit, const string& filePath)
+{
+	return clang_getFile(translationUnit, filePath.c_str());														// 5.
+}
