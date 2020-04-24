@@ -21,6 +21,60 @@ string tabOffset(uint32_t offset)
     return string(offset, '\t');
 }
 
+// ---------- Files Functions ----------
+
+int64_t countFileLines(const string& filePath)
+{
+    fstream stream;
+    int64_t lines{ -1 };
+
+    stream.open(filePath, std::fstream::in);
+    if (stream.is_open())
+    {
+        lines = 0;
+
+        while (getline(stream, string()))
+            ++lines;
+
+        stream.close();
+    }
+
+    return lines;
+}
+
+int64_t countFileLineColumns(const string& filePath, int64_t line)
+{
+    if (line < 0)
+        return -1;
+
+    fstream stream;
+    int64_t columns{ -1 };
+    int64_t lines{ -1 };
+
+    stream.open(filePath, std::fstream::in);
+    if (stream.is_open())
+    {
+        string str;
+        lines = 0;
+
+        while (getline(stream, str))
+        {
+            ++lines;
+            if (lines == line)
+                break;
+        }
+
+        if(lines == line) // file lines < line
+            columns = str.size();
+
+        stream.close();
+    }
+
+    return columns;
+}
+
+// ---------- Files Functions End ----------
+
 bool saveToFile(const string& path, const string& data)
 {
     fstream stream;
@@ -64,6 +118,7 @@ void processFile(const string& folderPath, const string& fileName)
 
             ClientData clientData;
             CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
+
             _5_token_extraction(*translationUnit, absoluteFilePath);
             _8_file_manipulation(*translationUnit, absoluteFilePath);
 

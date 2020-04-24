@@ -34,6 +34,9 @@ public:
 
 string tabOffset(uint32_t offset);
 
+int64_t countFileLines(const string& filePath);
+int64_t countFileLineColumns(const string& filePath, int64_t line);
+
 bool isFileHeader(const string& extension);
 bool isFileSource(const string& extension);
 
