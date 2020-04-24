@@ -28,3 +28,4 @@ string CXTypeNullabilityKind2String			(CXTypeNullabilityKind typeNullabilityKind
 string CXRefQualifierKind2String			(const CXRefQualifierKind refQualifierKind);
 string CX_CXXAccessSpecifier2String			(const CX_CXXAccessSpecifier accessSpecifier);
 string CX_StorageClass2String				(const CX_StorageClass storageClass);
+string CXTokenKind2String					(const CXTokenKind tokenKind);

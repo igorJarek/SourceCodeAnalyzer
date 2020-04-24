@@ -835,3 +835,23 @@ string CX_StorageClass2String(const CX_StorageClass storageClass)
 			return "Undefined CX_StorageClass";
 	}
 }
+
+string CXTokenKind2String(const CXTokenKind tokenKind)
+{
+	switch (tokenKind)
+	{
+		case CXToken_Punctuation:
+			return "CXToken_Punctuation";
+		case CXToken_Keyword:
+			return "CXToken_Keyword\t";
+		case CXToken_Identifier:
+			return "CXToken_Identifier";
+		case CXToken_Literal:
+			return "CXToken_Literal\t";
+		case CXToken_Comment:
+			return "CXToken_Comment";
+
+		default:
+			return "Undefined CXTokenKind";
+	}
+}
