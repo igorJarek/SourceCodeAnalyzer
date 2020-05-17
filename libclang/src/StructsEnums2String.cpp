@@ -603,8 +603,7 @@ string CXTUResourceUsage2String(const CXTUResourceUsage& TUResourceUsage, uint32
 			CXTUResourceUsageKind kind = resourceUsageEntry.kind;
 			uint64_t amount = resourceUsageEntry.amount;
 
-			str += tabOffset(offset) +
-				_6_CXTUResourceUsageKind2constChar(kind) + '\n';
+			str += tabOffset(offset) + _6_getTUResourceUsageName(kind) + '\n';
 			str += tabOffset(offset) + "Amount: " + to_string(amount) + "\n\n";
 		}
 	}

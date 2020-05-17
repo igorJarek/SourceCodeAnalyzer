@@ -120,7 +120,9 @@ void processFile(const string& folderPath, const string& fileName)
 
             clang_visitChildren(cursor, visitor, &clientData);
 
-            _6_releaseTranslationUnit(translationUnit);
+            _6_disposeTranslationUnit(*translationUnit);
+            delete translationUnit;
+            translationUnit = nullptr;
 
             bool ret;
             ret = saveToFile(absoluteFilePath + ".ast", clientData.astStringData);
