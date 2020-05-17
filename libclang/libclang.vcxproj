@@ -142,6 +142,7 @@
     <ClCompile Include="src\7_Information_for_attributes.cpp" />
     <ClCompile Include="src\8_File_manipulation_routines.cpp" />
     <ClCompile Include="src\9_Cross-referencing_in_the_AST.cpp" />
+    <ClCompile Include="src\ClangUtilityFunctions.cpp" />
     <ClCompile Include="src\LibPath.cpp" />
     <ClCompile Include="src\StructsEnums2String.cpp" />
     <ClCompile Include="src\UtilityFunctions.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="include\7_Information_for_attributes.h" />
     <ClInclude Include="include\8_File_manipulation_routines.h" />
     <ClInclude Include="include\9_Cross-referencing_in_the_AST.h" />
+    <ClInclude Include="include\ClangUtilityFunctions.h" />
     <ClInclude Include="include\LibPath.h" />
     <ClInclude Include="include\StructsEnums2String.h" />
     <ClInclude Include="include\UtilityFunctions.h" />

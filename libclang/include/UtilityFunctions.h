@@ -7,12 +7,10 @@
 #include <string>
 #include <windows.h>
 
-#include "1_Name_Mangling_API_Functions.h"
+#include "ClangUtilityFunctions.h"
 #include "2_Diagnostic_Reporting.h"
-#include "3_C++_AST_introspection.h"
 #include "5_Token_extraction_and_manipulation.h"
 #include "6_Translation_unit_manipulation.h"
-#include "7_Information_for_attributes.h"
 #include "8_File_manipulation_routines.h"
 #include "11_String_manipulation_routines.h"
 
@@ -47,6 +45,3 @@ bool processFolder(const string& path);
 void processFile(const string& folderPath, const string& fileName);
 
 bool saveToFile(const string& path, const string& data);
-
-void dumpAST(string& strData, const CXCursor& cursor);
-void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel);
