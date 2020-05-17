@@ -45,3 +45,48 @@ void _3_printASTIntrospection(string& strData, const CXCursor& cursor, uint32_t 
     strData += tabOffset(curLevel + 2) + "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0) : " + '\n' + CXSourceRange2String(cursorReferenceNameRange_CXNameRange_WantTemplateArgs, curLevel + 3);
     strData += tabOffset(curLevel + 2) + "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantSinglePiece, 0) : " + '\n'  + CXSourceRange2String(cursorReferenceNameRange_CXNameRange_WantSinglePiece, curLevel + 3);
 }
+
+unsigned            _3_CXXConstructor_isConvertingConstructor   (CXCursor C)
+                                                                { return clang_CXXConstructor_isConvertingConstructor(C); }
+
+unsigned            _3_CXXConstructor_isCopyConstructor         (CXCursor C)
+                                                                { return clang_CXXConstructor_isCopyConstructor(C); }
+
+unsigned            _3_CXXConstructor_isDefaultConstructor      (CXCursor C)
+                                                                { return clang_CXXConstructor_isDefaultConstructor(C); }
+
+unsigned            _3_CXXConstructor_isMoveConstructor         (CXCursor C)
+                                                                { return clang_CXXConstructor_isMoveConstructor(C); }
+
+unsigned            _3_CXXField_isMutable                       (CXCursor C)
+                                                                { return clang_CXXField_isMutable(C); }
+
+unsigned            _3_CXXMethod_isDefaulted                    (CXCursor C)
+                                                                { return clang_CXXMethod_isDefaulted(C); }
+
+unsigned            _3_CXXMethod_isPureVirtual                  (CXCursor C)
+                                                                { return clang_CXXMethod_isPureVirtual(C); }
+
+unsigned            _3_CXXMethod_isStatic                       (CXCursor C)
+                                                                { return clang_CXXMethod_isStatic(C); }
+
+unsigned            _3_CXXMethod_isVirtual                      (CXCursor C)
+                                                                { return clang_CXXMethod_isVirtual(C); }
+
+unsigned            _3_CXXRecord_isAbstract                     (CXCursor C)
+                                                                { return clang_CXXRecord_isAbstract(C); }
+
+unsigned            _3_EnumDecl_isScoped                        (CXCursor C)
+                                                                { return clang_EnumDecl_isScoped(C); }
+
+unsigned            _3_CXXMethod_isConst                        (CXCursor C)
+                                                                { return clang_CXXMethod_isConst(C); }
+
+enum CXCursorKind   _3_getTemplateCursorKind                    (CXCursor C)
+                                                                { return clang_getTemplateCursorKind(C); }
+
+CXCursor            _3_getSpecializedCursorTemplate             (CXCursor C)
+                                                                { return clang_getSpecializedCursorTemplate(C); }
+
+CXSourceRange       _3_getCursorReferenceNameRange              (CXCursor C, unsigned NameFlags, unsigned PieceIndex)
+                                                                { return clang_getCursorReferenceNameRange(C, NameFlags, PieceIndex); }
