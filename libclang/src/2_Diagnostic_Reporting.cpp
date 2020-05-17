@@ -119,7 +119,7 @@ CXString                    _2_formatDiagnostic                     (CXDiagnosti
                                                                     { return clang_formatDiagnostic(Diagnostic, Options); }
 
 unsigned                    _2_defaultDiagnosticDisplayOptions      (void)
-                                                                    { return clang_defaultDiagnosticDisplayOptions(void); }
+                                                                    { return clang_defaultDiagnosticDisplayOptions(); }
 
 enum CXDiagnosticSeverity   _2_getDiagnosticSeverity                (CXDiagnostic Diagnostic)
                                                                     { return clang_getDiagnosticSeverity(Diagnostic); }
@@ -134,7 +134,7 @@ CXString                    _2_getDiagnosticOption                  (CXDiagnosti
                                                                     { return clang_getDiagnosticOption( Diagnostic, Disable); }
 
 unsigned                    _2_getDiagnosticCategory                (CXDiagnostic Diagnostic)
-                                                                    { return clang_getDiagnosticCategory(CXDiagnostic Diagnostic); }
+                                                                    { return clang_getDiagnosticCategory(Diagnostic); }
 
 CXString                    _2_getDiagnosticCategoryName            (unsigned Category)
                                                                     { return clang_getDiagnosticCategoryName(Category); }

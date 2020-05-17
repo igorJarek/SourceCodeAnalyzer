@@ -29,3 +29,12 @@ using namespace std;
 */
 
 void _5_token_extraction(const CXTranslationUnit& translationUnit, const string& filePath);
+
+CXToken*            _5_getToken              (CXTranslationUnit TU, CXSourceLocation Location);
+CXTokenKind         _5_getTokenKind          (CXToken Token);
+CXString            _5_getTokenSpelling      (CXTranslationUnit TU, CXToken Token);
+CXSourceLocation    _5_getTokenLocation      (CXTranslationUnit TU, CXToken Token);
+CXSourceRange       _5_getTokenExtent        (CXTranslationUnit TU, CXToken Token);
+void                _5_tokenize              (CXTranslationUnit TU, CXSourceRange Range, CXToken **Tokens, unsigned *NumTokens);
+void                _5_annotateTokens        (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens, CXCursor *Cursors);
+void                _5_disposeTokens         (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens);
