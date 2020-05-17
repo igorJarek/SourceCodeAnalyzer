@@ -87,3 +87,69 @@ void _2_printDiagnostic(string& strData, const CXDiagnostic& currentDiagnostic)
         strData += tabOffset(3) + "Range : "                     +'\n' + CXSourceRange2String(diagnosticFixItSourceRange, 4);
     }
 }
+
+unsigned                    _2_getNumDiagnosticsInSet               (CXDiagnosticSet Diags)
+                                                                    { return clang_getNumDiagnosticsInSet(Diags); }
+
+CXDiagnostic                _2_getDiagnosticInSet                   (CXDiagnosticSet Diags, unsigned Index)
+                                                                    { return clang_getDiagnosticInSet(Diags, Index); }
+
+CXDiagnosticSet             _2_loadDiagnostics                      (const char *file, enum CXLoadDiag_Error *error, CXString *errorString)
+                                                                    { return clang_loadDiagnostics(file, error, errorString); }
+
+void                        _2_disposeDiagnosticSet                 (CXDiagnosticSet Diags)
+                                                                    { return clang_disposeDiagnosticSet(Diags); }
+
+CXDiagnosticSet             _2_getChildDiagnostics                  (CXDiagnostic D)
+                                                                    { return clang_getChildDiagnostics(D); }
+
+unsigned                    _2_getNumDiagnostics                    (CXTranslationUnit Unit)
+                                                                    { return clang_getNumDiagnostics(Unit); }
+
+CXDiagnostic                _2_getDiagnostic                        (CXTranslationUnit Unit, unsigned Index)
+                                                                    { return clang_getDiagnostic(Unit, Index); }
+
+CXDiagnosticSet             _2_getDiagnosticSetFromTU               (CXTranslationUnit Unit)
+                                                                    { return clang_getDiagnosticSetFromTU(Unit); }
+
+void                        _2_disposeDiagnostic                    (CXDiagnostic Diagnostic)
+                                                                    { return clang_disposeDiagnostic(Diagnostic); }
+
+CXString                    _2_formatDiagnostic                     (CXDiagnostic Diagnostic, unsigned Options)
+                                                                    { return clang_formatDiagnostic(Diagnostic, Options); }
+
+unsigned                    _2_defaultDiagnosticDisplayOptions      (void)
+                                                                    { return clang_defaultDiagnosticDisplayOptions(void); }
+
+enum CXDiagnosticSeverity   _2_getDiagnosticSeverity                (CXDiagnostic Diagnostic)
+                                                                    { return clang_getDiagnosticSeverity(Diagnostic); }
+
+CXSourceLocation            _2_getDiagnosticLocation                (CXDiagnostic Diagnostic)
+                                                                    { return clang_getDiagnosticLocation( Diagnostic); }
+
+CXString                    _2_getDiagnosticSpelling                (CXDiagnostic Diagnostic)
+                                                                    { return clang_getDiagnosticSpelling( Diagnostic); }
+
+CXString                    _2_getDiagnosticOption                  (CXDiagnostic Diagnostic, CXString *Disable)
+                                                                    { return clang_getDiagnosticOption( Diagnostic, Disable); }
+
+unsigned                    _2_getDiagnosticCategory                (CXDiagnostic Diagnostic)
+                                                                    { return clang_getDiagnosticCategory(CXDiagnostic Diagnostic); }
+
+CXString                    _2_getDiagnosticCategoryName            (unsigned Category)
+                                                                    { return clang_getDiagnosticCategoryName(Category); }
+
+CXString                    _2_getDiagnosticCategoryText            (CXDiagnostic Diagnostic)
+                                                                    { return clang_getDiagnosticCategoryText(Diagnostic); }
+
+unsigned                    _2_getDiagnosticNumRanges               (CXDiagnostic Diagnostic)
+                                                                    { return clang_getDiagnosticNumRanges(Diagnostic); }
+
+CXSourceRange               _2_getDiagnosticRange                   (CXDiagnostic Diagnostic, unsigned Range)
+                                                                    { return clang_getDiagnosticRange(Diagnostic, Range); }
+
+unsigned                    _2_getDiagnosticNumFixIts               (CXDiagnostic Diagnostic)
+                                                                    { return clang_getDiagnosticNumFixIts(Diagnostic); }
+
+CXString                    _2_getDiagnosticFixIt                   (CXDiagnostic Diagnostic, unsigned FixIt, CXSourceRange *ReplacementRange)
+                                                                    { return clang_getDiagnosticFixIt(Diagnostic, FixIt, ReplacementRange); }
