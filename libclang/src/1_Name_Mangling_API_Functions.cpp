@@ -16,3 +16,12 @@ void _1_printMangling(string& strData, const CXCursor& cursor, uint32_t curLevel
 	_11_releaseCXStringSet(CXXManglings);
 }
 
+
+CXString		_1_getMangling			(CXCursor C) 
+										{ return clang_Cursor_getMangling(C); }
+
+CXStringSet*	_1_getCXXManglings		(CXCursor C)
+										{ return clang_Cursor_getCXXManglings(C); }
+
+CXStringSet*	_1_getObjCManglings		(CXCursor C)
+										{ return clang_Cursor_getObjCManglings(C); }
