@@ -10,9 +10,11 @@
 using namespace std;
 
 /*
-	Used:
+    Used:
 
-		1. CXType	clang_getIBOutletCollectionType		(CXCursor)
+        1. CXType	clang_getIBOutletCollectionType		(CXCursor)
 */
 
 void _7_printInformationForAttributes(string& strData, const CXCursor& cursor, uint32_t curLevel);
+
+CXType _7_getIBOutletCollectionType (CXCursor C);
