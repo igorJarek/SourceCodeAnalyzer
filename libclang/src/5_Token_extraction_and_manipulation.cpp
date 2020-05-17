@@ -5,7 +5,7 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
     string strData{ "Token extraction and manipulation : \n" };
     uint32_t tOffset{ 1 };
 
-    CXFile file = _8_getFile(translationUnit, filePath);
+    CXFile file = _8_getFile(translationUnit, filePath.c_str());
 
     int64_t lineCount = countFileLines(filePath);
     if (lineCount == -1)

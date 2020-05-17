@@ -9,21 +9,29 @@ using namespace std;
 
 /*
 
-	Used:
+    Used:
 
-		1. CXString 		clang_getFileName						(CXFile SFile)
-		2. time_t 			clang_getFileTime						(CXFile SFile)
-		3. int 				clang_getFileUniqueID					(CXFile file, CXFileUniqueID *outID)
-		4. unsigned 		clang_isFileMultipleIncludeGuarded		(CXTranslationUnit tu, CXFile file)
-		5. CXFile 			clang_getFile							(CXTranslationUnit tu, const char *file_name)
-		6. const char * 	clang_getFileContents					(CXTranslationUnit tu, CXFile file, size_t *size)
-		8. CXString 		clang_File_tryGetRealPathName			(CXFile file)
+        1. CXString         clang_getFileName						(CXFile SFile)
+        2. time_t           clang_getFileTime						(CXFile SFile)
+        3. int              clang_getFileUniqueID					(CXFile file, CXFileUniqueID *outID)
+        4. unsigned         clang_isFileMultipleIncludeGuarded		(CXTranslationUnit tu, CXFile file)
+        5. CXFile           clang_getFile							(CXTranslationUnit tu, const char *file_name)
+        6. const char *     clang_getFileContents					(CXTranslationUnit tu, CXFile file, size_t *size)
+        8. CXString         clang_File_tryGetRealPathName			(CXFile file)
 
-	Unused:
+    Unused:
 
-		7. int 				clang_File_isEqual (CXFile file1, CXFile file2)
+        7. int 				clang_File_isEqual (CXFile file1, CXFile file2)
 
 */
 
 void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string& filePath);
-CXFile _8_getFile(const CXTranslationUnit& translationUnit, const string& filePath);
+
+CXString		_8_getFileName						(CXFile SFile);
+time_t			_8_getFileTime						(CXFile SFile);
+int				_8_getFileUniqueID					(CXFile file, CXFileUniqueID *outID);
+unsigned		_8_isFileMultipleIncludeGuarded		(CXTranslationUnit tu, CXFile file);
+CXFile			_8_getFile							(CXTranslationUnit tu, const char *file_name);
+const char *	_8_getFileContents					(CXTranslationUnit tu, CXFile file, size_t *size);
+int				_8_File_isEqual						(CXFile file1, CXFile file2);
+CXString		_8_File_tryGetRealPathName			(CXFile file);
