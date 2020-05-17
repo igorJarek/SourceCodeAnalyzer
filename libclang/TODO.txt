@@ -14,3 +14,4 @@ Fix :
 1. _11_releaseCXStringSet // VS2019 throws Heap problem
 2. What should i do with CXCursors that functions return ? Print only CXCursor type spelling ? 
 3. Change tabs to spaces
+4. Move _11_ funcs to LibClangFunctions.cpp
