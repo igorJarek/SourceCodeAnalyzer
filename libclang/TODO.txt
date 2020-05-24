@@ -6,13 +6,13 @@
 4. Change CXCursorKind2String to CXCursorKingSpelling()
 5. Check CXType == isNull in _15_CXType2String()
 7. Change print values to this pattern -> "clang_getFileContents [size] : ";
-									   -> "clang_getFileContents [return value] : ";						
+									   -> "clang_getFileContents [return value] : ";
 
 8. Add https://clang.llvm.org/doxygen/group__BUILD__SYSTEM.html and https://clang.llvm.org/doxygen/group__CINDEX__COMMENT.html
+9. Complete saveBaseCXCursorInfo() in ClangUtilityFunctions.cpp
 
 Fix :
-1. _11_releaseCXStringSet // VS2019 throws Heap problem
-2. What should i do with CXCursors that functions return ? Print only CXCursor type spelling ? 
-3. Change tabs to spaces
-4. Move _11_ funcs to LibClangFunctions.cpp
-5. _15_CXCursor2String and _15_CXType2String
+1. _11_releaseCXStringSet // VS2019 throws Heap problem 
+2. Change tabs to spaces
+3. Move _11_ funcs to LibClangFunctions.cpp
+4. _15_CXCursor2String and _15_CXType2String
