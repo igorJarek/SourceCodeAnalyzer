@@ -45,3 +45,6 @@ bool processFolder(const string& path);
 void processFile(const string& folderPath, const string& fileName);
 
 bool saveToFile(const string& path, const string& data);
+bool appendToFile(const string& path, const string& data);
+
+bool saveFile(const string& path, const string& data, ios_base::openmode mode);

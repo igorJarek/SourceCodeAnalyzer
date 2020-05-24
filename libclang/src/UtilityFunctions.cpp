@@ -73,8 +73,18 @@ int64_t countFileLineColumns(const string& filePath, int64_t line)
 
 bool saveToFile(const string& path, const string& data)
 {
+    return saveFile(path, data, std::fstream::trunc);
+}
+
+bool appendToFile(const string& path, const string& data)
+{
+    return saveFile(path, data, std::fstream::app);
+}
+
+bool saveFile(const string& path, const string& data, ios_base::openmode mode)
+{
     fstream stream;
-    stream.open(path, std::fstream::out | std::fstream::trunc);
+    stream.open(path, std::fstream::out | mode);
     if (stream.is_open())
     {
         stream << data;
