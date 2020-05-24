@@ -6,3 +6,5 @@
 #include <iostream>
 
 using namespace std;
+
+unsigned    _16_visitChildren   (CXCursor parent, CXCursorVisitor visitor, CXClientData client_data);
