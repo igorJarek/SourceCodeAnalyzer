@@ -212,3 +212,208 @@ string _15_CXType2String(const CXType& type)
 	CXString typeSpelling = clang_getTypeSpelling (type);																									// 2.
 	return _11_CXString2String(typeSpelling);
 }
+
+
+CXType                          _15_getCursorType                               (CXCursor C)
+                                                                                { return clang_getCursorType(C); }
+
+CXString                        _15_getTypeSpelling                             (CXType T)
+                                                                                { return clang_getTypeSpelling(T); }
+
+CXType                          _15_getTypedefDeclUnderlyingType                (CXCursor C)
+                                                                                { return clang_getTypedefDeclUnderlyingType(C); }
+
+CXType                          _15_getEnumDeclIntegerType                      (CXCursor C)
+                                                                                { return clang_getEnumDeclIntegerType(C); }
+
+long long                       _15_getEnumConstantDeclValue                    (CXCursor C)
+                                                                                { return clang_getEnumConstantDeclValue(C); }
+
+unsigned long long              _15_getEnumConstantDeclUnsignedValue            (CXCursor C)
+                                                                                { return clang_getEnumConstantDeclUnsignedValue(C); }
+
+int                             _15_getFieldDeclBitWidth                        (CXCursor C)
+                                                                                { return clang_getFieldDeclBitWidth(C); }
+
+int                             _15_getNumArguments                             (CXCursor C)
+                                                                                { return clang_Cursor_getNumArguments(C); }
+
+CXCursor                        _15_getArgument                                 (CXCursor C, unsigned i)
+                                                                                { return clang_Cursor_getArgument(C, i); }
+
+int                             _15_getNumTemplateArguments                     (CXCursor C)
+                                                                                { return clang_Cursor_getNumTemplateArguments(C); }
+
+enum CXTemplateArgumentKind     _15_getTemplateArgumentKind                     (CXCursor C, unsigned I)
+                                                                                { return clang_Cursor_getTemplateArgumentKind(C, I); }
+
+CXType                          _15_getTemplateArgumentType                     (CXCursor C, unsigned I)
+                                                                                { return clang_Cursor_getTemplateArgumentType(C, I); }
+
+long long                       _15_getTemplateArgumentValue                    (CXCursor C, unsigned I)
+                                                                                { return clang_Cursor_getTemplateArgumentValue(C, I); }
+
+unsigned long long              _15_getTemplateArgumentUnsignedValue            (CXCursor C, unsigned I)
+                                                                                { return clang_Cursor_getTemplateArgumentUnsignedValue(C, I); }
+
+unsigned                        _15_equalTypes                                  (CXType A, CXType B)
+                                                                                { return clang_equalTypes(A, B); }
+
+CXType                          _15_getCanonicalType                            (CXType T)
+                                                                                { return clang_getCanonicalType(T); }
+
+unsigned                        _15_isConstQualifiedType                        (CXType T)
+                                                                                { return clang_isConstQualifiedType(T); }
+
+unsigned                        _15_isMacroFunctionLike                         (CXCursor C)
+                                                                                { return clang_Cursor_isMacroFunctionLike(C); }
+
+unsigned                        _15_isMacroBuiltin                              (CXCursor C)
+                                                                                { return clang_Cursor_isMacroBuiltin(C); }
+
+unsigned                        _15_isFunctionInlined                           (CXCursor C)
+                                                                                { return clang_Cursor_isFunctionInlined(C); }
+
+unsigned                        _15_isVolatileQualifiedType                     (CXType T)
+                                                                                { return clang_isVolatileQualifiedType(T); }
+
+unsigned                        _15_isRestrictQualifiedType                     (CXType T)
+                                                                                { return clang_isRestrictQualifiedType(T); }
+
+unsigned                        _15_getAddressSpace                             (CXType T)
+                                                                                { return clang_getAddressSpace(T); }
+
+CXString                        _15_getTypedefName                              (CXType T)
+                                                                                { return clang_getTypedefName(T); }
+
+CXType                          _15_getPointeeType                              (CXType T)
+                                                                                { return clang_getPointeeType(T); }
+
+CXCursor                        _15_getTypeDeclaration                          (CXType T)
+                                                                                { return clang_getTypeDeclaration(T); }
+
+CXString                        _15_getDeclObjCTypeEncoding                     (CXCursor C)
+                                                                                { return clang_getDeclObjCTypeEncoding(C); }
+
+CXString                        _15_getObjCEncoding                             (CXType T)
+                                                                                { return clang_Type_getObjCEncoding(T); }
+
+CXString                        _15_getTypeKindSpelling                         (enum CXTypeKind TypeKind)
+                                                                                { return clang_getTypeKindSpelling(TypeKind); }
+
+enum CXCallingConv              _15_getFunctionTypeCallingConv                  (CXType T)
+                                                                                { return clang_getFunctionTypeCallingConv(T); }
+
+CXType                          _15_getResultType                               (CXType T)
+                                                                                { return clang_getResultType(T); }
+
+int                             _15_getExceptionSpecificationType               (CXType T)
+                                                                                { return clang_getExceptionSpecificationType(T); }
+
+int                             _15_getNumArgTypes                              (CXType T)
+                                                                                { return clang_getNumArgTypes(T); }
+
+CXType                          _15_getArgType                                  (CXType T, unsigned i)
+                                                                                { return clang_getArgType(T, i); }
+
+CXType                          _15_getObjCObjectBaseType                       (CXType T)
+                                                                                { return clang_Type_getObjCObjectBaseType(T); }
+
+unsigned                        _15_getNumObjCProtocolRefs                      (CXType T)
+                                                                                { return clang_Type_getNumObjCProtocolRefs(T); }
+
+CXCursor                        _15_getObjCProtocolDecl                         (CXType T, unsigned i)
+                                                                                { return clang_Type_getObjCProtocolDecl(T, i); }
+
+unsigned                        _15_getNumObjCTypeArgs                          (CXType T)
+                                                                                { return clang_Type_getNumObjCTypeArgs(T); }
+
+CXType                          _15_getObjCTypeArg                              (CXType T, unsigned i)
+                                                                                { return clang_Type_getObjCTypeArg(T, i); }
+
+unsigned                        _15_isFunctionTypeVariadic                      (CXType T)
+                                                                                { return clang_isFunctionTypeVariadic(T); }
+
+CXType                          _15_getCursorResultType                         (CXCursor C)
+                                                                                { return clang_getCursorResultType(C); }
+
+int                             _15_getCursorExceptionSpecificationType         (CXCursor C)
+                                                                                { return clang_getCursorExceptionSpecificationType(C); }
+
+unsigned                        _15_isPODType                                   (CXType T)
+                                                                                { return clang_isPODType(T); }
+
+CXType                          _15_getElementType                              (CXType T)
+                                                                                { return clang_getElementType(T); }
+
+long long                       _15_getNumElements                              (CXType T)
+                                                                                { return clang_getNumElements(T); }
+
+CXType                          _15_getArrayElementType                         (CXType T)
+                                                                                { return clang_getArrayElementType(T); }
+
+long long                       _15_getArraySize                                (CXType T)
+                                                                                { return clang_getArraySize(T); }
+
+CXType                          _15_getNamedType                                (CXType T)
+                                                                                { return clang_Type_getNamedType(T); }
+
+unsigned                        _15_isTransparentTagTypedef                     (CXType T)
+                                                                                { return clang_Type_isTransparentTagTypedef(T); }
+
+enum CXTypeNullabilityKind      _15_getNullability                              (CXType T)
+                                                                                { return clang_Type_getNullability(T); }
+
+long long                       _15_getAlignOf                                  (CXType T)
+                                                                                { return clang_Type_getAlignOf(T); }
+
+CXType                          _15_getClassType                                (CXType T)
+                                                                                { return clang_Type_getClassType(T); }
+
+long long                       _15_getSizeOf                                   (CXType T)
+                                                                                { return clang_Type_getSizeOf(T); }
+
+long long                       _15_getOffsetOf                                 (CXType T, const char *S)
+                                                                                { return clang_Type_getOffsetOf(T, S); }
+
+CXType                          _15_getModifiedType                             (CXType T)
+                                                                                { return clang_Type_getModifiedType(T); }
+
+long long                       _15_getOffsetOfField                            (CXCursor C)
+                                                                                { return clang_Cursor_getOffsetOfField(C); }
+
+unsigned                        _15_isAnonymous                                 (CXCursor C)
+                                                                                { return clang_Cursor_isAnonymous(C); }
+
+unsigned                        _15_isAnonymousRecordDecl                       (CXCursor C)
+                                                                                { return clang_Cursor_isAnonymousRecordDecl(C); }
+
+unsigned                        _15_isInlineNamespace                           (CXCursor C)
+                                                                                { return clang_Cursor_isInlineNamespace(C); }
+
+int                             _15_getNumTemplateArguments                     (CXType T)
+                                                                                { return clang_Type_getNumTemplateArguments(T); }
+
+CXType                          _15_getTemplateArgumentAsType                   (CXType T, unsigned i)
+                                                                                { return clang_Type_getTemplateArgumentAsType(T, i); }
+
+enum CXRefQualifierKind         _15_getCXXRefQualifier                          (CXType T)
+                                                                                { return clang_Type_getCXXRefQualifier(T); }
+
+unsigned                        _15_isBitField                                  (CXCursor C)
+                                                                                { return clang_Cursor_isBitField(C); }
+
+unsigned                        _15_isVirtualBase                               (CXCursor C)
+                                                                                { return clang_isVirtualBase(C); }
+
+enum CX_CXXAccessSpecifier      _15_getCXXAccessSpecifier                       (CXCursor C)
+                                                                                { return clang_getCXXAccessSpecifier(C); }
+
+enum CX_StorageClass            _15_getStorageClass                             (CXCursor C)
+                                                                                { return clang_Cursor_getStorageClass(C); }
+
+unsigned                        _15_getNumOverloadedDecls                       (CXCursor C)
+                                                                                { return clang_getNumOverloadedDecls(C); }
+
+CXCursor                        _15_getOverloadedDecl                           (CXCursor C, unsigned i)
+                                                                                { return clang_getOverloadedDecl(C, i); }
