@@ -2,9 +2,15 @@
 
 string _11_CXString2String(const CXString& str)
 {
-    string s{ clang_getCString(str) };  // 1
-    clang_disposeString(str);           // 2
-    return s;
+    string out{"-NULL-"};
+
+    if( str.data != nullptr)
+    {
+        out = clang_getCString(str);    // 1
+        clang_disposeString(str);       // 2
+    }
+
+    return out;
 }
 
 ostream& operator<<(ostream& stream, const CXString& str)

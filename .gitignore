@@ -33,6 +33,7 @@
 *.tunitLog
 *.file
 *.tokens
+*.cur
 
 *.html
 
