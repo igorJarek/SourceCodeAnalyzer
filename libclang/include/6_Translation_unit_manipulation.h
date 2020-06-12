@@ -22,7 +22,7 @@ using namespace std;
         12. void                clang_disposeTranslationUnit                (CXTranslationUnit)
         13. unsigned            clang_defaultReparseOptions                 (CXTranslationUnit TU)
         15. const char *        clang_getTUResourceUsageName                (enum CXTUResourceUsageKind kind)
-        16. CXTUResourceUsage clang_getCXTUResourceUsage                    (CXTranslationUnit TU)
+        16. CXTUResourceUsage   clang_getCXTUResourceUsage                  (CXTranslationUnit TU)
         17. void                clang_disposeCXTUResourceUsage              (CXTUResourceUsage usage)
         18. CXTargetInfo        clang_getTranslationUnitTargetInfo          (CXTranslationUnit CTUnit)
         19. void                clang_TargetInfo_dispose                    (CXTargetInfo Info)

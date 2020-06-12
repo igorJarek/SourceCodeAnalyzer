@@ -21,6 +21,22 @@ string tabOffset(uint32_t offset)
     return string(offset, '\t');
 }
 
+int64_t countStringLines(const string& str)
+{
+    int64_t lines{ 0 };
+    const char* data = str.c_str();
+
+    while(*data != '\0')
+    {
+        if(*data == '\n')
+            ++lines;
+
+        ++data;
+    }
+
+    return lines;
+}
+
 int64_t countFileLines(const string& filePath)
 {
     fstream stream;
@@ -31,7 +47,8 @@ int64_t countFileLines(const string& filePath)
     {
         lines = 0;
 
-        while (getline(stream, string()))
+        string s;
+        while (getline(stream, s))
             ++lines;
 
         stream.close();

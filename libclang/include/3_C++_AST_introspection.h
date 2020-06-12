@@ -26,11 +26,11 @@ using namespace std;
         11. unsigned                clang_EnumDecl_isScoped                         (CXCursor C)
         12. unsigned                clang_CXXMethod_isConst                         (CXCursor C)
         13. enum CXCursorKind       clang_getTemplateCursorKind                     (CXCursor C)
+        15. CXSourceRange 	        clang_getCursorReferenceNameRange               (CXCursor C, unsigned NameFlags, unsigned PieceIndex)
 
     Unused:
 
         14. CXCursor 	            clang_getSpecializedCursorTemplate              (CXCursor C)
-        15. CXSourceRange 	        clang_getCursorReferenceNameRange               (CXCursor C, unsigned NameFlags, unsigned PieceIndex)
 */
 
 void _3_printASTIntrospection(string& strData, const CXCursor& cursor, uint32_t curLevel);
