@@ -29,3 +29,4 @@ string CXRefQualifierKind2String			(const CXRefQualifierKind refQualifierKind);
 string CX_CXXAccessSpecifier2String			(const CX_CXXAccessSpecifier accessSpecifier);
 string CX_StorageClass2String				(const CX_StorageClass storageClass);
 string CXTokenKind2String					(const CXTokenKind tokenKind);
+string CXPrintingPolicy2String				(const CXPrintingPolicy printingPolicy, uint32_t offset);

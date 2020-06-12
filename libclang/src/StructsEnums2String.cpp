@@ -68,16 +68,18 @@ string CXSourceLocation2String(const CXSourceLocation sourceLocation, uint32_t o
     clang_getSpellingLocation(sourceLocation, &file2, &line2, &column2, &offset2);
 
     str += tabOffset(offset) + "ExpansionLocation : \n";
-    str += tabOffset(offset + 1) + "File : " + _11_CXString2String(clang_getFileName(file1)) + '\n';
-    str += tabOffset(offset + 1) + "Line : " + to_string(line1) + '\n';
-    str += tabOffset(offset + 1) + "Column : " + to_string(column1) + '\n';
-    str += tabOffset(offset + 1) + "Offset : " + to_string(offset1) + "\n\n";
+    str += tabOffset(offset + 1);
+    str += "File : " + _11_CXString2String(clang_getFileName(file1)) + ", ";
+    str += "Line : " + to_string(line1) + ", ";
+    str += "Column : " + to_string(column1) + ", ";
+    str += "Offset : " + to_string(offset1) + '\n';
 
     str += tabOffset(offset) + "SpellingLocation : \n";
-    str += tabOffset(offset + 1) + "File : " + _11_CXString2String(clang_getFileName(file2)) + '\n';
-    str += tabOffset(offset + 1) + "Line : " + to_string(line2) + '\n';
-    str += tabOffset(offset + 1) + "Column : " + to_string(column2) + '\n';
-    str += tabOffset(offset + 1) + "Offset : " + to_string(offset2) + "\n\n";
+    str += tabOffset(offset + 1);
+    str += "File : " + _11_CXString2String(clang_getFileName(file2)) + ", ";
+    str += "Line : " + to_string(line2) + ", ";
+    str += "Column : " + to_string(column2) + ", ";
+    str += "Offset : " + to_string(offset2) + "\n\n";
 
     return str;
 }
@@ -853,4 +855,70 @@ string CXTokenKind2String(const CXTokenKind tokenKind)
 		default:
 			return "Undefined CXTokenKind";
 	}
+}
+
+string CXPrintingPolicy2String(const CXPrintingPolicy printingPolicy, uint32_t offset)
+{
+	PrintingPolicy* pp = reinterpret_cast<PrintingPolicy*>(printingPolicy);
+	string str;
+
+	uint32_t indentation							= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_Indentation);
+	uint32_t suppressSpecifiers						= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_SuppressSpecifiers);
+	uint32_t suppressTagKeyword						= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_SuppressTagKeyword);
+	uint32_t includeTagDefinition					= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_IncludeTagDefinition);
+	uint32_t suppressScope							= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_SuppressScope);
+	uint32_t suppressUnwrittenScope					= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_SuppressUnwrittenScope);
+	uint32_t suppressInitializers					= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_SuppressInitializers);
+	uint32_t constantArraySizeAsWritten				= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_ConstantArraySizeAsWritten);
+	uint32_t anonymousTagLocations					= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_AnonymousTagLocations);
+	uint32_t suppressStrongLifetime					= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_SuppressStrongLifetime);
+	uint32_t suppressLifetimeQualifiers				= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_SuppressLifetimeQualifiers);
+	uint32_t suppressTemplateArgsInCXXConstructors	= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors);
+	uint32_t boolean								= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_Bool);
+	uint32_t restrict								= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_Restrict);
+	uint32_t alignOf								= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_Alignof);
+	uint32_t underscoreAlignof						= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_UnderscoreAlignof);
+	uint32_t useVoidForZeroParams					= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_UseVoidForZeroParams);
+	uint32_t terseOutput							= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_TerseOutput);
+	uint32_t polishForDeclaration					= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_PolishForDeclaration);
+	uint32_t half									= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_Half);
+	uint32_t mswChar								= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_MSWChar);
+	uint32_t includeNewlines						= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_IncludeNewlines);
+	uint32_t mSVCFormatting							= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_MSVCFormatting);
+	uint32_t constantsAsWritten						= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_ConstantsAsWritten);
+	uint32_t suppressImplicitBase					= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_SuppressImplicitBase);
+	uint32_t fullyQualifiedName						= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_FullyQualifiedName);
+	uint32_t lastProperty							= clang_PrintingPolicy_getProperty(printingPolicy, CXPrintingPolicyProperty::CXPrintingPolicy_LastProperty);
+
+	str += tabOffset(offset) +		"CXPrintingPolicy : \n";
+
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_Indentation) : "								+ to_string(indentation)							+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressSpecifiers) : "						+ to_string(suppressSpecifiers)						+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressTagKeyword) : "						+ to_string(suppressTagKeyword)						+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_IncludeTagDefinition) : "					+ to_string(includeTagDefinition)					+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressScope) : "							+ to_string(suppressScope)							+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressUnwrittenScope) : "					+ to_string(suppressUnwrittenScope)					+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressInitializers) : "					+ to_string(suppressInitializers)					+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_ConstantArraySizeAsWritten) : "				+ to_string(constantArraySizeAsWritten)				+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_AnonymousTagLocations) : "					+ to_string(anonymousTagLocations)					+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressStrongLifetime) : "					+ to_string(suppressStrongLifetime)					+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressLifetimeQualifiers) : "				+ to_string(suppressLifetimeQualifiers)				+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors) : "	+ to_string(suppressTemplateArgsInCXXConstructors)	+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_Bool) : "									+ to_string(boolean)								+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_Restrict) : "								+ to_string(restrict)								+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_Alignof) : "									+ to_string(alignOf)								+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_UnderscoreAlignof) : "						+ to_string(underscoreAlignof)						+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_UseVoidForZeroParams) : "					+ to_string(useVoidForZeroParams)					+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_TerseOutput) : "								+ to_string(terseOutput)							+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_PolishForDeclaration) : "					+ to_string(polishForDeclaration)					+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_Half) : "									+ to_string(half)									+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_MSWChar) : "									+ to_string(mswChar)								+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_IncludeNewlines) : "							+ to_string(includeNewlines)						+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_MSVCFormatting) : "							+ to_string(mSVCFormatting)							+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_ConstantsAsWritten) : "						+ to_string(constantsAsWritten)						+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressImplicitBase) : "					+ to_string(suppressImplicitBase)					+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_FullyQualifiedName) : "						+ to_string(fullyQualifiedName)						+ '\n';
+	str += tabOffset(offset + 1) +	"clang_PrintingPolicy_getProperty(CXPrintingPolicy_LastProperty) : "							+ to_string(lastProperty)							+ '\n';
+
+	return str;
 }
