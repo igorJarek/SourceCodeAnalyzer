@@ -1,5 +1,34 @@
 #include "18_Miscellaneous_utility_functions.h"
 
+void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cursor, uint32_t curLevel)
+{
+    strData += tabOffset(curLevel + 1) + "Miscellaneous utility functions : \n";
+
+    CXEvalResult         evalResult     = clang_Cursor_Evaluate(cursor);                    // 4.
+    if(evalResult)
+    {
+        CXEvalResultKind evalResultKind = clang_EvalResult_getKind(evalResult);             // 5.
+        int32_t          getAsInt       = clang_EvalResult_getAsInt(evalResult);            // 6.
+        int64_t          getAsLongLong  = clang_EvalResult_getAsLongLong(evalResult);       // 7.
+        uint32_t         isUnsignedInt  = clang_EvalResult_isUnsignedInt(evalResult);       // 8.
+        uint64_t         getAsUnsigned  = clang_EvalResult_getAsUnsigned(evalResult);       // 9.
+        double           getAsDouble    = clang_EvalResult_getAsDouble(evalResult);         // 10.
+        const char*      getAsStr       = clang_EvalResult_getAsStr(evalResult);            // 11.
+
+        clang_EvalResult_dispose(evalResult);                                               // 12.
+
+        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getKind : "       + CXEvalResultKind2String(evalResultKind) + '\n';
+        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsInt : "      + to_string(getAsInt)                     + '\n';
+        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsLongLong : " + to_string(getAsLongLong)                + '\n';
+        strData += tabOffset(curLevel + 2) + "clang_EvalResult_isUnsignedInt : " + to_string(isUnsignedInt)                + '\n';
+        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsUnsigned : " + to_string(getAsUnsigned)                + '\n';
+        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsDouble : "   + to_string(getAsDouble)                  + '\n';
+        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsStr : "      + getAsStr                                + '\n';
+    }
+    else
+        strData += tabOffset(curLevel + 2) + "-NULL-\n";
+}
+
 CXString                _18_getClangVersion             (void)
                                                         { return clang_getClangVersion(); }
 

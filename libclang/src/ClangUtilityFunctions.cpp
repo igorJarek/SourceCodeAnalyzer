@@ -45,6 +45,7 @@ void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel)
     _10_printMappingBetweenCursorsAndSourceCode(strData, cursor, curLevel);
     _13_printModuleIntrospection(strData, cursor, curLevel);
     _15_printTypeInformationForCXCursors(strData, cursor, curLevel);
+    _18_printMiscellaneousUtilityFunctions(strData, cursor, curLevel);
 
     strData += '\n';
 }
@@ -124,6 +125,24 @@ uint64_t saveBaseCXCursorInfo(const CXCursor& cursor)
     // 13. Module interspection
 
     // 15. Type information for CXCursors
+
+    // 18. Miscellaneous utility functions
+
+    CXEvalResult         evalResult     = _18_evaluate(cursor);
+    if(evalResult)
+    {
+        out += tabOffset(1) + "Miscellaneous utility functions : \n";
+
+        out += tabOffset(2) + "_18_getKind : "                           + CXEvalResultKind2String(_18_getKind(evalResult))                             + '\n';
+        out += tabOffset(2) + "_18_getAsInt : "                          + to_string(_18_getAsInt(evalResult))                                          + '\n';
+        out += tabOffset(2) + "_18_getAsLongLong : "                     + to_string(_18_getAsLongLong(evalResult))                                     + '\n';
+        out += tabOffset(2) + "_18_isUnsignedInt : "                     + to_string(_18_isUnsignedInt(evalResult))                                     + '\n';
+        out += tabOffset(2) + "_18_getAsUnsigned : "                     + to_string(_18_getAsUnsigned(evalResult))                                     + '\n';
+        out += tabOffset(2) + "_18_getAsDouble : "                       + to_string(_18_getAsDouble(evalResult))                                       + '\n';
+        out += tabOffset(2) + "_18_getAsStr : "                          + _18_getAsStr(evalResult)                                                     + '\n';
+
+        _18_dispose(evalResult);
+    }
 
 // End
 

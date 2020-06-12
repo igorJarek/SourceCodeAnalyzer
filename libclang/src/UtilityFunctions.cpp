@@ -113,6 +113,12 @@ bool saveFile(const string& path, const string& data, ios_base::openmode mode)
         return false;
 }
 
+void processBeforeAll()
+{
+    cout << "Clang version : " << _11_CXString2String(_18_getClangVersion()) << endl;
+    _18_toggleCrashRecovery(1);
+}
+
 bool processFolder(const string& path)
 {
     bool ret = recursiveFolderSearch(path);

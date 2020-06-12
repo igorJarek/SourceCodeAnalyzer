@@ -922,3 +922,27 @@ string CXPrintingPolicy2String(const CXPrintingPolicy printingPolicy, uint32_t o
 
 	return str;
 }
+
+string CXEvalResultKind2String (const CXEvalResultKind evalResultKind)
+{
+    switch (evalResultKind)
+    {
+        case CXEval_Int:
+            return "CXEval_Int";
+        case CXEval_Float:
+            return "CXEval_Float";
+        case CXEval_ObjCStrLiteral:
+            return "CXEval_ObjCStrLiteral";
+        case CXEval_StrLiteral:
+            return "CXEval_StrLiteral";
+        case CXEval_CFStr:
+            return "CXEval_CFStr";
+        case CXEval_Other:
+            return "CXEval_Other";
+        case CXEval_UnExposed:
+            return "CXEval_UnExposed";
+
+        default:
+            return "Undefined CXEvalResultKind";
+	}
+}

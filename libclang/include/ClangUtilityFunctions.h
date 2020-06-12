@@ -14,6 +14,7 @@
 #include "10_Mapping_between_cursors_and_source_code.h"
 #include "13_Module_introspection.h"
 #include "15_Type_information_for_CXCursors.h"
+#include "18_Miscellaneous_utility_functions.h"
 
 using namespace std;
 

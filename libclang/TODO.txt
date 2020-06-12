@@ -5,11 +5,12 @@
 3. Optimize process that prints variables to the files (something like table, maybe HTML table ?)
 4. Change CXCursorKind2String to CXCursorKingSpelling()
 5. Check CXType == isNull in _15_CXType2String()
-7. Change print values to this pattern -> "clang_getFileContents [size] : ";
+6. Change print values to this pattern -> "clang_getFileContents [size] : ";
 									   -> "clang_getFileContents [return value] : ";
 
-8. Add https://clang.llvm.org/doxygen/group__BUILD__SYSTEM.html and https://clang.llvm.org/doxygen/group__CINDEX__COMMENT.html
-9. Complete saveBaseCXCursorInfo() in ClangUtilityFunctions.cpp
+7. Add https://clang.llvm.org/doxygen/group__BUILD__SYSTEM.html and https://clang.llvm.org/doxygen/group__CINDEX__COMMENT.html
+8. Complete saveBaseCXCursorInfo() in ClangUtilityFunctions.cpp
+9. Change #include "" to #include <>
 
 Fix :
 1. _11_releaseCXStringSet // VS2019 throws Heap problem 

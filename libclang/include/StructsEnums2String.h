@@ -30,3 +30,4 @@ string CX_CXXAccessSpecifier2String			(const CX_CXXAccessSpecifier accessSpecifi
 string CX_StorageClass2String				(const CX_StorageClass storageClass);
 string CXTokenKind2String					(const CXTokenKind tokenKind);
 string CXPrintingPolicy2String				(const CXPrintingPolicy printingPolicy, uint32_t offset);
+string CXEvalResultKind2String				(const CXEvalResultKind evalResultKind);

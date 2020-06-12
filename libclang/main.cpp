@@ -4,7 +4,9 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+    processBeforeAll();
     bool ret = recursiveFolderSearch(LIB_PATH);
+    system("pause");
     return EXIT_SUCCESS;
 }
 

@@ -42,6 +42,7 @@ bool isFileSource(const string& extension);
 CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data);
 bool recursiveFolderSearch(const string& folderPath);
 
+void processBeforeAll();
 bool processFolder(const string& path);
 void processFile(const string& folderPath, const string& fileName);
 
