@@ -43,6 +43,7 @@ void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel)
     _7_printInformationForAttributes(strData, cursor, curLevel);
     _9_printCrossReferencingInTheAST(strData, cursor, curLevel);
     _10_printMappingBetweenCursorsAndSourceCode(strData, cursor, curLevel);
+    _13_printModuleIntrospection(strData, cursor, curLevel);
     _15_printTypeInformationForCXCursors(strData, cursor, curLevel);
 
     strData += '\n';

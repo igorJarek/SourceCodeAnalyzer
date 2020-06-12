@@ -11,6 +11,8 @@
 #include "3_C++_AST_introspection.h"
 #include "7_Information_for_attributes.h"
 #include "9_Cross-referencing_in_the_AST.h"
+#include "10_Mapping_between_cursors_and_source_code.h"
+#include "13_Module_introspection.h"
 #include "15_Type_information_for_CXCursors.h"
 
 using namespace std;

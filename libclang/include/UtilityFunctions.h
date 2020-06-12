@@ -12,7 +12,6 @@
 #include "5_Token_extraction_and_manipulation.h"
 #include "6_Translation_unit_manipulation.h"
 #include "8_File_manipulation_routines.h"
-#include "10_Mapping_between_cursors_and_source_code.h"
 #include "11_String_manipulation_routines.h"
 
 using namespace std;
