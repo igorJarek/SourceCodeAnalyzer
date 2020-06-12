@@ -3,6 +3,9 @@
 #include <clang-c/Index.h>
 
 #include <string>
+#include <iostream>
+
+#include "UtilityFunctions.h"
 
 #include "1_Name_Mangling_API_Functions.h"
 #include "3_C++_AST_introspection.h"
@@ -15,4 +18,4 @@ using namespace std;
 void dumpAST(string& strData, const CXCursor& cursor);
 
 void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel);
-void saveBaseCXCursorInfo(const CXCursor& cursor);
+uint64_t saveBaseCXCursorInfo(const CXCursor& cursor);
