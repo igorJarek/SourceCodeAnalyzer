@@ -944,5 +944,127 @@ string CXEvalResultKind2String (const CXEvalResultKind evalResultKind)
 
         default:
             return "Undefined CXEvalResultKind";
-	}
+    }
+}
+
+string CXLinkageKind2String(const CXLinkageKind linkageKind)
+{
+    switch (linkageKind)
+    {
+        case CXLinkage_Invalid:
+            return "CXLinkage_Invalid";
+        case CXLinkage_NoLinkage:
+            return "CXLinkage_NoLinkage";
+        case CXLinkage_Internal:
+            return "CXLinkage_Internal";
+        case CXLinkage_UniqueExternal:
+            return "CXLinkage_UniqueExternal";
+        case CXLinkage_External:
+            return "CXLinkage_External";
+
+        default:
+            return "Undefined CXLinkageKind";
+    }
+}
+
+string CXVisibilityKind2String(const CXVisibilityKind visibilityKind)
+{
+    switch (visibilityKind)
+    {
+        case CXVisibility_Invalid:
+            return "CXVisibility_Invalid";
+        case CXVisibility_Hidden:
+            return "CXVisibility_Hidden";
+        case CXVisibility_Protected:
+            return "CXVisibility_Protected";
+        case CXVisibility_Default:
+            return "CXVisibility_Default";
+
+        default:
+            return "Undefined CXVisibilityKind";
+    }
+}
+
+string CXAvailabilityKind2String(const CXAvailabilityKind availabilityKind)
+{
+    switch (availabilityKind)
+    {
+        case CXAvailability_Available:
+            return "CXAvailability_Available";
+        case CXAvailability_Deprecated:
+            return "CXAvailability_Deprecated";
+        case CXAvailability_NotAvailable:
+            return "CXAvailability_NotAvailable";
+        case CXAvailability_NotAccessible:
+            return "CXAvailability_NotAccessible";
+
+        default:
+            return "Undefined CXAvailabilityKind";
+    }
+}
+
+string CXVersion2String(const CXVersion version, uint32_t offset)
+{
+    string str;
+
+    str += tabOffset(offset) + "Major : "    + to_string(version.Major)    + ", ";
+    str += tabOffset(offset) + "Minor : "    + to_string(version.Minor)    + ", ";
+    str += tabOffset(offset) + "Subminor : " + to_string(version.Subminor);
+
+    return str;
+}
+
+string CXPlatformAvailability2String(const CXPlatformAvailability platformAvailability, uint32_t offset)
+{
+    string str;
+
+    CXString  platform    = platformAvailability.Platform;
+    CXVersion introduced  = platformAvailability.Introduced;
+    CXVersion deprecated  = platformAvailability.Deprecated;
+    CXVersion obsoleted   = platformAvailability.Obsoleted;
+    int32_t   unavailable = platformAvailability.Unavailable;
+    CXString  message     = platformAvailability.Message;
+
+    str += tabOffset(offset) + "Platform : "    + _11_CXString2String(platform)   + '\n';
+    str += tabOffset(offset) + "Introduced : "  + CXVersion2String(introduced, 0) + '\n';
+    str += tabOffset(offset) + "Deprecated : "  + CXVersion2String(deprecated, 0) + '\n';
+    str += tabOffset(offset) + "Obsoleted : "   + CXVersion2String(obsoleted,  0) + '\n';
+    str += tabOffset(offset) + "Unavailable : " + to_string(unavailable)          + '\n';
+    str += tabOffset(offset) + "Message : "     + _11_CXString2String(message)    + '\n';
+
+	return str;
+}
+
+string CXLanguageKind2String(const CXLanguageKind languageKind)
+{
+    switch (languageKind)
+    {
+        case CXLanguage_Invalid:
+            return "CXLanguage_Invalid";
+        case CXLanguage_C:
+            return "CXLanguage_C";
+        case CXLanguage_ObjC:
+            return "CXLanguage_ObjC";
+        case CXLanguage_CPlusPlus:
+            return "CXLanguage_CPlusPlus";
+
+        default:
+            return "Undefined CXLanguageKind";
+    }
+}
+
+string CXTLSKind2String(const CXTLSKind LSKind)
+{
+    switch (LSKind)
+    {
+        case CXTLS_None:
+            return "CXTLS_None";
+        case CXTLS_Dynamic:
+            return "CXTLS_Dynamic";
+        case CXTLS_Static:
+            return "CXTLS_Static";
+
+        default:
+            return "Undefined CXTLSKind";
+    }
 }

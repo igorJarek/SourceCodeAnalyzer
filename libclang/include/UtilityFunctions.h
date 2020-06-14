@@ -20,11 +20,13 @@ class ClientData
 {
 public:
 
-    ClientData(uint32_t level = 0)
+    ClientData(CXTranslationUnit tu, uint32_t level = 0)
     {
+        translationUnit = tu;
         treeLevel = level;
     }
 
+    CXTranslationUnit translationUnit;
     uint32_t treeLevel{ 0 };
     string astStringData{};
     string astExtStringData{};

@@ -11,9 +11,13 @@
 7. Add https://clang.llvm.org/doxygen/group__BUILD__SYSTEM.html and https://clang.llvm.org/doxygen/group__CINDEX__COMMENT.html
 8. Complete saveBaseCXCursorInfo() in ClangUtilityFunctions.cpp
 9. Change #include "" to #include <>
+10. In functions check CXCursor by clang_Cursor_isNull() function
 
 Fix :
 1. _11_releaseCXStringSet // VS2019 throws Heap problem 
 2. Change tabs to spaces
 3. Move _11_ funcs to LibClangFunctions.cpp
 4. _15_CXCursor2String and _15_CXType2String
+5. In saveBaseCXCursorInfo() function fix math formula that calculate current line -> "return functionRunCounter * countStringLines(out);"
+6. Check CX structs (maybe CXABC* oraz CXABC& can be replaced by CXABC [CXABC is pointer itself])
+7. CXABC abc; if(abc) {} else "-NULL-" when CXABC is pointer (typedef void* CXABC). Add 'if' statement in functions 

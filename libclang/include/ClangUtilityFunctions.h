@@ -15,10 +15,12 @@
 #include "13_Module_introspection.h"
 #include "15_Type_information_for_CXCursors.h"
 #include "18_Miscellaneous_utility_functions.h"
+#include "19_Cursor_manipulations.h"
 
 using namespace std;
 
 void dumpAST(string& strData, const CXCursor& cursor);
 
-void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel);
+void printCursor(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel);
 uint64_t saveBaseCXCursorInfo(const CXCursor& cursor);
+string getBaseCXFileInfo(const CXTranslationUnit& translationUnit, const CXFile& file, uint32_t curLevel);

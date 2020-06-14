@@ -35,7 +35,7 @@ void dumpAST(string& strData, const CXCursor& cursor)
     strData += " used " + _11_CXString2String(cursorSpelling) + " '" + _11_CXString2String(cursorTypeSpelling) + "'\n";
 }
 
-void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel)
+void printCursor(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel)
 {
     strData += "Token str : \n";
     _1_printMangling(strData, cursor, curLevel);
@@ -46,6 +46,7 @@ void printCursor(string& strData, const CXCursor& cursor, uint32_t curLevel)
     _13_printModuleIntrospection(strData, cursor, curLevel);
     _15_printTypeInformationForCXCursors(strData, cursor, curLevel);
     _18_printMiscellaneousUtilityFunctions(strData, cursor, curLevel);
+    _19_printCursorManipulations(translationUnit, strData, cursor, curLevel);
 
     strData += '\n';
 }
@@ -128,7 +129,7 @@ uint64_t saveBaseCXCursorInfo(const CXCursor& cursor)
 
     // 18. Miscellaneous utility functions
 
-    CXEvalResult         evalResult     = _18_evaluate(cursor);
+    CXEvalResult evalResult = _18_evaluate(cursor);
     if(evalResult)
     {
         out += tabOffset(1) + "Miscellaneous utility functions : \n";
@@ -165,4 +166,34 @@ uint64_t saveBaseCXCursorInfo(const CXCursor& cursor)
     ++functionRunCounter;
 
     return functionRunCounter * countStringLines(out);
+}
+
+string getBaseCXFileInfo(const CXTranslationUnit& translationUnit, const CXFile& file, uint32_t curLevel)
+{
+    string out;
+
+    time_t fileTime = _8_getFileTime(file);
+    char timeBuff[255] = { 0 };
+    ctime_s(timeBuff, sizeof(timeBuff), &fileTime);
+
+    CXFileUniqueID fileUniqueIDStruct;
+    int32_t fileUniqueID = _8_getFileUniqueID(file, &fileUniqueIDStruct);
+
+    uint32_t multipleIncludeGuarded = _8_isFileMultipleIncludeGuarded(translationUnit, file);
+
+    size_t size;
+    const char* fileContents = _8_getFileContents(translationUnit, file, &size);
+
+    out += tabOffset(curLevel) + "_8_getFileName : "                    + _11_CXString2String(_8_getFileName(file))             + '\n';
+    out += tabOffset(curLevel) + "_8_getFileTime : "                    + timeBuff                                              + '\n';
+    out += tabOffset(curLevel) + "_8_getFileUniqueID [return value] : " + to_string(fileUniqueID)                               + '\n';
+    out += tabOffset(curLevel) + "_8_getFileUniqueID [outID] : "        + to_string(fileUniqueIDStruct.data[0]) + ", " +
+                                                                          to_string(fileUniqueIDStruct.data[1]) + ", " +
+                                                                          to_string(fileUniqueIDStruct.data[2]) + ", "          + '\n';
+    out += tabOffset(curLevel) + "_8_isFileMultipleIncludeGuarded : "   + to_string(multipleIncludeGuarded)                     + '\n';
+    out += tabOffset(curLevel) + "_8_getFileContents [size] : "         + to_string(size)                                       + '\n';
+    out += tabOffset(curLevel) + "_8_getFileContents [return] : "       + fileContents                                          + '\n';
+    out += tabOffset(curLevel) + "_8_File_tryGetRealPathName : "        + _11_CXString2String(_8_File_tryGetRealPathName(file)) + '\n';
+
+    return out;
 }

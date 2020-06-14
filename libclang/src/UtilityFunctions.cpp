@@ -145,7 +145,7 @@ void processFile(const string& folderPath, const string& fileName)
         {
             cout << "Parse file : " << absoluteFilePath << endl;
 
-            ClientData clientData;
+            ClientData clientData(*translationUnit);
             CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
 
             _5_token_extraction(*translationUnit, absoluteFilePath);
@@ -169,6 +169,7 @@ void processFile(const string& folderPath, const string& fileName)
 CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data)
 {
     ClientData* clientDataPtr = reinterpret_cast<ClientData*>(client_data);
+    CXTranslationUnit translationUnit = clientDataPtr->translationUnit;
     string& astStringData = clientDataPtr->astStringData;
     string& astExtStringData = clientDataPtr->astExtStringData;
     uint32_t curLevel = clientDataPtr->treeLevel;
@@ -177,9 +178,9 @@ CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client
     astExtStringData += tabOffset(curLevel);
 
     dumpAST(astStringData, cursor);
-    printCursor(astExtStringData, cursor, curLevel);
+    printCursor(translationUnit, astExtStringData, cursor, curLevel);
 
-    ClientData nextClientData(curLevel + 1);
+    ClientData nextClientData(translationUnit, curLevel + 1);
     clang_visitChildren(cursor, visitor, &nextClientData);
 
     astStringData += nextClientData.astStringData;

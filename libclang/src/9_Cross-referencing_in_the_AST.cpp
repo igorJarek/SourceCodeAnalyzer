@@ -45,11 +45,11 @@ void _9_printCrossReferencingInTheAST(string& strData, const CXCursor& cursor, u
     strData += tabOffset(curLevel + 2) + "clang_getCursorDisplayName : "                        + _11_CXString2String(cursorDisplayName)             + '\n';
 
     strData += tabOffset(curLevel + 2) + "clang_getCursorReferenced : lib/cursors.cur -> "      + to_string(saveBaseCXCursorInfo(cursorReferenced))  + '\n';
-    strData += tabOffset(curLevel + 2) + "clang_getCursorDefinition : cursors.cur -> "          + to_string(saveBaseCXCursorInfo(cursorDefinition))  + '\n';
+    strData += tabOffset(curLevel + 2) + "clang_getCursorDefinition : lib/cursors.cur -> "      + to_string(saveBaseCXCursorInfo(cursorDefinition))  + '\n';
 
     strData += tabOffset(curLevel + 2) + "clang_isCursorDefinition : "                          + to_string(isCursorDefinition)                      + '\n';
 
-    strData += tabOffset(curLevel + 2) + "clang_getCanonicalCursor : cursors.cur -> "           + to_string(saveBaseCXCursorInfo(canonicalCursor))   + '\n';
+    strData += tabOffset(curLevel + 2) + "clang_getCanonicalCursor : lib/cursors.cur -> "       + to_string(saveBaseCXCursorInfo(canonicalCursor))   + '\n';
 
     strData += tabOffset(curLevel + 2) + "clang_Cursor_isDynamicCall : "                        + to_string(isDynamicCall)                           + '\n';
     //strData += tabOffset(curLevel + 2) + "clang_Cursor_getReceiverType : "                    + _15_CXType2String(receiverType)                    + '\n';
