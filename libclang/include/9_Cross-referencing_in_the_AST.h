@@ -97,7 +97,7 @@ struct PrintingPolicy
 	//std::function<std::string(StringRef)> remapPath;
 };
 
-void _9_printCrossReferencingInTheAST(string & strData, const CXCursor & cursor, uint32_t curLevel);
+void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, string & strData, const CXCursor & cursor, uint32_t curLevel);
 
 CXString			_9_getCursorUSR							(CXCursor C);																						// 1.
 CXString			_9_constructUSR_ObjCClass				(const char *class_name);																			// 2.

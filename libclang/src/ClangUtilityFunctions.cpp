@@ -41,7 +41,7 @@ void printCursor(const CXTranslationUnit& translationUnit, string& strData, cons
     _1_printMangling(strData, cursor, curLevel);
     _3_printASTIntrospection(strData, cursor, curLevel);
     _7_printInformationForAttributes(strData, cursor, curLevel);
-    _9_printCrossReferencingInTheAST(strData, cursor, curLevel);
+    _9_printCrossReferencingInTheAST(translationUnit, strData, cursor, curLevel);
     _10_printMappingBetweenCursorsAndSourceCode(strData, cursor, curLevel);
     _13_printModuleIntrospection(strData, cursor, curLevel);
     _15_printTypeInformationForCXCursors(strData, cursor, curLevel);
@@ -51,7 +51,7 @@ void printCursor(const CXTranslationUnit& translationUnit, string& strData, cons
     strData += '\n';
 }
 
-uint64_t saveBaseCXCursorInfo(const CXCursor& cursor)
+uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CXCursor& cursor)
 {
     string out;
 
@@ -144,6 +144,74 @@ uint64_t saveBaseCXCursorInfo(const CXCursor& cursor)
 
         _18_dispose(evalResult);
     }
+
+    // 19. Cursor manipulations
+
+    int32_t  alwaysDeprecated, alwaysUnavailable;
+    CXString deprecatedMessage, unavailableMessage;
+    CXPlatformAvailability platformAvailability;
+    
+    int32_t cursorPlatformAvailabilityReturn = _19_getCursorPlatformAvailability(cursor, &alwaysDeprecated, &deprecatedMessage, 
+                                                                                 &alwaysUnavailable, &unavailableMessage, &platformAvailability, 0);    // check last parameter
+    CXCursorKind cursorKind = _19_getCursorKind(cursor);
+
+    CXCursor* overriddens = nullptr;
+    uint32_t  num_overridden;
+    _19_getOverriddenCursors(cursor, &overriddens, &num_overridden);
+
+    CXFile includedFile = _19_getIncludedFile(cursor);
+
+    out += tabOffset(1) + "Cursor manipulations : \n";
+
+    out += tabOffset(2) + "_19_hashCursor : "                            + to_string(_19_hashCursor(cursor))                                            + '\n';
+    out += tabOffset(2) + "_19_getCursorKind : "                         + CXCursorKind2String(cursorKind)                                              + '\n';
+    out += tabOffset(2) + "_19_isDeclaration : "                         + to_string(_19_isDeclaration(cursorKind))                                     + '\n';
+    out += tabOffset(2) + "_19_isInvalidDeclaration : "                  + to_string(_19_isInvalidDeclaration(cursor))                                  + '\n';
+    out += tabOffset(2) + "_19_isReference : "                           + to_string(_19_isReference(cursorKind))                                       + '\n';
+    out += tabOffset(2) + "_19_isExpression : "                          + to_string(_19_isExpression(cursorKind))                                      + '\n';
+    out += tabOffset(2) + "_19_isStatement : "                           + to_string(_19_isStatement(cursorKind))                                       + '\n';
+    out += tabOffset(2) + "_19_isAttribute : "                           + to_string(_19_isAttribute(cursorKind))                                       + '\n';
+    out += tabOffset(2) + "_19_hasAttrs : "                              + to_string(_19_hasAttrs(cursor))                                              + '\n';
+    out += tabOffset(2) + "_19_isInvalid : "                             + to_string(_19_isInvalid(cursorKind))                                         + '\n';
+    out += tabOffset(2) + "_19_isTranslationUnit : "                     + to_string(_19_isTranslationUnit(cursorKind))                                 + '\n';
+    out += tabOffset(2) + "_19_isPreprocessing : "                       + to_string(_19_isPreprocessing(cursorKind))                                   + '\n';
+    out += tabOffset(2) + "_19_isUnexposed : "                           + to_string(_19_isUnexposed(cursorKind))                                       + '\n';
+    out += tabOffset(2) + "_19_getCursorLinkage : "                      + CXLinkageKind2String(_19_getCursorLinkage(cursor))                           + '\n';
+    out += tabOffset(2) + "_19_getCursorVisibility : "                   + CXVisibilityKind2String(_19_getCursorVisibility(cursor))                     + '\n';
+    out += tabOffset(2) + "_19_getCursorAvailability : "                 + CXAvailabilityKind2String(_19_getCursorAvailability(cursor))                 + '\n';
+
+    out += tabOffset(2) + "_19_getCursorPlatformAvailability [return] : " + to_string(cursorPlatformAvailabilityReturn)                                 + '\n';
+    if(cursorPlatformAvailabilityReturn > 0)
+    {
+        out += tabOffset(2) + "_19_getCursorPlatformAvailability [always_deprecated] : "   + to_string(alwaysDeprecated)                                + '\n';
+        out += tabOffset(2) + "_19_getCursorPlatformAvailability [deprecated_message] : "  + _11_CXString2String(deprecatedMessage)                     + '\n';
+        out += tabOffset(2) + "_19_getCursorPlatformAvailability [always_unavailable] : "  + to_string(alwaysUnavailable)                               + '\n';
+        out += tabOffset(2) + "_19_getCursorPlatformAvailability [unavailable_message] : " + _11_CXString2String(unavailableMessage)                    + '\n';
+        out += tabOffset(2) + "_19_getCursorPlatformAvailability [availability] : \n"      + CXPlatformAvailability2String(platformAvailability, 3)     + '\n';
+
+        _19_disposeCXPlatformAvailability(&platformAvailability);
+    }
+
+    out += tabOffset(2)     + "_19_getCursorLanguage : "                 + CXLanguageKind2String(_19_getCursorLanguage(cursor))                         + '\n';
+    out += tabOffset(2)     + "_19_getCursorTLSKind : "                  + CXTLSKind2String(_19_getCursorTLSKind(cursor))                               + '\n';
+
+    out += tabOffset(2)     + "_19_getOverriddenCursors [num_overridden] : " + to_string(num_overridden)                                                + '\n';
+    if(num_overridden > 0)
+    {
+        for(uint32_t index { 0 }; index < num_overridden; ++index)
+        {
+            const CXCursor& overridden = overriddens[index];
+            if(!clang_Cursor_isNull(overridden))
+                out += tabOffset(2) + "_19_getOverriddenCursors [" + to_string(index + 1) + "] : " + CXCursorKind2String(_19_getCursorKind(overridden)) + '\n';
+        }
+
+        _19_disposeOverriddenCursors(overriddens);
+    }
+
+    if(includedFile)
+        out += tabOffset(2) + "_19_getIncludedFile : \n"                                   + getBaseCXFileInfo(translationUnit, includedFile, 3)       + '\n';
+    else
+        out += tabOffset(2) + "_19_getIncludedFile : -NULL-\n";
 
 // End
 

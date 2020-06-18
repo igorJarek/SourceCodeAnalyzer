@@ -22,5 +22,5 @@ using namespace std;
 void dumpAST(string& strData, const CXCursor& cursor);
 
 void printCursor(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel);
-uint64_t saveBaseCXCursorInfo(const CXCursor& cursor);
+uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CXCursor& cursor);
 string getBaseCXFileInfo(const CXTranslationUnit& translationUnit, const CXFile& file, uint32_t curLevel);
