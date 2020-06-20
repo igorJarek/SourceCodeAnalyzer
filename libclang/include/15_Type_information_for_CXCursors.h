@@ -102,71 +102,71 @@ void _15_printTypeInformationForCXCursors(string& strData, const CXCursor& curso
 string _15_CXCursor2String(const CXCursor& cursor);
 string _15_CXType2String(const CXType& type);
 
-CXType                          _15_getCursorType                               (CXCursor C);
-CXString                        _15_getTypeSpelling                             (CXType T);
-CXType                          _15_getTypedefDeclUnderlyingType                (CXCursor C);
-CXType                          _15_getEnumDeclIntegerType                      (CXCursor C);
-long long                       _15_getEnumConstantDeclValue                    (CXCursor C);
-unsigned long long              _15_getEnumConstantDeclUnsignedValue            (CXCursor C);
-int                             _15_getFieldDeclBitWidth                        (CXCursor C);
-int                             _15_getNumArguments                             (CXCursor C);
-CXCursor                        _15_getArgument                                 (CXCursor C, unsigned i);
-int                             _15_getNumTemplateArguments                     (CXCursor C);
-enum CXTemplateArgumentKind     _15_getTemplateArgumentKind                     (CXCursor C, unsigned I);
-CXType                          _15_getTemplateArgumentType                     (CXCursor C, unsigned I);
-long long                       _15_getTemplateArgumentValue                    (CXCursor C, unsigned I);
-unsigned long long              _15_getTemplateArgumentUnsignedValue            (CXCursor C, unsigned I);
-unsigned                        _15_equalTypes                                  (CXType A, CXType B);
-CXType                          _15_getCanonicalType                            (CXType T);
-unsigned                        _15_isConstQualifiedType                        (CXType T);
-unsigned                        _15_isMacroFunctionLike                         (CXCursor C);
-unsigned                        _15_isMacroBuiltin                              (CXCursor C);
-unsigned                        _15_isFunctionInlined                           (CXCursor C);
-unsigned                        _15_isVolatileQualifiedType                     (CXType T);
-unsigned                        _15_isRestrictQualifiedType                     (CXType T);
-unsigned                        _15_getAddressSpace                             (CXType T);
-CXString                        _15_getTypedefName                              (CXType T);
-CXType                          _15_getPointeeType                              (CXType T);
-CXCursor                        _15_getTypeDeclaration                          (CXType T);
-CXString                        _15_getDeclObjCTypeEncoding                     (CXCursor C);
-CXString                        _15_getObjCEncoding                             (CXType T);
-CXString                        _15_getTypeKindSpelling                         (enum CXTypeKind TypeKind);
-enum CXCallingConv              _15_getFunctionTypeCallingConv                  (CXType T);
-CXType                          _15_getResultType                               (CXType T);
-int                             _15_getExceptionSpecificationType               (CXType T);
-int                             _15_getNumArgTypes                              (CXType T);
-CXType                          _15_getArgType                                  (CXType T, unsigned i);
-CXType                          _15_getObjCObjectBaseType                       (CXType T);
-unsigned                        _15_getNumObjCProtocolRefs                      (CXType T);
-CXCursor                        _15_getObjCProtocolDecl                         (CXType T, unsigned i);
-unsigned                        _15_getNumObjCTypeArgs                          (CXType T);
-CXType                          _15_getObjCTypeArg                              (CXType T, unsigned i);
-unsigned                        _15_isFunctionTypeVariadic                      (CXType T);
-CXType                          _15_getCursorResultType                         (CXCursor C);
-int                             _15_getCursorExceptionSpecificationType         (CXCursor C);
-unsigned                        _15_isPODType                                   (CXType T);
-CXType                          _15_getElementType                              (CXType T);
-long long                       _15_getNumElements                              (CXType T);
-CXType                          _15_getArrayElementType                         (CXType T);
-long long                       _15_getArraySize                                (CXType T);
-CXType                          _15_getNamedType                                (CXType T);
-unsigned                        _15_isTransparentTagTypedef                     (CXType T);
-enum CXTypeNullabilityKind      _15_getNullability                              (CXType T);
-long long                       _15_getAlignOf                                  (CXType T);
-CXType                          _15_getClassType                                (CXType T);
-long long                       _15_getSizeOf                                   (CXType T);
-long long                       _15_getOffsetOf                                 (CXType T, const char *S);
-CXType                          _15_getModifiedType                             (CXType T);
-long long                       _15_getOffsetOfField                            (CXCursor C);
-unsigned                        _15_isAnonymous                                 (CXCursor C);
-unsigned                        _15_isAnonymousRecordDecl                       (CXCursor C);
-unsigned                        _15_isInlineNamespace                           (CXCursor C);
-int                             _15_getNumTemplateArguments                     (CXType T);
-CXType                          _15_getTemplateArgumentAsType                   (CXType T, unsigned i);
-enum CXRefQualifierKind         _15_getCXXRefQualifier                          (CXType T);
-unsigned                        _15_isBitField                                  (CXCursor C);
-unsigned                        _15_isVirtualBase                               (CXCursor C);
-enum CX_CXXAccessSpecifier      _15_getCXXAccessSpecifier                       (CXCursor C);
-enum CX_StorageClass            _15_getStorageClass                             (CXCursor C);
-unsigned                        _15_getNumOverloadedDecls                       (CXCursor C);
-CXCursor                        _15_getOverloadedDecl                           (CXCursor C, unsigned i);
+CXType                          _15_getCursorType                               (CXCursor C);                   // 1.
+CXString                        _15_getTypeSpelling                             (CXType T);                     // 2.
+CXType                          _15_getTypedefDeclUnderlyingType                (CXCursor C);                   // 3.
+CXType                          _15_getEnumDeclIntegerType                      (CXCursor C);                   // 4.
+long long                       _15_getEnumConstantDeclValue                    (CXCursor C);                   // 5.
+unsigned long long              _15_getEnumConstantDeclUnsignedValue            (CXCursor C);                   // 6.
+int                             _15_getFieldDeclBitWidth                        (CXCursor C);                   // 7.
+int                             _15_getNumArguments                             (CXCursor C);                   // 8.
+CXCursor                        _15_getArgument                                 (CXCursor C, unsigned i);       // 9.
+int                             _15_getNumTemplateArguments                     (CXCursor C);                   // 10.
+enum CXTemplateArgumentKind     _15_getTemplateArgumentKind                     (CXCursor C, unsigned I);       // 11.
+CXType                          _15_getTemplateArgumentType                     (CXCursor C, unsigned I);       // 12.
+long long                       _15_getTemplateArgumentValue                    (CXCursor C, unsigned I);       // 13.
+unsigned long long              _15_getTemplateArgumentUnsignedValue            (CXCursor C, unsigned I);       // 14.
+unsigned                        _15_equalTypes                                  (CXType A, CXType B);           // 15.
+CXType                          _15_getCanonicalType                            (CXType T);                     // 16.
+unsigned                        _15_isConstQualifiedType                        (CXType T);                     // 17.
+unsigned                        _15_isMacroFunctionLike                         (CXCursor C);                   // 18.
+unsigned                        _15_isMacroBuiltin                              (CXCursor C);                   // 19.
+unsigned                        _15_isFunctionInlined                           (CXCursor C);                   // 20.
+unsigned                        _15_isVolatileQualifiedType                     (CXType T);                     // 21.
+unsigned                        _15_isRestrictQualifiedType                     (CXType T);                     // 22.
+unsigned                        _15_getAddressSpace                             (CXType T);                     // 23.
+CXString                        _15_getTypedefName                              (CXType T);                     // 24.
+CXType                          _15_getPointeeType                              (CXType T);                     // 25.
+CXCursor                        _15_getTypeDeclaration                          (CXType T);                     // 26.
+CXString                        _15_getDeclObjCTypeEncoding                     (CXCursor C);                   // 27.
+CXString                        _15_getObjCEncoding                             (CXType T);                     // 28.
+CXString                        _15_getTypeKindSpelling                         (enum CXTypeKind TypeKind);     // 29.
+enum CXCallingConv              _15_getFunctionTypeCallingConv                  (CXType T);                     // 30.
+CXType                          _15_getResultType                               (CXType T);                     // 31.
+int                             _15_getExceptionSpecificationType               (CXType T);                     // 32.
+int                             _15_getNumArgTypes                              (CXType T);                     // 33.
+CXType                          _15_getArgType                                  (CXType T, unsigned i);         // 34.
+CXType                          _15_getObjCObjectBaseType                       (CXType T);                     // 35.
+unsigned                        _15_getNumObjCProtocolRefs                      (CXType T);                     // 36.
+CXCursor                        _15_getObjCProtocolDecl                         (CXType T, unsigned i);         // 37.
+unsigned                        _15_getNumObjCTypeArgs                          (CXType T);                     // 38.
+CXType                          _15_getObjCTypeArg                              (CXType T, unsigned i);         // 39.
+unsigned                        _15_isFunctionTypeVariadic                      (CXType T);                     // 40.
+CXType                          _15_getCursorResultType                         (CXCursor C);                   // 41.
+int                             _15_getCursorExceptionSpecificationType         (CXCursor C);                   // 42.
+unsigned                        _15_isPODType                                   (CXType T);                     // 43.
+CXType                          _15_getElementType                              (CXType T);                     // 44.
+long long                       _15_getNumElements                              (CXType T);                     // 45.
+CXType                          _15_getArrayElementType                         (CXType T);                     // 46.
+long long                       _15_getArraySize                                (CXType T);                     // 47.
+CXType                          _15_getNamedType                                (CXType T);                     // 48.
+unsigned                        _15_isTransparentTagTypedef                     (CXType T);                     // 49.
+enum CXTypeNullabilityKind      _15_getNullability                              (CXType T);                     // 50.
+long long                       _15_getAlignOf                                  (CXType T);                     // 51.
+CXType                          _15_getClassType                                (CXType T);                     // 52.
+long long                       _15_getSizeOf                                   (CXType T);                     // 53.
+long long                       _15_getOffsetOf                                 (CXType T, const char *S);      // 54.
+CXType                          _15_getModifiedType                             (CXType T);                     // 55.
+long long                       _15_getOffsetOfField                            (CXCursor C);                   // 56.
+unsigned                        _15_isAnonymous                                 (CXCursor C);                   // 57.
+unsigned                        _15_isAnonymousRecordDecl                       (CXCursor C);                   // 58.
+unsigned                        _15_isInlineNamespace                           (CXCursor C);                   // 59.
+int                             _15_getNumTemplateArguments                     (CXType T);                     // 60.
+CXType                          _15_getTemplateArgumentAsType                   (CXType T, unsigned i);         // 61.
+enum CXRefQualifierKind         _15_getCXXRefQualifier                          (CXType T);                     // 62.
+unsigned                        _15_isBitField                                  (CXCursor C);                   // 63.
+unsigned                        _15_isVirtualBase                               (CXCursor C);                   // 64.
+enum CX_CXXAccessSpecifier      _15_getCXXAccessSpecifier                       (CXCursor C);                   // 65.
+enum CX_StorageClass            _15_getStorageClass                             (CXCursor C);                   // 66.
+unsigned                        _15_getNumOverloadedDecls                       (CXCursor C);                   // 67.
+CXCursor                        _15_getOverloadedDecl                           (CXCursor C, unsigned i);       // 68.

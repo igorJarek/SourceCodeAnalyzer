@@ -34,12 +34,12 @@ using namespace std;
 
 void _13_printModuleIntrospection(string& strData, const CXCursor& cursor, uint32_t curLevel);
 
-CXModule        _13_Cursor_getModule                (CXCursor C);
-CXModule        _13_getModuleForFile                (CXTranslationUnit TranslationUnit, CXFile File);
-CXFile          _13_Module_getASTFile               (CXModule Module);
-CXModule        _13_Module_getParent                (CXModule Module);
-CXString        _13_Module_getName                  (CXModule Module);
-CXString        _13_Module_getFullName              (CXModule Module);
-int             _13_Module_isSystem                 (CXModule Module);
-unsigned        _13_Module_getNumTopLevelHeaders    (CXTranslationUnit TranslationUnit, CXModule Module);
-CXFile          _13_Module_getTopLevelHeader        (CXTranslationUnit TranslationUnit, CXModule Module, unsigned Index);
+CXModule        _13_Cursor_getModule                (CXCursor C);                                                           // 1.
+CXModule        _13_getModuleForFile                (CXTranslationUnit TranslationUnit, CXFile File);                       // 2.
+CXFile          _13_Module_getASTFile               (CXModule Module);                                                      // 3.
+CXModule        _13_Module_getParent                (CXModule Module);                                                      // 4.
+CXString        _13_Module_getName                  (CXModule Module);                                                      // 5.
+CXString        _13_Module_getFullName              (CXModule Module);                                                      // 6.
+int             _13_Module_isSystem                 (CXModule Module);                                                      // 7.
+unsigned        _13_Module_getNumTopLevelHeaders    (CXTranslationUnit TranslationUnit, CXModule Module);                   // 8.
+CXFile          _13_Module_getTopLevelHeader        (CXTranslationUnit TranslationUnit, CXModule Module, unsigned Index);   // 9.

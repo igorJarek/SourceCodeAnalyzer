@@ -17,4 +17,4 @@ using namespace std;
 
 void _7_printInformationForAttributes(string& strData, const CXCursor& cursor, uint32_t curLevel);
 
-CXType _7_getIBOutletCollectionType (CXCursor C);
+CXType _7_getIBOutletCollectionType (CXCursor C);    // 1.

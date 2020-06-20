@@ -30,11 +30,11 @@ using namespace std;
 
 void _5_token_extraction(const CXTranslationUnit& translationUnit, const string& filePath);
 
-CXToken*            _5_getToken              (CXTranslationUnit TU, CXSourceLocation Location);
-CXTokenKind         _5_getTokenKind          (CXToken Token);
-CXString            _5_getTokenSpelling      (CXTranslationUnit TU, CXToken Token);
-CXSourceLocation    _5_getTokenLocation      (CXTranslationUnit TU, CXToken Token);
-CXSourceRange       _5_getTokenExtent        (CXTranslationUnit TU, CXToken Token);
-void                _5_tokenize              (CXTranslationUnit TU, CXSourceRange Range, CXToken **Tokens, unsigned *NumTokens);
-void                _5_annotateTokens        (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens, CXCursor *Cursors);
-void                _5_disposeTokens         (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens);
+CXToken*            _5_getToken              (CXTranslationUnit TU, CXSourceLocation Location);                                     // 1.
+CXTokenKind         _5_getTokenKind          (CXToken Token);                                                                       // 2.
+CXString            _5_getTokenSpelling      (CXTranslationUnit TU, CXToken Token);                                                 // 3.
+CXSourceLocation    _5_getTokenLocation      (CXTranslationUnit TU, CXToken Token);                                                 // 4.
+CXSourceRange       _5_getTokenExtent        (CXTranslationUnit TU, CXToken Token);                                                 // 5.
+void                _5_tokenize              (CXTranslationUnit TU, CXSourceRange Range, CXToken **Tokens, unsigned *NumTokens);    // 6.
+void                _5_annotateTokens        (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens, CXCursor *Cursors);        // 7.
+void                _5_disposeTokens         (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens);                           // 8.

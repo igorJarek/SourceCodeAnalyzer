@@ -34,15 +34,15 @@ using namespace std;
 
 void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cursor, uint32_t curLevel);
 
-CXString                _18_getClangVersion             (void);
-void                    _18_toggleCrashRecovery         (unsigned isEnabled);
-void                    _18_getInclusions               (CXTranslationUnit tu, CXInclusionVisitor visitor, CXClientData client_data);
-CXEvalResult            _18_evaluate                    (CXCursor C);
-CXEvalResultKind        _18_getKind                     (CXEvalResult E);
-int                     _18_getAsInt                    (CXEvalResult E);
-long long               _18_getAsLongLong               (CXEvalResult E);
-unsigned                _18_isUnsignedInt               (CXEvalResult E);
-unsigned long long      _18_getAsUnsigned               (CXEvalResult E);
-double                  _18_getAsDouble                 (CXEvalResult E);
-const char *            _18_getAsStr                    (CXEvalResult E);
-void                    _18_dispose                     (CXEvalResult E);
+CXString                _18_getClangVersion             (void);                                                                         // 1.
+void                    _18_toggleCrashRecovery         (unsigned isEnabled);                                                           // 2.
+void                    _18_getInclusions               (CXTranslationUnit tu, CXInclusionVisitor visitor, CXClientData client_data);   // 3.
+CXEvalResult            _18_evaluate                    (CXCursor C);                                                                   // 4.
+CXEvalResultKind        _18_getKind                     (CXEvalResult E);                                                               // 5.
+int                     _18_getAsInt                    (CXEvalResult E);                                                               // 6.
+long long               _18_getAsLongLong               (CXEvalResult E);                                                               // 7.
+unsigned                _18_isUnsignedInt               (CXEvalResult E);                                                               // 8.
+unsigned long long      _18_getAsUnsigned               (CXEvalResult E);                                                               // 9.
+double                  _18_getAsDouble                 (CXEvalResult E);                                                               // 10.
+const char *            _18_getAsStr                    (CXEvalResult E);                                                               // 11.
+void                    _18_dispose                     (CXEvalResult E);                                                               // 12.

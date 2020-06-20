@@ -24,6 +24,6 @@ void _11_releaseCXStringSet(CXStringSet* stringSet);
 vector<string> _11_CXStringSet2StringVec(CXStringSet* stringSet);
 ostream& operator<<(ostream& stream, const CXString& str);
 
-const char *    _11_getCString          (CXString string);
-void            _11_disposeString       (CXString string);
-void            _11_disposeStringSet    (CXStringSet *set);
+const char *    _11_getCString          (CXString string);  // 1.
+void            _11_disposeString       (CXString string);  // 2.
+void            _11_disposeStringSet    (CXStringSet *set); // 3.

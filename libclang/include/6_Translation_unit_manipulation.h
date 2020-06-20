@@ -44,24 +44,29 @@ using namespace std;
 
 CXTranslationUnit*      _6_translation_unit_manipulation            (CXIndex& index, const string& filePath);
 
-CXString				_6_getTranslationUnitSpelling				(CXTranslationUnit CTUnit);
-CXTranslationUnit		_6_createTranslationUnitFromSourceFile		(CXIndex CIdx, const char *source_filename, int num_clang_command_line_args, const char *const *clang_command_line_args, unsigned num_unsaved_files, struct CXUnsavedFile *unsaved_files);
-CXTranslationUnit		_6_createTranslationUnit					(CXIndex CIdx, const char *ast_filename);
-enum CXErrorCode		_6_createTranslationUnit2					(CXIndex CIdx, const char *ast_filename, CXTranslationUnit *out_TU);
-unsigned				_6_defaultEditingTranslationUnitOptions		(void);
-CXTranslationUnit		_6_parseTranslationUnit						(CXIndex CIdx, const char *source_filename, const char *const *command_line_args, int num_command_line_args, struct CXUnsavedFile *unsaved_files, unsigned num_unsaved_files, unsigned options);
-enum CXErrorCode		_6_parseTranslationUnit2					(CXIndex CIdx, const char *source_filename, const char *const *command_line_args, int num_command_line_args, struct CXUnsavedFile *unsaved_files, unsigned num_unsaved_files, unsigned options, CXTranslationUnit *out_TU);
-enum CXErrorCode		_6_parseTranslationUnit2FullArgv			(CXIndex CIdx, const char *source_filename, const char *const *command_line_args, int num_command_line_args, struct CXUnsavedFile *unsaved_files, unsigned num_unsaved_files, unsigned options, CXTranslationUnit *out_TU);
-unsigned				_6_defaultSaveOptions						(CXTranslationUnit TU);
-int						_6_saveTranslationUnit						(CXTranslationUnit TU, const char *FileName, unsigned options);
-unsigned				_6_suspendTranslationUnit					(CXTranslationUnit TU);
-void					_6_disposeTranslationUnit					(CXTranslationUnit TU);
-unsigned				_6_defaultReparseOptions					(CXTranslationUnit TU);
-int						_6_reparseTranslationUnit					(CXTranslationUnit TU, unsigned num_unsaved_files, struct CXUnsavedFile *unsaved_files, unsigned options);
-const char *			_6_getTUResourceUsageName					(enum CXTUResourceUsageKind kind);
-CXTUResourceUsage		_6_getCXTUResourceUsage						(CXTranslationUnit TU);
-void					_6_disposeCXTUResourceUsage					(CXTUResourceUsage usage);
-CXTargetInfo			_6_getTranslationUnitTargetInfo				(CXTranslationUnit CTUnit);
-void					_6_TargetInfo_dispose						(CXTargetInfo Info);
-CXString				_6_TargetInfo_getTriple						(CXTargetInfo Info);
-int						_6_TargetInfo_getPointerWidth				(CXTargetInfo Info);
+CXString				_6_getTranslationUnitSpelling				(CXTranslationUnit CTUnit);                                                                                         // 1.
+CXTranslationUnit		_6_createTranslationUnitFromSourceFile		(CXIndex CIdx, const char *source_filename, int num_clang_command_line_args, 
+                                                                     const char *const *clang_command_line_args, unsigned num_unsaved_files, 
+                                                                     struct CXUnsavedFile *unsaved_files);                                                                              // 2.
+CXTranslationUnit		_6_createTranslationUnit					(CXIndex CIdx, const char *ast_filename);                                                                           // 3.
+enum CXErrorCode		_6_createTranslationUnit2					(CXIndex CIdx, const char *ast_filename, CXTranslationUnit *out_TU);                                                // 4.
+unsigned				_6_defaultEditingTranslationUnitOptions		(void);                                                                                                             // 5.
+CXTranslationUnit		_6_parseTranslationUnit						(CXIndex CIdx, const char *source_filename, const char *const *command_line_args, int num_command_line_args, 
+                                                                     struct CXUnsavedFile *unsaved_files, unsigned num_unsaved_files, unsigned options);                                // 6.
+enum CXErrorCode		_6_parseTranslationUnit2					(CXIndex CIdx, const char *source_filename, const char *const *command_line_args, int num_command_line_args, 
+                                                                     struct CXUnsavedFile *unsaved_files, unsigned num_unsaved_files, unsigned options, CXTranslationUnit *out_TU);     // 7.
+enum CXErrorCode		_6_parseTranslationUnit2FullArgv			(CXIndex CIdx, const char *source_filename, const char *const *command_line_args, int num_command_line_args, 
+                                                                     struct CXUnsavedFile *unsaved_files, unsigned num_unsaved_files, unsigned options, CXTranslationUnit *out_TU);     // 8.
+unsigned				_6_defaultSaveOptions						(CXTranslationUnit TU);                                                                                             // 9.
+int						_6_saveTranslationUnit						(CXTranslationUnit TU, const char *FileName, unsigned options);                                                     // 10.
+unsigned				_6_suspendTranslationUnit					(CXTranslationUnit TU);                                                                                             // 11.
+void					_6_disposeTranslationUnit					(CXTranslationUnit TU);                                                                                             // 12.
+unsigned				_6_defaultReparseOptions					(CXTranslationUnit TU);                                                                                             // 13.
+int						_6_reparseTranslationUnit					(CXTranslationUnit TU, unsigned num_unsaved_files, struct CXUnsavedFile *unsaved_files, unsigned options);          // 14.
+const char *			_6_getTUResourceUsageName					(enum CXTUResourceUsageKind kind);                                                                                  // 15.
+CXTUResourceUsage		_6_getCXTUResourceUsage						(CXTranslationUnit TU);                                                                                             // 16.
+void					_6_disposeCXTUResourceUsage					(CXTUResourceUsage usage);                                                                                          // 17.
+CXTargetInfo			_6_getTranslationUnitTargetInfo				(CXTranslationUnit CTUnit);                                                                                         // 18.
+void					_6_TargetInfo_dispose						(CXTargetInfo Info);                                                                                                // 19.
+CXString				_6_TargetInfo_getTriple						(CXTargetInfo Info);                                                                                                // 20.
+int						_6_TargetInfo_getPointerWidth				(CXTargetInfo Info);                                                                                                // 21.

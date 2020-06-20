@@ -23,6 +23,6 @@ using namespace std;
 
 void _10_printMappingBetweenCursorsAndSourceCode(string& strData, const CXCursor& cursor, uint32_t curLevel);
 
-CXCursor            _10_getCursor               (CXTranslationUnit TU, CXSourceLocation SourceLocation);
-CXSourceLocation    _10_getCursorLocation       (CXCursor C);
-CXSourceRange       _10_getCursorExtent         (CXCursor C);
+CXCursor            _10_getCursor               (CXTranslationUnit TU, CXSourceLocation SourceLocation);    // 1.
+CXSourceLocation    _10_getCursorLocation       (CXCursor C);                                               // 2.
+CXSourceRange       _10_getCursorExtent         (CXCursor C);                                               // 3.

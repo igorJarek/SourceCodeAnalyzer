@@ -22,6 +22,6 @@ using namespace std;
 
 void _1_printMangling(string& strData, const CXCursor& cursor, uint32_t curLevel);
 
-CXString		_1_getMangling			(CXCursor C);
-CXStringSet*	_1_getCXXManglings		(CXCursor C);
-CXStringSet*	_1_getObjCManglings		(CXCursor C);
+CXString		_1_getMangling			(CXCursor C);  // 1.
+CXStringSet*	_1_getCXXManglings		(CXCursor C);  // 2.
+CXStringSet*	_1_getObjCManglings		(CXCursor C);  // 3.

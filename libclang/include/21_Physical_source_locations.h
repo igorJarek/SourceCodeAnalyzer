@@ -35,23 +35,23 @@ using namespace std;
 		20. void                clang_disposeSourceRangeList        (CXSourceRangeList *ranges)
 */
 
-CXSourceLocation        _21_getNullLocation             (void);
-unsigned                _21_equalLocations              (CXSourceLocation loc1, CXSourceLocation loc2);
-CXSourceLocation        _21_getLocation                 (CXTranslationUnit tu, CXFile file, unsigned line, unsigned column);
-CXSourceLocation        _21_getLocationForOffset        (CXTranslationUnit tu, CXFile file, unsigned offset);
-int                     _21_isInSystemHeader            (CXSourceLocation location);
-int                     _21_isFromMainFile              (CXSourceLocation location);
-CXSourceRange           _21_getNullRange                (void);
-CXSourceRange           _21_getRange                    (CXSourceLocation begin, CXSourceLocation end);
-unsigned                _21_equalRanges                 (CXSourceRange range1, CXSourceRange range2);
-int                     _21_isNull                      (CXSourceRange range);
-void                    _21_getExpansionLocation        (CXSourceLocation location, CXFile* file, unsigned* line, unsigned* column, unsigned* offset);
-void                    _21_getPresumedLocation         (CXSourceLocation location, CXString* filename, unsigned* line, unsigned* column);
-void                    _21_getInstantiationLocation    (CXSourceLocation location, CXFile* file, unsigned* line, unsigned* column, unsigned* offset);
-void                    _21_getSpellingLocation         (CXSourceLocation location, CXFile* file, unsigned* line, unsigned* column, unsigned* offset);
-void                    _21_getFileLocation             (CXSourceLocation location, CXFile* file, unsigned* line, unsigned* column, unsigned* offset);
-CXSourceLocation        _21_getRangeStart               (CXSourceRange range);
-CXSourceLocation        _21_getRangeEnd                 (CXSourceRange range);
-CXSourceRangeList*      _21_getSkippedRanges            (CXTranslationUnit tu, CXFile file);
-CXSourceRangeList*      _21_getAllSkippedRanges         (CXTranslationUnit tu);
-void                    _21_disposeSourceRangeList      (CXSourceRangeList* ranges);
+CXSourceLocation        _21_getNullLocation             (void);                                                                                         // 1.
+unsigned                _21_equalLocations              (CXSourceLocation loc1, CXSourceLocation loc2);                                                 // 2.
+CXSourceLocation        _21_getLocation                 (CXTranslationUnit tu, CXFile file, unsigned line, unsigned column);                            // 3.
+CXSourceLocation        _21_getLocationForOffset        (CXTranslationUnit tu, CXFile file, unsigned offset);                                           // 4.
+int                     _21_isInSystemHeader            (CXSourceLocation location);                                                                    // 5.
+int                     _21_isFromMainFile              (CXSourceLocation location);                                                                    // 6.
+CXSourceRange           _21_getNullRange                (void);                                                                                         // 7.
+CXSourceRange           _21_getRange                    (CXSourceLocation begin, CXSourceLocation end);                                                 // 8.
+unsigned                _21_equalRanges                 (CXSourceRange range1, CXSourceRange range2);                                                   // 9.
+int                     _21_isNull                      (CXSourceRange range);                                                                          // 10.
+void                    _21_getExpansionLocation        (CXSourceLocation location, CXFile* file, unsigned* line, unsigned* column, unsigned* offset);  // 11.
+void                    _21_getPresumedLocation         (CXSourceLocation location, CXString* filename, unsigned* line, unsigned* column);              // 12.
+void                    _21_getInstantiationLocation    (CXSourceLocation location, CXFile* file, unsigned* line, unsigned* column, unsigned* offset);  // 13.
+void                    _21_getSpellingLocation         (CXSourceLocation location, CXFile* file, unsigned* line, unsigned* column, unsigned* offset);  // 14.
+void                    _21_getFileLocation             (CXSourceLocation location, CXFile* file, unsigned* line, unsigned* column, unsigned* offset);  // 15.
+CXSourceLocation        _21_getRangeStart               (CXSourceRange range);                                                                          // 16.
+CXSourceLocation        _21_getRangeEnd                 (CXSourceRange range);                                                                          // 17.
+CXSourceRangeList*      _21_getSkippedRanges            (CXTranslationUnit tu, CXFile file);                                                            // 18.
+CXSourceRangeList*      _21_getAllSkippedRanges         (CXTranslationUnit tu);                                                                         // 19.
+void                    _21_disposeSourceRangeList      (CXSourceRangeList* ranges);                                                                    // 20.

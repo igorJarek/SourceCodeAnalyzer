@@ -35,18 +35,18 @@ using namespace std;
 
 void _3_printASTIntrospection(string& strData, const CXCursor& cursor, uint32_t curLevel);
 
-unsigned            _3_CXXConstructor_isConvertingConstructor   (CXCursor C);
-unsigned            _3_CXXConstructor_isCopyConstructor         (CXCursor C);
-unsigned            _3_CXXConstructor_isDefaultConstructor      (CXCursor C);
-unsigned            _3_CXXConstructor_isMoveConstructor         (CXCursor C);
-unsigned            _3_CXXField_isMutable                       (CXCursor C);
-unsigned            _3_CXXMethod_isDefaulted                    (CXCursor C);
-unsigned            _3_CXXMethod_isPureVirtual                  (CXCursor C);
-unsigned            _3_CXXMethod_isStatic                       (CXCursor C);
-unsigned            _3_CXXMethod_isVirtual                      (CXCursor C);
-unsigned            _3_CXXRecord_isAbstract                     (CXCursor C);
-unsigned            _3_EnumDecl_isScoped                        (CXCursor C);
-unsigned            _3_CXXMethod_isConst                        (CXCursor C);
-enum CXCursorKind   _3_getTemplateCursorKind                    (CXCursor C);
-CXCursor            _3_getSpecializedCursorTemplate             (CXCursor C);
-CXSourceRange       _3_getCursorReferenceNameRange              (CXCursor C, unsigned NameFlags, unsigned PieceIndex);
+unsigned            _3_CXXConstructor_isConvertingConstructor   (CXCursor C);                                               // 1.
+unsigned            _3_CXXConstructor_isCopyConstructor         (CXCursor C);                                               // 2.
+unsigned            _3_CXXConstructor_isDefaultConstructor      (CXCursor C);                                               // 3.
+unsigned            _3_CXXConstructor_isMoveConstructor         (CXCursor C);                                               // 4.
+unsigned            _3_CXXField_isMutable                       (CXCursor C);                                               // 5.
+unsigned            _3_CXXMethod_isDefaulted                    (CXCursor C);                                               // 6.
+unsigned            _3_CXXMethod_isPureVirtual                  (CXCursor C);                                               // 7.
+unsigned            _3_CXXMethod_isStatic                       (CXCursor C);                                               // 8.
+unsigned            _3_CXXMethod_isVirtual                      (CXCursor C);                                               // 9.
+unsigned            _3_CXXRecord_isAbstract                     (CXCursor C);                                               // 10.
+unsigned            _3_EnumDecl_isScoped                        (CXCursor C);                                               // 11.
+unsigned            _3_CXXMethod_isConst                        (CXCursor C);                                               // 12.
+enum CXCursorKind   _3_getTemplateCursorKind                    (CXCursor C);                                               // 13.
+CXCursor            _3_getSpecializedCursorTemplate             (CXCursor C);                                               // 14.
+CXSourceRange       _3_getCursorReferenceNameRange              (CXCursor C, unsigned NameFlags, unsigned PieceIndex);      // 15.
