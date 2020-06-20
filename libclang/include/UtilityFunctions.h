@@ -14,6 +14,14 @@
 #include "8_File_manipulation_routines.h"
 #include "11_String_manipulation_routines.h"
 
+#define ADD_STRING_OUT_NAME(  tabCount, functionName)                          strData += tabOffset(tabCount) + functionName                 + '\n';
+
+#define ADD_STRING_OUT(       tabCount, functionName, functionValue)           strData += tabOffset(tabCount) + functionName + functionValue;
+#define ADD_STRING_OUT_NL(    tabCount, functionName, functionValue)           strData += tabOffset(tabCount) + functionName + functionValue + '\n';
+
+#define ADD_STRING_OUT_IF(    tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue;
+#define ADD_STRING_OUT_IF_NL( tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue + '\n';
+
 using namespace std;
 
 class ClientData
