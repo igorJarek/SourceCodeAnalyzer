@@ -10,18 +10,22 @@
 using namespace std;
 
 /*
-	Used:
+    Used:
 
-		1. CXString 			clang_Cursor_getMangling		(CXCursor)
-		2. CXStringSet* 		clang_Cursor_getCXXManglings	(CXCursor)
+        1. CXString             clang_Cursor_getMangling        (CXCursor)
+        2. CXStringSet*         clang_Cursor_getCXXManglings    (CXCursor)
 
-	Unused:
+    Unused:
 
-		ObjC 3. CXStringSet* 	clang_Cursor_getObjCManglings	(CXCursor)
+        3. CXStringSet*         clang_Cursor_getObjCManglings   (CXCursor)      // ObjC 
 */
+
+// Print Function
 
 void _1_printMangling(string& strData, const CXCursor& cursor, uint32_t curLevel);
 
-CXString		_1_getMangling			(CXCursor C);  // 1.
-CXStringSet*	_1_getCXXManglings		(CXCursor C);  // 2.
-CXStringSet*	_1_getObjCManglings		(CXCursor C);  // 3.
+// Clang Functions
+
+CXString        _1_getMangling          (CXCursor C);       // 1.
+CXStringSet*    _1_getCXXManglings      (CXCursor C);       // 2.
+CXStringSet*    _1_getObjCManglings     (CXCursor C);       // 3.

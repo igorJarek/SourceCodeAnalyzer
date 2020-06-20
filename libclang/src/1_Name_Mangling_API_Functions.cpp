@@ -2,26 +2,25 @@
 
 void _1_printMangling(string& strData, const CXCursor& cursor, uint32_t curLevel)
 {
-	CXString mangling = clang_Cursor_getMangling(cursor);				// 1.
-	CXStringSet* CXXManglings = clang_Cursor_getCXXManglings(cursor);	// 2.
+    CXString     mangling     = _1_getMangling(cursor);                                             // 1.
+    CXStringSet* CXXManglings = _1_getCXXManglings(cursor);                                         // 2.
 
-	strData += tabOffset(curLevel + 1) + "Mangling : " + '\n';
-	strData += tabOffset(curLevel + 2) + "clang_Cursor_getMangling : " + _11_CXString2String(mangling) + '\n';
-	strData += tabOffset(curLevel + 2) + "clang_Cursor_getCXXManglings : " + '\n';
+    ADD_STRING_OUT_NAME (curLevel + 1, "1. Mangling : ")
+    ADD_STRING_OUT_NL   (curLevel + 2, "_1_getMangling : ", _11_CXString2String(mangling))
+    ADD_STRING_OUT_NAME (curLevel + 2, "_1_getCXXManglings : ")
 
-	vector<string> CXXManglingsStrings = _11_CXStringSet2StringVec(CXXManglings);
-	for (string str : CXXManglingsStrings)
-		strData += tabOffset(curLevel + 3) + str + '\n';
+    vector<string> CXXManglingsStrings = _11_CXStringSet2StringVec(CXXManglings);
+    for (string manglingString : CXXManglingsStrings)
+        ADD_STRING_OUT_NAME(curLevel + 3, manglingString)
 
-	_11_releaseCXStringSet(CXXManglings);
+    _11_releaseCXStringSet(CXXManglings);
 }
 
+CXString        _1_getMangling          (CXCursor C) 
+                                        { return clang_Cursor_getMangling(C); }
 
-CXString		_1_getMangling			(CXCursor C) 
-										{ return clang_Cursor_getMangling(C); }
+CXStringSet*    _1_getCXXManglings      (CXCursor C)
+                                        { return clang_Cursor_getCXXManglings(C); }
 
-CXStringSet*	_1_getCXXManglings		(CXCursor C)
-										{ return clang_Cursor_getCXXManglings(C); }
-
-CXStringSet*	_1_getObjCManglings		(CXCursor C)
-										{ return clang_Cursor_getObjCManglings(C); }
+CXStringSet*    _1_getObjCManglings     (CXCursor C)
+                                        { return clang_Cursor_getObjCManglings(C); }

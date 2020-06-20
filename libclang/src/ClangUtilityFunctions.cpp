@@ -61,8 +61,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
 
     // 1. Manglings
 
-    out += tabOffset(1) + "Mangling : " + '\n';
-	out += tabOffset(2) + "_1_getMangling : "                            + _11_CXString2String(_1_getMangling(cursor))                                  + '\n';
+    _1_printMangling(out, cursor, 0);
 
     // 3. C++ AST introspection
 
