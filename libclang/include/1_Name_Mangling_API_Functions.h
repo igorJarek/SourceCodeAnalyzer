@@ -22,7 +22,7 @@ using namespace std;
 
 // Print Function
 
-void _1_printMangling(string& strData, const CXCursor& cursor, uint32_t curLevel);
+void _1_printMangling(string& strData, const CXCursor& cursor, const uint32_t curLevel);
 
 // Clang Functions
 

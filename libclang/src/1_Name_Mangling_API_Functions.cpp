@@ -1,6 +1,6 @@
 #include "1_Name_Mangling_API_Functions.h"
 
-void _1_printMangling(string& strData, const CXCursor& cursor, uint32_t curLevel)
+void _1_printMangling(string& strData, const CXCursor& cursor, const uint32_t curLevel)
 {
     CXString     mangling     = _1_getMangling(cursor);                                             // 1.
     CXStringSet* CXXManglings = _1_getCXXManglings(cursor);                                         // 2.

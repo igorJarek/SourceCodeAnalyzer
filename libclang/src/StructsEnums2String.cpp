@@ -79,7 +79,7 @@ string CXSourceLocation2String(const CXSourceLocation sourceLocation, uint32_t o
     str += "File : " + _11_CXString2String(clang_getFileName(file2)) + ", ";
     str += "Line : " + to_string(line2) + ", ";
     str += "Column : " + to_string(column2) + ", ";
-    str += "Offset : " + to_string(offset2) + "\n\n";
+    str += "Offset : " + to_string(offset2) + '\n';
 
     return str;
 }
