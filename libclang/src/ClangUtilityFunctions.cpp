@@ -39,7 +39,7 @@ void printCursor(const CXTranslationUnit& translationUnit, string& strData, cons
 {
     strData += "Token str : \n";
     _1_printMangling(strData, cursor, curLevel);
-    _3_printASTIntrospection(strData, cursor, curLevel);
+    _3_printASTIntrospection(translationUnit, strData, cursor, curLevel);
     _7_printInformationForAttributes(strData, cursor, curLevel);
     _9_printCrossReferencingInTheAST(translationUnit, strData, cursor, curLevel);
     _10_printMappingBetweenCursorsAndSourceCode(strData, cursor, curLevel);
@@ -65,21 +65,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
 
     // 3. C++ AST introspection
 
-    out += tabOffset(1) + "AST introspection : " + '\n';
-    out += tabOffset(2) + "_3_CXXConstructor_isConvertingConstructor : " + to_string(_3_CXXConstructor_isConvertingConstructor(cursor))                 + '\n';
-    out += tabOffset(2) + "_3_CXXConstructor_isCopyConstructor : "       + to_string(_3_CXXConstructor_isCopyConstructor(cursor))                       + '\n';
-    out += tabOffset(2) + "_3_CXXConstructor_isDefaultConstructor : "    + to_string(_3_CXXConstructor_isDefaultConstructor(cursor))                    + '\n';
-    out += tabOffset(2) + "_3_CXXConstructor_isMoveConstructor : "       + to_string(_3_CXXConstructor_isMoveConstructor(cursor))                       + '\n';
-    out += tabOffset(2) + "_3_CXXField_isMutable : "                     + to_string(_3_CXXField_isMutable(cursor))                                     + '\n';
-    out += tabOffset(2) + "_3_CXXMethod_isDefaulted : "                  + to_string(_3_CXXMethod_isDefaulted(cursor))                                  + '\n';
-    out += tabOffset(2) + "_3_CXXMethod_isPureVirtual : "                + to_string(_3_CXXMethod_isPureVirtual(cursor))                                + '\n';
-    out += tabOffset(2) + "_3_CXXMethod_isStatic : "                     + to_string(_3_CXXMethod_isStatic(cursor))                                     + '\n';
-    out += tabOffset(2) + "_3_CXXMethod_isVirtual : "                    + to_string(_3_CXXMethod_isVirtual(cursor))                                    + '\n';
-    out += tabOffset(2) + "_3_CXXRecord_isAbstract : "                   + to_string(_3_CXXRecord_isAbstract(cursor))                                   + '\n';
-    out += tabOffset(2) + "_3_EnumDecl_isScoped : "                      + to_string(_3_EnumDecl_isScoped(cursor))                                      + '\n';
-    out += tabOffset(2) + "_3_CXXMethod_isConst : "                      + to_string(_3_CXXMethod_isConst(cursor))                                      + '\n';
-
-    out += tabOffset(2) + "_3_getTemplateCursorKind : "                  + CXCursorKind2String(_3_getTemplateCursorKind(cursor))                        + '\n';
+    _3_printASTIntrospection(translationUnit, out, cursor, 0, false);
 
     // 7. Information for attributes
 
