@@ -23,7 +23,7 @@ void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, string& 
     CXSourceRange cursorReferenceNameRange_CXNameRange_WantTemplateArgs = clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0);       // 15.
     CXSourceRange cursorReferenceNameRange_CXNameRange_WantSinglePiece  = clang_getCursorReferenceNameRange(cursor, CXNameRange_WantSinglePiece,  0);       // 15.
 
-    ADD_STRING_OUT_NAME(curLevel + 1, "ASTIntrospection : ")
+    ADD_STRING_OUT_NAME(curLevel + 1, "3. ASTIntrospection : ")
 
     ADD_STRING_OUT_NL(curLevel + 2, "_3_CXXConstructor_isConvertingConstructor : ",             to_string(isConvertingConstructor))
     ADD_STRING_OUT_NL(curLevel + 2, "_3_CXXConstructor_isCopyConstructor : ",                   to_string(isCopyConstructor))
