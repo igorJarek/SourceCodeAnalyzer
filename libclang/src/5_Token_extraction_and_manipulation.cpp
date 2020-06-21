@@ -2,81 +2,80 @@
 
 void _5_token_extraction(const CXTranslationUnit& translationUnit, const string& filePath)
 {
-    string strData{ "Token extraction and manipulation : \n" };
-    uint32_t tOffset{ 1 };
+    string strData;
+
+    ADD_STRING_OUT_NAME(0, "5. Token extraction and manipulation : ")
 
     CXFile file = _8_getFile(translationUnit, filePath.c_str());
 
-    int64_t lineCount = countFileLines(filePath);
+    const int64_t lineCount = countFileLines(filePath);
     if (lineCount == -1)
-        strData += tabOffset(tOffset) + "File is empty." + '\n';
+        ADD_STRING_OUT_NAME(1, "File is empty.")
     else
     {
-        int64_t lastLineColumns = countFileLineColumns(filePath, lineCount);
+        const int64_t lastLineColumns = countFileLineColumns(filePath, lineCount);
         if(lastLineColumns == -1)
-            strData += tabOffset(tOffset) + "Something is wrong with last line oraz file." + '\n';
+            ADD_STRING_OUT_NAME(1, "Something is wrong with last line or file.")
         else
         {
             //  For first char '#' CXSourceLocation is <1, 1>
             //  For last  char ';' CXSourceLocation is <11, 2>
             /*
-                1. #pragma once
-                2.
-                3. class Class
-                4. {
-                5.		public:
-                6.			Class(void);
-                7.			~Class(void);
-                8.			Class(const Class& classes);
-                9.
-                10.			void classMethod(void);
-                11.	};
+                1. |#pragma once
+                2. |
+                3. |class Class
+                4. |{
+                5. |    public:
+                6. |        Class(void);
+                7. |        ~Class(void);
+                8. |        Class(const Class& classes);
+                9. |
+                10.|        void classMethod(void);
+                11.|};
             */
 
-            CXSourceLocation beginLocation = _21_getLocation(translationUnit, file, 1, 1);
-            CXSourceLocation endLocation   = _21_getLocation(translationUnit, file, lineCount, lastLineColumns);
+            // tokenization whole file
+            CXSourceLocation beginLocation  = _21_getLocation(translationUnit, file, 1, 1);
+            CXSourceLocation endLocation    = _21_getLocation(translationUnit, file, lineCount, lastLineColumns);
+            CXSourceRange    tokenizerRange = _21_getRange(beginLocation, endLocation);
 
-            CXSourceRange tokenizerRange = _21_getRange(beginLocation, endLocation);
+            CXToken*         tokensOut      = nullptr;
+            uint32_t         tokensNum      = 0;
 
-            CXCursor* cursorsOut = nullptr;
-            CXToken*  tokensOut = nullptr;
-            uint32_t  tokensNum = 0;
+            _5_tokenize(translationUnit, tokenizerRange, &tokensOut, &tokensNum);                                                                               // 6.
 
-            clang_tokenize(translationUnit, tokenizerRange, &tokensOut, &tokensNum);											// 6.
+            ADD_STRING_OUT_NL(1, "_5_tokenize [NumTokens] : ", to_string(tokensNum))
 
             if (tokensNum > 0)
             {
-                strData += tabOffset(tOffset) + "Token count : " + to_string(tokensNum) + '\n';
-                strData += tabOffset(tOffset) + "Tokens :" + '\n';
+                ADD_STRING_OUT_NAME(1, "Tokens : ")
 
-                clang_annotateTokens(translationUnit, tokensOut, tokensNum, cursorsOut);										// 7.
-
-                for (uint32_t index{0}; index < tokensNum; ++index)
+                for (uint32_t index{ 0 }; index < tokensNum; ++index)
                 {
-                    const CXToken token = tokensOut[index];
+                    const CXToken&   token = tokensOut[index];
                     
-                    CXTokenKind			tokenKind		= clang_getTokenKind(token);											// 2.
-                    CXString			tokenSpelling	= clang_getTokenSpelling(translationUnit, token);						// 3.
-                    CXSourceLocation	tokenLoc		= clang_getTokenLocation(translationUnit, token);						// 4.   unused
-                    CXSourceRange		tokenRange		= clang_getTokenExtent(translationUnit, token);							// 5.
+                    CXTokenKind      tokenKind     = _5_getTokenKind(token);                                                                                    // 2.
+                    CXString         tokenSpelling = _5_getTokenSpelling(translationUnit, token);                                                               // 3.
+                    CXSourceLocation tokenLocation =  clang_getTokenLocation  (translationUnit, token);                                                         // 4.
+                    CXSourceRange    tokenRange    = _5_getTokenExtent(translationUnit, token);                                                                 // 5.
 
-                    strData += 
-                        tabOffset(tOffset + 1) +  to_string(index + 1) + ")\t" +  _11_CXString2String(tokenSpelling) + '\n' +
-                        tabOffset(tOffset + 2) + "clang_getTokenKind: " + CXTokenKind2String(tokenKind) + '\n' +
-                        tabOffset(tOffset + 2) + "clang_getTokenExtent: " + '\n' +
-                        CXSourceRange2String(tokenRange, tOffset + 3);
+                    CXCursor cursor = _10_getCursor(translationUnit, tokenLocation);
+
+                    ADD_STRING_OUT_NL(2, to_string(index + 1) + ")\t_5_getTokenSpelling : ",  _11_CXString2String(tokenSpelling))
+                    ADD_STRING_OUT_NL(3, "_5_getTokenKind : ",                                CXTokenKind2String(tokenKind))
+                    ADD_STRING_OUT_NL(3, "_5_annotateTokens [Cursors] : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursor)))
+                    ADD_STRING_OUT_NL(3, "_5_getTokenExtent : \n",                            CXSourceRange2String(tokenRange, 4))
                 }
             }
 
             if (tokensOut)
-                clang_disposeTokens(translationUnit, tokensOut, tokensNum);														// 8.
+                _5_disposeTokens(translationUnit, tokensOut, tokensNum);                                                                                        // 8.
         }
-        
     }
 
     string saveFilePath{ filePath + ".tokens" };
-        if (!saveToFile(saveFilePath, strData))
-            cout << "Couldn't create file : " << saveFilePath << endl;
+    if (!saveToFile(saveFilePath, strData))
+        cout << "Couldn't create file : " << saveFilePath << endl;
 }
 
 CXToken*            _5_getToken             (CXTranslationUnit TU, CXSourceLocation Location)

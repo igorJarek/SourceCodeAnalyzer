@@ -14,21 +14,25 @@ using namespace std;
 /*
 
     Used:
-        2. CXTokenKind 	        clang_getTokenKind      (CXToken)
-        3. CXString 	        clang_getTokenSpelling  (CXTranslationUnit, CXToken)
-        5. CXSourceRange 	    clang_getTokenExtent    (CXTranslationUnit, CXToken)
-        6. void 	            clang_tokenize          (CXTranslationUnit TU, CXSourceRange Range, CXToken **Tokens, unsigned *NumTokens)
-        7. void 	            clang_annotateTokens    (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens, CXCursor *Cursors)
-        8. void 	            clang_disposeTokens     (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens)
+        2. CXTokenKind          clang_getTokenKind      (CXToken Token)
+        3. CXString             clang_getTokenSpelling  (CXTranslationUnit TU, CXToken Token)
+        4. CXSourceLocation     clang_getTokenLocation  (CXTranslationUnit TU, CXToken)
+        5. CXSourceRange        clang_getTokenExtent    (CXTranslationUnit TU, CXToken Token)
+        6. void                 clang_tokenize          (CXTranslationUnit TU, CXSourceRange Range, CXToken **Tokens, unsigned *NumTokens)
+        8. void                 clang_disposeTokens     (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens)
 
     Unused:
 
-        1. CXToken * 	        clang_getToken          (CXTranslationUnit TU, CXSourceLocation Location)
-        4. CXSourceLocation 	clang_getTokenLocation  (CXTranslationUnit, CXToken)
+        1. CXToken *            clang_getToken          (CXTranslationUnit TU, CXSourceLocation Location)
+        7. void                 clang_annotateTokens    (CXTranslationUnit TU, CXToken *Tokens, unsigned NumTokens, CXCursor *Cursors)  used _10_getCursor() insted of clang_annotateTokens()
 
 */
 
+// Print Function
+
 void _5_token_extraction(const CXTranslationUnit& translationUnit, const string& filePath);
+
+// Clang Functions
 
 CXToken*            _5_getToken              (CXTranslationUnit TU, CXSourceLocation Location);                                     // 1.
 CXTokenKind         _5_getTokenKind          (CXToken Token);                                                                       // 2.
