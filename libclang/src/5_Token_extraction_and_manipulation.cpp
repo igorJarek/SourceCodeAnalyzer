@@ -59,7 +59,7 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
                     CXSourceLocation tokenLocation =  clang_getTokenLocation  (translationUnit, token);                                                         // 4.
                     CXSourceRange    tokenRange    = _5_getTokenExtent(translationUnit, token);                                                                 // 5.
 
-                    CXCursor cursor = _10_getCursor(translationUnit, tokenLocation);
+                    CXCursor         cursor        = _10_getCursor(translationUnit, tokenLocation);
 
                     ADD_STRING_OUT_NL(2, to_string(index + 1) + ")\t_5_getTokenSpelling : ",  _11_CXString2String(tokenSpelling))
                     ADD_STRING_OUT_NL(3, "_5_getTokenKind : ",                                CXTokenKind2String(tokenKind))
