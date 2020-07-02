@@ -71,8 +71,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
 
         // 7. Information for attributes
 
-        out += tabOffset(1) + "Information for attributes : " + '\n';
-        out += tabOffset(2) + "_7_getIBOutletCollectionType : "              +  _15_CXType2String(_7_getIBOutletCollectionType(cursor))                     + '\n';
+        _7_printInformationForAttributes(out, cursor, 0);
 
         // 9. Cross-referencing in the AST
 
