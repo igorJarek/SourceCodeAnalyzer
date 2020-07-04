@@ -2,47 +2,48 @@
 
 void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string& filePath)
 {
-    string strData{"File manipulation routines : \n"};
-    uint32_t tOffset{ 1 };
+    string strData;
 
-    CXFile file = clang_getFile(translationUnit, filePath.c_str());													// 5.
+    ADD_STRING_OUT_NAME(0, "File manipulation routines : ")
+
+    CXFile file = clang_getFile(translationUnit, filePath.c_str());                                                                     // 5.
     if(!file)
-        strData += "clang_getFile : Null" + '\n';
+        ADD_STRING_OUT_NAME(1, "clang_getFile : null")
     else
     {
-        CXString fileName = clang_getFileName(file);																// 1.
+        CXString        fileName = clang_getFileName(file);                                                                             // 1.
 
-        time_t fileTime = clang_getFileTime(file);																	// 2.
-        char timeBuff[255] = { 0 };
+        time_t          fileTime = clang_getFileTime(file);                                                                             // 2.
+        char            timeBuff[255] = { 0 };
         ctime_s(timeBuff, sizeof(timeBuff), &fileTime);
 
-        CXFileUniqueID fileUniqueIDStruct;
-        int32_t fileUniqueID = clang_getFileUniqueID(file, &fileUniqueIDStruct);									// 3.
+        CXFileUniqueID  fileUniqueIDStruct;
+        int32_t         fileUniqueID = clang_getFileUniqueID(file, &fileUniqueIDStruct);                                                // 3.
 
-        uint32_t isFileMultipleIncludeGuarded = clang_isFileMultipleIncludeGuarded(translationUnit, file);			// 4.
+        uint32_t        isFileMultipleIncludeGuarded = clang_isFileMultipleIncludeGuarded(translationUnit, file);                       // 4.
 
-        size_t size;
-        const char* fileContents = clang_getFileContents(translationUnit, file, &size);								// 6.
-        CXString realPathName = clang_File_tryGetRealPathName(file);												// 8.
+        size_t          size;
+        const char*     fileContents = clang_getFileContents(translationUnit, file, &size);                                             // 6.
+        CXString        realPathName = clang_File_tryGetRealPathName(file);                                                             // 8.
 
-        strData += tabOffset(tOffset) + "clang_getFileName : " + _11_CXString2String(fileName) + '\n';
-        strData += tabOffset(tOffset) + "clang_getFileTime : " + string(timeBuff);
+        ADD_STRING_OUT_NL(1, "clang_getFileName : ",                                _11_CXString2String(fileName))
+        ADD_STRING_OUT   (1, "clang_getFileTime : ",                                string(timeBuff))
 
-        strData += tabOffset(tOffset) + "clang_getFileUniqueID : " + to_string(fileUniqueIDStruct.data[0]) + ", " +
-                                                                     to_string(fileUniqueIDStruct.data[1]) + ", " +
-                                                                     to_string(fileUniqueIDStruct.data[2]) + ", " + '\n';
-        strData += tabOffset(tOffset) + "clang_getFileUniqueID [return value] : " + to_string(fileUniqueID) + '\n';
+        ADD_STRING_OUT_NL(1, "clang_getFileUniqueID : ",                             to_string(fileUniqueIDStruct.data[0]) + ", " +
+                                                                                     to_string(fileUniqueIDStruct.data[1]) + ", " +
+                                                                                     to_string(fileUniqueIDStruct.data[2]))
 
-        strData += tabOffset(tOffset) + "clang_isFileMultipleIncludeGuarded [return value] : " + to_string(isFileMultipleIncludeGuarded) + '\n';
-        strData += tabOffset(tOffset) + "clang_File_tryGetRealPathName [return value] : " + _11_CXString2String(realPathName) + "\n\n";
-
-        strData += tabOffset(tOffset) + "clang_getFileContents [size] : " + to_string(size) + '\n';
-        strData += tabOffset(tOffset) + "clang_getFileContents [return value] : " + '\n' + tabOffset(tOffset + 1) + fileContents + '\n';
+        ADD_STRING_OUT_NL(1, "clang_getFileUniqueID [return value] : ",              to_string(fileUniqueID))
+        ADD_STRING_OUT_NL(1, "clang_isFileMultipleIncludeGuarded [return value] : ", to_string(isFileMultipleIncludeGuarded))
+        ADD_STRING_OUT_NL(1, "clang_File_tryGetRealPathName [return value] : ",      _11_CXString2String(realPathName))
+        ADD_STRING_OUT_NL(1, "clang_getFileContents [size] : ",                      to_string(size))
+        ADD_STRING_OUT_NAME(1, "clang_getFileContents [return value] : ")
+        ADD_STRING_OUT_NAME(2, fileContents)
     }
-        
+
     string saveFilePath{ filePath + ".file" };
     if (!saveToFile(saveFilePath, strData))
-        cout << "Couldn't create file : " << saveFilePath << endl;
+        cout << "Couldn't save file : " << saveFilePath << endl;
 }
 
 CXString        _8_getFileName                      (CXFile SFile)
