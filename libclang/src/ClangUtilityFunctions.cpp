@@ -81,8 +81,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
 
         out += tabOffset(1) + "Mapping between cursors and source code : \n";
 
-        out += tabOffset(2) + "_10_getCursorLocation : \n"                   + CXSourceLocation2String(_10_getCursorLocation(cursor), 3);
-        out += tabOffset(2) + "_10_getCursorExtent : \n"                     + CXSourceRange2String(_10_getCursorExtent(cursor), 3);
+        _10_printMappingBetweenCursorsAndSourceCode(out, cursor, 0, true);
 
         // 13. Module interspection
 

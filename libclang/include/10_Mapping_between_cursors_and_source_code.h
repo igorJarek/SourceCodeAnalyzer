@@ -10,18 +10,22 @@ using namespace std;
 
 /*
 
-	Used:
+    Used:
 
-		2. CXSourceLocation			clang_getCursorLocation										(CXCursor C)
-		3. CXSourceRange			clang_getCursorExtent										(CXCursor C)
+        2. CXSourceLocation         clang_getCursorLocation                                     (CXCursor C)
+        3. CXSourceRange            clang_getCursorExtent                                       (CXCursor C)
 
-	Unused:
+    Unused:
 
-		1. CXCursor					clang_getCursor												(CXTranslationUnit, CXSourceLocation)
+        1. CXCursor                 clang_getCursor                                             (CXTranslationUnit, CXSourceLocation)
 
 */
 
-void _10_printMappingBetweenCursorsAndSourceCode(string& strData, const CXCursor& cursor, uint32_t curLevel);
+// Print Function
+
+void _10_printMappingBetweenCursorsAndSourceCode(string& strData, const CXCursor& cursor, uint32_t curLevel, bool print = true);
+
+// Clang Functions
 
 CXCursor            _10_getCursor               (CXTranslationUnit TU, CXSourceLocation SourceLocation);    // 1.
 CXSourceLocation    _10_getCursorLocation       (CXCursor C);                                               // 2.

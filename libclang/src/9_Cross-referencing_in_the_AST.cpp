@@ -64,7 +64,7 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
         ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isExternalSymbol [isGenerated] : ",  to_string(isGenerated))
     }
 
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_getCommentRange : \n",               CXSourceRange2String(commentRange, (curLevel + 3)))
+    ADD_STRING_OUT       (curLevel + 2, "clang_Cursor_getCommentRange : \n",               CXSourceRange2String(commentRange, (curLevel + 3)))
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_getRawCommentText : ",               _11_CXString2String(rawCommentText))
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_getBriefCommentText : ",             _11_CXString2String(briefCommentText))
 
