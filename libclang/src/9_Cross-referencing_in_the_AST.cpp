@@ -26,8 +26,8 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
 
     ADD_STRING_OUT_NAME  (curLevel + 1, "9. Cross-referencing in the AST : ")
 
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorUSR : ",                           _11_CXString2String(cursorUSR))
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorSpelling : ",                      _11_CXString2String(cursorSpelling))
+    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorUSR : ",                           CXString2String(cursorUSR))
+    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorSpelling : ",                      CXString2String(cursorSpelling))
 
     if (spellingNameRange.ptr_data[0] != nullptr && spellingNameRange.ptr_data[1] != nullptr)
         ADD_STRING_OUT   (curLevel + 2, "clang_Cursor_getSpellingNameRange : \n",          CXSourceRange2String(spellingNameRange, curLevel + 3))
@@ -36,8 +36,8 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
 
     ADD_STRING_OUT       (curLevel + 2, "clang_getCursorPrintingPolicy : \n",              CXPrintingPolicy2String(cursorPrintingPolicy, curLevel + 3))
 
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorPrettyPrinted : \n",               _11_CXString2String(cursorPrettyPrinted))
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorDisplayName : ",                   _11_CXString2String(cursorDisplayName))
+    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorPrettyPrinted : \n",               CXString2String(cursorPrettyPrinted))
+    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorDisplayName : ",                   CXString2String(cursorDisplayName))
 
     ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursorReferenced)))
     ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursorDefinition)))
@@ -59,14 +59,14 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
 
     if(isExternalSymbol)
     {
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isExternalSymbol [language] : ",     _11_CXString2String(language))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isExternalSymbol [definedIn] : ",    _11_CXString2String(definedIn))
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isExternalSymbol [language] : ",     CXString2String(language))
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isExternalSymbol [definedIn] : ",    CXString2String(definedIn))
         ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isExternalSymbol [isGenerated] : ",  to_string(isGenerated))
     }
 
     ADD_STRING_OUT       (curLevel + 2, "clang_Cursor_getCommentRange : \n",               CXSourceRange2String(commentRange, (curLevel + 3)))
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_getRawCommentText : ",               _11_CXString2String(rawCommentText))
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_getBriefCommentText : ",             _11_CXString2String(briefCommentText))
+    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_getRawCommentText : ",               CXString2String(rawCommentText))
+    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_getBriefCommentText : ",             CXString2String(briefCommentText))
 
     clang_PrintingPolicy_dispose(cursorPrintingPolicy);                                                                                                        // 13.
 }

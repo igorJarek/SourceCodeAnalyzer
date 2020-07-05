@@ -56,16 +56,16 @@ void _2_printDiagnostic(string& strData, const CXDiagnostic& currentDiagnostic)
     uint32_t                diagnosticNumFixIts            = clang_getDiagnosticNumFixIts(currentDiagnostic);                                                                      // 21.
 
     ADD_STRING_OUT_NL(2, "clang_defaultDiagnosticDisplayOptions : ", CXDiagnosticDisplayOptions2String(defaultDiagnosticDisplayOption))
-    ADD_STRING_OUT_NL(2, "clang_formatDiagnostic : ",                _11_CXString2String(formatDiagnostic))
+    ADD_STRING_OUT_NL(2, "clang_formatDiagnostic : ",                CXString2String(formatDiagnostic))
 
     ADD_STRING_OUT_NL(2, "clang_getDiagnosticSeverity : ",           CXDiagnosticSeverity2String(diagnosticSeverity))
     ADD_STRING_OUT   (2, "clang_getDiagnosticLocation :\n",          CXSourceLocation2String(sourceLocation, 3))
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticSpelling : ",           _11_CXString2String(diagnosticSpelling))
+    ADD_STRING_OUT_NL(2, "clang_getDiagnosticSpelling : ",           CXString2String(diagnosticSpelling))
 
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticOption Enable : ",      _11_CXString2String(diagnosticOption))
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticOption Disable : ",     _11_CXString2String(disableDiagnosticString))
+    ADD_STRING_OUT_NL(2, "clang_getDiagnosticOption Enable : ",      CXString2String(diagnosticOption))
+    ADD_STRING_OUT_NL(2, "clang_getDiagnosticOption Disable : ",     CXString2String(disableDiagnosticString))
     ADD_STRING_OUT_NL(2, "clang_getDiagnosticCategory : ",           to_string(diagnosticCategory))
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticCategoryText : ",       _11_CXString2String(diagnosticCategoryText))
+    ADD_STRING_OUT_NL(2, "clang_getDiagnosticCategoryText : ",       CXString2String(diagnosticCategoryText))
 
     ADD_STRING_OUT_NL(2, "clang_getDiagnosticNumRanges : ",          to_string(diagnosticNumRanges))
     for (uint32_t index{ 0 }; index < diagnosticNumRanges; ++index)
@@ -80,7 +80,7 @@ void _2_printDiagnostic(string& strData, const CXDiagnostic& currentDiagnostic)
         CXSourceRange       diagnosticFixItSourceRange;
         CXString            diagnosticFixIt                = clang_getDiagnosticFixIt(currentDiagnostic, index, &diagnosticFixItSourceRange);                                      // 22.
 
-        ADD_STRING_OUT_NL(3, "clang_getDiagnosticFixIt [" + to_string(index) + "] [return] : ",            _11_CXString2String(diagnosticFixIt))
+        ADD_STRING_OUT_NL(3, "clang_getDiagnosticFixIt [" + to_string(index) + "] [return] : ",            CXString2String(diagnosticFixIt))
         ADD_STRING_OUT   (3, "clang_getDiagnosticFixIt [" + to_string(index) + "] [replacementRange] :\n", CXSourceRange2String(diagnosticFixItSourceRange, 4))
     }
 }

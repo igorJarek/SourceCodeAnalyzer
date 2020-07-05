@@ -1,5 +1,38 @@
 #include "StructsEnums2String.h"
 
+string CXString2String(const CXString& string)
+{
+    std::string out{ "-NULL-" };
+
+    if( string.data)
+    {
+        out = _11_getCString(string);
+        _11_disposeString(string);
+    }
+
+    return out;
+}
+
+vector<string> CXStringSet2StringVec(CXStringSet* stringSet)
+{
+    if (stringSet)
+    {  
+        uint32_t stringSetCount{ stringSet->Count };
+        vector<string> out(stringSetCount);
+
+        for (uint32_t index{ 0 }; index < stringSetCount; ++index)
+        {
+            CXString string = stringSet->Strings[index];
+            out.at(index) = move(std::string(_11_getCString(string)));
+        }
+
+        _11_disposeStringSet(stringSet);
+        return out;
+    }
+
+    return {};
+}
+
 string CXDiagnosticSeverity2String(const CXDiagnosticSeverity diagnosticSeverity)
 {
     string str;
@@ -69,14 +102,14 @@ string CXSourceLocation2String(const CXSourceLocation sourceLocation, uint32_t o
 
     str += tabOffset(offset) + "ExpansionLocation : \n";
     str += tabOffset(offset + 1);
-    str += "File : " + _11_CXString2String(clang_getFileName(file1)) + ", ";
+    str += "File : " + CXString2String(clang_getFileName(file1)) + ", ";
     str += "Line : " + to_string(line1) + ", ";
     str += "Column : " + to_string(column1) + ", ";
     str += "Offset : " + to_string(offset1) + '\n';
 
     str += tabOffset(offset) + "SpellingLocation : \n";
     str += tabOffset(offset + 1);
-    str += "File : " + _11_CXString2String(clang_getFileName(file2)) + ", ";
+    str += "File : " + CXString2String(clang_getFileName(file2)) + ", ";
     str += "Line : " + to_string(line2) + ", ";
     str += "Column : " + to_string(column2) + ", ";
     str += "Offset : " + to_string(offset2) + '\n';
@@ -1025,12 +1058,12 @@ string CXPlatformAvailability2String(const CXPlatformAvailability platformAvaila
     int32_t   unavailable = platformAvailability.Unavailable;
     CXString  message     = platformAvailability.Message;
 
-    str += tabOffset(offset) + "Platform : "    + _11_CXString2String(platform)   + '\n';
+    str += tabOffset(offset) + "Platform : "    + CXString2String(platform)   + '\n';
     str += tabOffset(offset) + "Introduced : "  + CXVersion2String(introduced, 0) + '\n';
     str += tabOffset(offset) + "Deprecated : "  + CXVersion2String(deprecated, 0) + '\n';
     str += tabOffset(offset) + "Obsoleted : "   + CXVersion2String(obsoleted,  0) + '\n';
     str += tabOffset(offset) + "Unavailable : " + to_string(unavailable)          + '\n';
-    str += tabOffset(offset) + "Message : "     + _11_CXString2String(message)    + '\n';
+    str += tabOffset(offset) + "Message : "     + CXString2String(message)    + '\n';
 
 	return str;
 }

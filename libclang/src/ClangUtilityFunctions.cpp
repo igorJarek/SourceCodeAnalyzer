@@ -4,7 +4,7 @@ void dumpAST(string& strData, const CXCursor& cursor)
 {
     CXCursorKind kind = clang_getCursorKind(cursor);
     CXString kindSpelling = clang_getCursorKindSpelling(kind);
-    strData += _11_CXString2String(kindSpelling) + " ";
+    strData += CXString2String(kindSpelling) + " ";
 
     CXSourceLocation cursorLocation = clang_getCursorLocation(cursor);
     CXSourceRange cursorRange = clang_getCursorExtent(cursor);
@@ -31,8 +31,8 @@ void dumpAST(string& strData, const CXCursor& cursor)
     CXType cursorType = clang_getCursorType(cursor);
     CXString cursorTypeSpelling = clang_getTypeSpelling(cursorType);
 
-    strData += "<" + _11_CXString2String(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", col:" + to_string(endColumn) + ">" + " col:" + to_string(cursorColumn);
-    strData += " used " + _11_CXString2String(cursorSpelling) + " '" + _11_CXString2String(cursorTypeSpelling) + "'\n";
+    strData += "<" + CXString2String(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", col:" + to_string(endColumn) + ">" + " col:" + to_string(cursorColumn);
+    strData += " used " + CXString2String(cursorSpelling) + " '" + CXString2String(cursorTypeSpelling) + "'\n";
 }
 
 void printCursor(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel)
@@ -144,9 +144,9 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
         if(cursorPlatformAvailabilityReturn > 0)
         {
             out += tabOffset(2) + "_19_getCursorPlatformAvailability [always_deprecated] : "   + to_string(alwaysDeprecated)                                + '\n';
-            out += tabOffset(2) + "_19_getCursorPlatformAvailability [deprecated_message] : "  + _11_CXString2String(deprecatedMessage)                     + '\n';
+            out += tabOffset(2) + "_19_getCursorPlatformAvailability [deprecated_message] : "  + CXString2String(deprecatedMessage)                         + '\n';
             out += tabOffset(2) + "_19_getCursorPlatformAvailability [always_unavailable] : "  + to_string(alwaysUnavailable)                               + '\n';
-            out += tabOffset(2) + "_19_getCursorPlatformAvailability [unavailable_message] : " + _11_CXString2String(unavailableMessage)                    + '\n';
+            out += tabOffset(2) + "_19_getCursorPlatformAvailability [unavailable_message] : " + CXString2String(unavailableMessage)                        + '\n';
             out += tabOffset(2) + "_19_getCursorPlatformAvailability [availability] : \n"      + CXPlatformAvailability2String(platformAvailability, 3)     + '\n';
 
             _19_disposeCXPlatformAvailability(&platformAvailability);
@@ -169,7 +169,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
         }
 
         if(includedFile)
-            out += tabOffset(2) + "_19_getIncludedFile : \n"                                   + getBaseCXFileInfo(translationUnit, includedFile, 3)       + '\n';
+            out += tabOffset(2) + "_19_getIncludedFile : \n"                                   + getBaseCXFileInfo(translationUnit, includedFile, 3)        + '\n';
         else
             out += tabOffset(2) + "_19_getIncludedFile : -NULL-\n";
     }
@@ -213,7 +213,7 @@ string getBaseCXFileInfo(const CXTranslationUnit& translationUnit, const CXFile&
     size_t size;
     const char* fileContents = _8_getFileContents(translationUnit, file, &size);
 
-    out += tabOffset(curLevel) + "_8_getFileName : "                    + _11_CXString2String(_8_getFileName(file))             + '\n';
+    out += tabOffset(curLevel) + "_8_getFileName : "                    + CXString2String(_8_getFileName(file))                 + '\n';
     out += tabOffset(curLevel) + "_8_getFileTime : "                    + timeBuff                                              + '\n';
     out += tabOffset(curLevel) + "_8_getFileUniqueID [return value] : " + to_string(fileUniqueID)                               + '\n';
     out += tabOffset(curLevel) + "_8_getFileUniqueID [outID] : "        + to_string(fileUniqueIDStruct.data[0]) + ", " +
@@ -222,7 +222,7 @@ string getBaseCXFileInfo(const CXTranslationUnit& translationUnit, const CXFile&
     out += tabOffset(curLevel) + "_8_isFileMultipleIncludeGuarded : "   + to_string(multipleIncludeGuarded)                     + '\n';
     out += tabOffset(curLevel) + "_8_getFileContents [size] : "         + to_string(size)                                       + '\n';
     out += tabOffset(curLevel) + "_8_getFileContents [return] : "       + fileContents                                          + '\n';
-    out += tabOffset(curLevel) + "_8_File_tryGetRealPathName : "        + _11_CXString2String(_8_File_tryGetRealPathName(file)) + '\n';
+    out += tabOffset(curLevel) + "_8_File_tryGetRealPathName : "        + CXString2String(_8_File_tryGetRealPathName(file))     + '\n';
 
     return out;
 }

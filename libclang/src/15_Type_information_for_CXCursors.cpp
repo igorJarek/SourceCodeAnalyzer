@@ -8,7 +8,7 @@ void _15_printTypeInformationForCXCursors(string& strData, const CXCursor& curso
 	if (cursorType.kind == CXType_Invalid || cursorType.kind == CXType_Unexposed)
 	{
 		strData += tabOffset(curLevel + 1) + "Type information for CXCursors : \n";
-		strData += tabOffset(curLevel + 2) + "clang_getTypeSpelling : " + _11_CXString2String(typeSpelling) + '\n';
+		strData += tabOffset(curLevel + 2) + "clang_getTypeSpelling : " + CXString2String(typeSpelling) + '\n';
 
 		return;
 	}
@@ -122,7 +122,7 @@ void _15_printTypeInformationForCXCursors(string& strData, const CXCursor& curso
 
 	strData += tabOffset(curLevel + 1) + "Type information for CXCursors : \n";
 
-	strData += tabOffset(curLevel + 2) + "clang_getTypeSpelling : "						+ _11_CXString2String(typeSpelling)				+ '\n';
+	strData += tabOffset(curLevel + 2) + "clang_getTypeSpelling : "						+ CXString2String(typeSpelling)					+ '\n';
 	strData += tabOffset(curLevel + 2) + "clang_getTypedefDeclUnderlyingType : "		+ _15_CXType2String(typedefDeclUnderlyingType)	+ '\n';
 	strData += tabOffset(curLevel + 2) + "clang_getEnumDeclIntegerType : "				+ _15_CXType2String(enumDeclIntegerType)		+ '\n';
 	strData += tabOffset(curLevel + 2) + "clang_getEnumConstantDeclValue : "			+ to_string(enumConstantDeclValue)				+ '\n';
@@ -150,10 +150,10 @@ void _15_printTypeInformationForCXCursors(string& strData, const CXCursor& curso
 	strData += tabOffset(curLevel + 2) + "clang_isVolatileQualifiedType : "				+ to_string(isVolatileQualifiedType)			+ '\n';
 	strData += tabOffset(curLevel + 2) + "clang_isRestrictQualifiedType : "				+ to_string(isRestrictQualifiedType)			+ '\n';
 	strData += tabOffset(curLevel + 2) + "clang_getAddressSpace : "						+ to_string(getAddressSpace)					+ '\n';
-	strData += tabOffset(curLevel + 2) + "clang_getTypedefName : "						+ _11_CXString2String(getTypedefName)			+ '\n';
+	strData += tabOffset(curLevel + 2) + "clang_getTypedefName : "						+ CXString2String(getTypedefName)				+ '\n';
 	strData += tabOffset(curLevel + 2) + "clang_getPointeeType : "						+ _15_CXType2String(getPointeeType)				+ '\n';
 	strData += tabOffset(curLevel + 2) + "clang_getTypeDeclaration : "					+ _15_CXCursor2String(getTypeDeclaration)		+ '\n';
-	strData += tabOffset(curLevel + 2) + "clang_getTypeKindSpelling : "					+ _11_CXString2String(typeKindSpelling)			+ '\n';
+	strData += tabOffset(curLevel + 2) + "clang_getTypeKindSpelling : "					+ CXString2String(typeKindSpelling)				+ '\n';
 
 	strData += tabOffset(curLevel + 2) + "clang_getFunctionTypeCallingConv : "			+ CXCallingConv2String(functionTypeCallingConv) + '\n';
 	strData += tabOffset(curLevel + 2) + "clang_getResultType : "						+ _15_CXType2String(resultType)					+ '\n';
@@ -210,7 +210,7 @@ string _15_CXCursor2String(const CXCursor& cursor)
 string _15_CXType2String(const CXType& type)
 {
 	CXString typeSpelling = clang_getTypeSpelling (type);																									// 2.
-	return _11_CXString2String(typeSpelling);
+	return CXString2String(typeSpelling);
 }
 
 

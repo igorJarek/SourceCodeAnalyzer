@@ -33,13 +33,13 @@ CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string
         ADD_STRING_OUT_NAME(0, "6. Translation Unit Manipulation : ")
 
         ADD_STRING_OUT_NL(1, "clang_parseTranslationUnit2 : ",                CXErrorCode2String(errorCode))
-        ADD_STRING_OUT_NL(1, "clang_getTranslationUnitSpelling : ",           _11_CXString2String(translationUnitSpelling))
+        ADD_STRING_OUT_NL(1, "clang_getTranslationUnitSpelling : ",           CXString2String(translationUnitSpelling))
         ADD_STRING_OUT_NL(1, "clang_defaultEditingTranslationUnitOptions : ", to_string(defaultEditingTranslationUnitOptions))
         ADD_STRING_OUT_NL(1, "clang_defaultSaveOptions : ",                   to_string(defaultSaveOptions))
         ADD_STRING_OUT_NL(1, "clang_saveTranslationUnit : ",                  CXSaveError2String(saveTranslationUnit))
         ADD_STRING_OUT_NL(1, "clang_defaultReparseOptions : ",                to_string(defaultReparseOptions))
         ADD_STRING_OUT_NL(1, "clang_getCXTUResourceUsage : \n",               CXTUResourceUsage2String(getCXTUResourceUsage, 2))
-        ADD_STRING_OUT_NL(1, "clang_TargetInfo_getTriple : ",                 _11_CXString2String(targetInfo_getTriple))
+        ADD_STRING_OUT_NL(1, "clang_TargetInfo_getTriple : ",                 CXString2String(targetInfo_getTriple))
         ADD_STRING_OUT_NL(1, "clang_TargetInfo_getPointerWidth : ",           to_string(targetInfo_getPointerWidth))
 
         clang_disposeCXTUResourceUsage(getCXTUResourceUsage);                                                                                                       // 17.

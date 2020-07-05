@@ -69,9 +69,9 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, stri
     if(cursorPlatformAvailability > 0)
     {
         strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [always_deprecated] : "   + to_string(alwaysDeprecated)                                       + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [deprecated_message] : "  + _11_CXString2String(deprecatedMessage)                            + '\n';
+        strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [deprecated_message] : "  + CXString2String(deprecatedMessage)                                + '\n';
         strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [always_unavailable] : "  + to_string(alwaysUnavailable)                                      + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [unavailable_message] : " + _11_CXString2String(unavailableMessage)                           + '\n';
+        strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [unavailable_message] : " + CXString2String(unavailableMessage)                               + '\n';
         strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [availability] : \n"      + CXPlatformAvailability2String(platformAvailability, curLevel + 3) + '\n';
 
         clang_disposeCXPlatformAvailability(&platformAvailability);                                                                                                             // 22.

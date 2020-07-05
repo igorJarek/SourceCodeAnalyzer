@@ -26,7 +26,7 @@ void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string
         const char*     fileContents = clang_getFileContents(translationUnit, file, &size);                                             // 6.
         CXString        realPathName = clang_File_tryGetRealPathName(file);                                                             // 8.
 
-        ADD_STRING_OUT_NL(1, "clang_getFileName : ",                                _11_CXString2String(fileName))
+        ADD_STRING_OUT_NL(1, "clang_getFileName : ",                                CXString2String(fileName))
         ADD_STRING_OUT   (1, "clang_getFileTime : ",                                string(timeBuff))
 
         ADD_STRING_OUT_NL(1, "clang_getFileUniqueID : ",                             to_string(fileUniqueIDStruct.data[0]) + ", " +
@@ -35,7 +35,7 @@ void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string
 
         ADD_STRING_OUT_NL(1, "clang_getFileUniqueID [return value] : ",              to_string(fileUniqueID))
         ADD_STRING_OUT_NL(1, "clang_isFileMultipleIncludeGuarded [return value] : ", to_string(isFileMultipleIncludeGuarded))
-        ADD_STRING_OUT_NL(1, "clang_File_tryGetRealPathName [return value] : ",      _11_CXString2String(realPathName))
+        ADD_STRING_OUT_NL(1, "clang_File_tryGetRealPathName [return value] : ",      CXString2String(realPathName))
         ADD_STRING_OUT_NL(1, "clang_getFileContents [size] : ",                      to_string(size))
         ADD_STRING_OUT_NAME(1, "clang_getFileContents [return value] : ")
         ADD_STRING_OUT_NAME(2, fileContents)
