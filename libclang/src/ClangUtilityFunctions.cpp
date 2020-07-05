@@ -75,32 +75,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
 
         // 9. Cross-referencing in the AST
 
-        CXString language, definedIn;
-        uint32_t isGenerated;
-        unsigned int _9_isExternalSymbolRet = _9_isExternalSymbol(cursor, &language, &definedIn, &isGenerated);
-
-        out += tabOffset(1) + "Cross-referencing in the AST : " + '\n';
-
-        out += tabOffset(2) + "_9_getCursorUSR : "                           +  _11_CXString2String(_9_getCursorUSR(cursor))                                + '\n';
-        out += tabOffset(2) + "_9_getCursorSpelling : "                      +  _11_CXString2String(_9_getCursorSpelling(cursor))                           + '\n';
-        out += tabOffset(2) + "_9_Cursor_getSpellingNameRange : \n"          +  CXSourceRange2String(_9_Cursor_getSpellingNameRange(cursor, 0, 0), 3);                  // check last 2 parameters (..., 0, 0)
-        out += tabOffset(2) + "_9_getCursorDisplayName : "                   +  _11_CXString2String(_9_getCursorDisplayName(cursor))                        + '\n';
-        out += tabOffset(2) + "_9_isCursorDefinition : "                     +  to_string(_9_isCursorDefinition(cursor))                                    + '\n';
-        out += tabOffset(2) + "_9_isDynamicCall : "                          +  to_string(_9_isDynamicCall(cursor))                                         + '\n';
-        //out += tabOffset(2) + "_9_getReceiverType : "                        +  _15_CXType2String(_9_getReceiverType(cursor))                             + '\n';
-        out += tabOffset(2) + "_9_isVariadic : "                             +  to_string(_9_isVariadic(cursor))                                            + '\n';
-
-        out += tabOffset(2) + "_9_isExternalSymbol [ret] : "                 + to_string(_9_isExternalSymbolRet)                                            + '\n';
-        if(_9_isExternalSymbolRet)
-        {
-            out += tabOffset(2) + "_9_isExternalSymbol [language] : "        + _11_CXString2String(language)                                                + '\n';
-            out += tabOffset(2) + "_9_isExternalSymbol [definedIn] : "       + _11_CXString2String(definedIn)                                               + '\n';
-            out += tabOffset(2) + "_9_isExternalSymbol [isGenerated] : "     + to_string(isGenerated)                                                       + '\n';
-        }
-
-        out += tabOffset(2) + "_9_getCommentRange : \n"                      +  CXSourceRange2String(_9_getCommentRange(cursor), 3);
-        out += tabOffset(2) + "_9_getRawCommentText : "                      + _11_CXString2String(_9_getRawCommentText(cursor))                            + '\n';
-        out += tabOffset(2) + "_9_getBriefCommentText : "                    + _11_CXString2String(_9_getBriefCommentText(cursor))                          + '\n';
+       _9_printCrossReferencingInTheAST(translationUnit, out, cursor, 0, false);
 
         // 10. Mapping between cursors and source code
 
