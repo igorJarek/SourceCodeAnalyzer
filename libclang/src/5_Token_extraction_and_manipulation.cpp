@@ -42,9 +42,9 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
             CXToken*         tokensOut      = nullptr;
             uint32_t         tokensNum      = 0;
 
-            _5_tokenize(translationUnit, tokenizerRange, &tokensOut, &tokensNum);                                                                               // 6.
+            clang_tokenize(translationUnit, tokenizerRange, &tokensOut, &tokensNum);                                                                               // 6.
 
-            ADD_STRING_OUT_NL(1, "_5_tokenize [NumTokens] : ", to_string(tokensNum))
+            ADD_STRING_OUT_NL(1, "clang_tokenize [NumTokens] : ", to_string(tokensNum))
 
             if (tokensNum > 0)
             {
@@ -54,22 +54,22 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
                 {
                     const CXToken&   token = tokensOut[index];
                     
-                    CXTokenKind      tokenKind     = _5_getTokenKind(token);                                                                                    // 2.
-                    CXString         tokenSpelling = _5_getTokenSpelling(translationUnit, token);                                                               // 3.
-                    CXSourceLocation tokenLocation =  clang_getTokenLocation  (translationUnit, token);                                                         // 4.
-                    CXSourceRange    tokenRange    = _5_getTokenExtent(translationUnit, token);                                                                 // 5.
+                    CXTokenKind      tokenKind     = clang_getTokenKind(token);                                                                                    // 2.
+                    CXString         tokenSpelling = clang_getTokenSpelling(translationUnit, token);                                                               // 3.
+                    CXSourceLocation tokenLocation = clang_getTokenLocation(translationUnit, token);                                                               // 4.
+                    CXSourceRange    tokenRange    = clang_getTokenExtent(translationUnit, token);                                                                 // 5.
 
                     CXCursor         cursor        = _10_getCursor(translationUnit, tokenLocation);
 
-                    ADD_STRING_OUT_NL(2, to_string(index + 1) + ")\t_5_getTokenSpelling : ",  _11_CXString2String(tokenSpelling))
-                    ADD_STRING_OUT_NL(3, "_5_getTokenKind : ",                                CXTokenKind2String(tokenKind))
-                    ADD_STRING_OUT_NL(3, "_5_annotateTokens [Cursors] : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursor)))
-                    ADD_STRING_OUT_NL(3, "_5_getTokenExtent : \n",                            CXSourceRange2String(tokenRange, 4))
+                    ADD_STRING_OUT_NL(2, to_string(index + 1) + ")\tclang_getTokenSpelling : ",         _11_CXString2String(tokenSpelling))
+                    ADD_STRING_OUT_NL(3, "clang_getTokenKind : ",                                       CXTokenKind2String(tokenKind))
+                    ADD_STRING_OUT_NL(3, "_10_getCursor(clang_getTokenLocation) : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursor)))
+                    ADD_STRING_OUT_NL(3, "clang_getTokenExtent : \n",                                   CXSourceRange2String(tokenRange, 4))
                 }
             }
 
             if (tokensOut)
-                _5_disposeTokens(translationUnit, tokensOut, tokensNum);                                                                                        // 8.
+                clang_disposeTokens(translationUnit, tokensOut, tokensNum);                                                                                        // 8.
         }
     }
 
