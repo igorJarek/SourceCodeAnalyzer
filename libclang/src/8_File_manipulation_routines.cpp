@@ -4,7 +4,7 @@ void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string
 {
     string strData;
 
-    ADD_STRING_OUT_NAME(0, "File manipulation routines : ")
+    ADD_STRING_OUT_NAME(0, "8. File manipulation routines : ")
 
     CXFile file = clang_getFile(translationUnit, filePath.c_str());                                                                     // 5.
     if(!file)

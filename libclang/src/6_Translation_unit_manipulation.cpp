@@ -30,7 +30,7 @@ CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string
         CXString          targetInfo_getTriple                 = clang_TargetInfo_getTriple(translationUnitTargetInfo);                                             // 20.
         int32_t           targetInfo_getPointerWidth           = clang_TargetInfo_getPointerWidth(translationUnitTargetInfo);                                       // 21.
 
-        ADD_STRING_OUT_NAME(0, "Translation Unit Manipulation : ")
+        ADD_STRING_OUT_NAME(0, "6. Translation Unit Manipulation : ")
 
         ADD_STRING_OUT_NL(1, "clang_parseTranslationUnit2 : ",                CXErrorCode2String(errorCode))
         ADD_STRING_OUT_NL(1, "clang_getTranslationUnitSpelling : ",           _11_CXString2String(translationUnitSpelling))

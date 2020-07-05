@@ -4,7 +4,7 @@ void _7_printInformationForAttributes(string& strData, const CXCursor& cursor, u
 {
     CXType outletCollectionType = clang_getIBOutletCollectionType(cursor);                                                          // 1.
 
-    ADD_STRING_OUT_NAME(curLevel + 1, "Information_for attributes : ")
+    ADD_STRING_OUT_NAME(curLevel + 1, "7. Information_for attributes : ")
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getIBOutletCollectionType : ", _15_CXType2String(outletCollectionType))
 }
 
