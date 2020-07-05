@@ -1,16 +1,5 @@
 #include "13_Module_introspection.h"
 
-void _13_printModuleIntrospection(string& strData, const CXCursor& cursor, uint32_t curLevel)
-{
-    strData += tabOffset(curLevel + 1) + "Module introspection : \n";
-
-    CXModule module = clang_Cursor_getModule(cursor);       // 1.
-    if(module)
-    {
-        
-    }
-}
-
 CXModule        _13_Cursor_getModule                (CXCursor C)
                                                     { return clang_Cursor_getModule(C); }
 

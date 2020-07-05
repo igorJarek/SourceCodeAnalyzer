@@ -8,6 +8,8 @@
 
 using namespace std;
 
+// Clang Functions
+
 CXCompilationDatabase   _12_CompilationDatabase_fromDirectory               (const char *BuildDir, CXCompilationDatabase_Error *ErrorCode);                 // 1.
 void                    _12_CompilationDatabase_dispose                     (CXCompilationDatabase CompilationDatabase);                                    // 2.
 CXCompileCommands       _12_CompilationDatabase_getCompileCommands          (CXCompilationDatabase CompilationDatabase, const char *CompleteFileName);      // 3.

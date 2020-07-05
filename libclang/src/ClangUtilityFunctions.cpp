@@ -43,7 +43,6 @@ void printCursor(const CXTranslationUnit& translationUnit, string& strData, cons
     _7_printInformationForAttributes(strData, cursor, curLevel);
     _9_printCrossReferencingInTheAST(translationUnit, strData, cursor, curLevel);
     _10_printMappingBetweenCursorsAndSourceCode(strData, cursor, curLevel);
-    _13_printModuleIntrospection(strData, cursor, curLevel);
     _15_printTypeInformationForCXCursors(strData, cursor, curLevel);
     _18_printMiscellaneousUtilityFunctions(strData, cursor, curLevel);
     _19_printCursorManipulations(translationUnit, strData, cursor, curLevel);
@@ -82,8 +81,6 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
         out += tabOffset(1) + "Mapping between cursors and source code : \n";
 
         _10_printMappingBetweenCursorsAndSourceCode(out, cursor, 0, true);
-
-        // 13. Module interspection
 
         // 15. Type information for CXCursors
 
