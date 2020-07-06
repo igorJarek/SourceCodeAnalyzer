@@ -43,7 +43,7 @@ void printCursor(const CXTranslationUnit& translationUnit, string& strData, cons
     _7_printInformationForAttributes(strData, cursor, curLevel);
     _9_printCrossReferencingInTheAST(translationUnit, strData, cursor, curLevel);
     _10_printMappingBetweenCursorsAndSourceCode(strData, cursor, curLevel);
-    _15_printTypeInformationForCXCursors(strData, cursor, curLevel);
+    _15_printTypeInformationForCXCursors(translationUnit, strData, cursor, curLevel);
     _18_printMiscellaneousUtilityFunctions(strData, cursor, curLevel);
     _19_printCursorManipulations(translationUnit, strData, cursor, curLevel);
 
@@ -60,29 +60,17 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
         out += tabOffset(1) + "cursor.kind = CXCursor_NoDeclFound\n";
     else
     {
-        // 1. Manglings
-
         _1_printMangling(out, cursor, 0);
-
-        // 3. C++ AST introspection
 
         _3_printASTIntrospection(translationUnit, out, cursor, 0, false);
 
-        // 7. Information for attributes
-
         _7_printInformationForAttributes(out, cursor, 0);
 
-        // 9. Cross-referencing in the AST
-
-       _9_printCrossReferencingInTheAST(translationUnit, out, cursor, 0, false);
-
-        // 10. Mapping between cursors and source code
-
-        out += tabOffset(1) + "Mapping between cursors and source code : \n";
+        _9_printCrossReferencingInTheAST(translationUnit, out, cursor, 0, false);
 
         _10_printMappingBetweenCursorsAndSourceCode(out, cursor, 0, true);
 
-        // 15. Type information for CXCursors
+        _15_printTypeInformationForCXCursors(translationUnit, out, cursor, 0, false);
 
         // 18. Miscellaneous utility functions
 

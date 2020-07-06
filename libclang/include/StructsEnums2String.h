@@ -12,6 +12,8 @@ using namespace std;
 string CXString2String						(const CXString& string);
 vector<string> CXStringSet2StringVec		(CXStringSet* stringSet);
 
+string CXType2String						(const CXType& type);
+
 string CXDiagnosticSeverity2String			(const CXDiagnosticSeverity diagnosticSeverity);
 string CXDiagnosticDisplayOptions2String	(uint32_t options);
 

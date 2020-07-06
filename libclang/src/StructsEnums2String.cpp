@@ -33,6 +33,12 @@ vector<string> CXStringSet2StringVec(CXStringSet* stringSet)
     return {};
 }
 
+string CXType2String(const CXType& type)
+{
+    CXString typeSpelling = _15_getTypeSpelling(type);
+    return CXString2String(typeSpelling);
+}
+
 string CXDiagnosticSeverity2String(const CXDiagnosticSeverity diagnosticSeverity)
 {
     string str;

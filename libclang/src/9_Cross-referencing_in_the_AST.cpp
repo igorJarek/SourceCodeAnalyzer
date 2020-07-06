@@ -49,7 +49,7 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_isDynamicCall : ",                   to_string(isDynamicCall))
 
     if(_19_isExpression(cursor.kind))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getReceiverType : ",                 _15_CXType2String(clang_Cursor_getReceiverType(cursor)))            // 22.
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getReceiverType : ",                 CXType2String(clang_Cursor_getReceiverType(cursor)))                // 22.
     else
        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getReceiverType : ",                  "Null")
 
