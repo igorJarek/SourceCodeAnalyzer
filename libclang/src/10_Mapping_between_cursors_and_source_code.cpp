@@ -1,6 +1,6 @@
 #include "10_Mapping_between_cursors_and_source_code.h"
 
-void _10_printMappingBetweenCursorsAndSourceCode(string& strData, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
+void _10_printMappingBetweenCursorsAndSourceCode(string& strData, const CXCursor& cursor, uint32_t curLevel)
 {
     CXSourceLocation cursorLocation = clang_getCursorLocation(cursor);      // 2.
     CXSourceRange    cursorExtent   = clang_getCursorExtent(cursor);        // 3.

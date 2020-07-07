@@ -23,7 +23,7 @@ using namespace std;
 
 // Print Function
 
-void _10_printMappingBetweenCursorsAndSourceCode(string& strData, const CXCursor& cursor, uint32_t curLevel, bool print = true);
+void _10_printMappingBetweenCursorsAndSourceCode(string& strData, const CXCursor& cursor, uint32_t curLevel);
 
 // Clang Functions
 

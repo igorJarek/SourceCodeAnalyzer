@@ -68,7 +68,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
 
         _9_printCrossReferencingInTheAST(translationUnit, out, cursor, 0, false);
 
-        _10_printMappingBetweenCursorsAndSourceCode(out, cursor, 0, true);
+        _10_printMappingBetweenCursorsAndSourceCode(out, cursor, 0);
 
         _15_printTypeInformationForCXCursors(translationUnit, out, cursor, 0, false);
 
