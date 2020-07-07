@@ -133,9 +133,6 @@ CXString                    _2_getDiagnosticOption                  (CXDiagnosti
 unsigned                    _2_getDiagnosticCategory                (CXDiagnostic Diagnostic)
                                                                     { return clang_getDiagnosticCategory(Diagnostic); }
 
-CXString                    _2_getDiagnosticCategoryName            (unsigned Category)
-                                                                    { return clang_getDiagnosticCategoryName(Category); }
-
 CXString                    _2_getDiagnosticCategoryText            (CXDiagnostic Diagnostic)
                                                                     { return clang_getDiagnosticCategoryText(Diagnostic); }
 

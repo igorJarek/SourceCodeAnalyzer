@@ -37,7 +37,7 @@ using namespace std;
 
         3.  CXDiagnosticSet             clang_loadDiagnostics                   (const char* file, enum CXLoadDiag_Error* error, CXString* errorString)
         5.  CXDiagnosticSet             clang_getChildDiagnostics               (CXDiagnostic D)                                                                    // ??
-        17. CXString                    clang_getDiagnosticCategoryName         (unsigned Category)                                                                 // deprecated
+        17. CXString                    clang_getDiagnosticCategoryName         (unsigned Category)                                                                 // DEPRECATED
 */
 
 // Print Function
@@ -63,7 +63,6 @@ CXSourceLocation            _2_getDiagnosticLocation                (CXDiagnosti
 CXString                    _2_getDiagnosticSpelling                (CXDiagnostic Diagnostic);                                                          // 14.
 CXString                    _2_getDiagnosticOption                  (CXDiagnostic Diagnostic, CXString *Disable);                                       // 15.
 unsigned                    _2_getDiagnosticCategory                (CXDiagnostic Diagnostic);                                                          // 16.
-CXString                    _2_getDiagnosticCategoryName            (unsigned Category);                                                                // 17.
 CXString                    _2_getDiagnosticCategoryText            (CXDiagnostic Diagnostic);                                                          // 18.
 unsigned                    _2_getDiagnosticNumRanges               (CXDiagnostic Diagnostic);                                                          // 19.
 CXSourceRange               _2_getDiagnosticRange                   (CXDiagnostic Diagnostic, unsigned Range);                                          // 20.
