@@ -51,7 +51,7 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
     if(_19_isExpression(cursor.kind))
         ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getReceiverType : ",                 CXType2String(clang_Cursor_getReceiverType(cursor)))                // 22.
     else
-       ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getReceiverType : ",                  "Null")
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getReceiverType : ",                  "Null")
 
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_isVariadic : ",                      to_string(isVariadic))
 

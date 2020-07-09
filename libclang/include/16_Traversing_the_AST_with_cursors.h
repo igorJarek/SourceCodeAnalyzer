@@ -7,4 +7,6 @@
 
 using namespace std;
 
-unsigned    _16_visitChildren   (CXCursor parent, CXCursorVisitor visitor, CXClientData client_data);     // 1.
+// Clang Functions
+
+unsigned    _16_visitChildren   (CXCursor parent, CXCursorVisitor visitor, CXClientData client_data);         // 1.
