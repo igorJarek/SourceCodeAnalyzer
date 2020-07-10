@@ -2,7 +2,7 @@
 
 void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cursor, uint32_t curLevel)
 {
-    strData += tabOffset(curLevel + 1) + "Miscellaneous utility functions : \n";
+    ADD_STRING_OUT_NAME(curLevel + 1, "18. Miscellaneous utility functions : ")
 
     CXEvalResult         evalResult     = clang_Cursor_Evaluate(cursor);                    // 4.
     if(evalResult)
@@ -17,16 +17,16 @@ void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cur
 
         clang_EvalResult_dispose(evalResult);                                               // 12.
 
-        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getKind : "       + CXEvalResultKind2String(evalResultKind) + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsInt : "      + to_string(getAsInt)                     + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsLongLong : " + to_string(getAsLongLong)                + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_EvalResult_isUnsignedInt : " + to_string(isUnsignedInt)                + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsUnsigned : " + to_string(getAsUnsigned)                + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsDouble : "   + to_string(getAsDouble)                  + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_EvalResult_getAsStr : "      + getAsStr                                + '\n';
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getKind : ",       CXEvalResultKind2String(evalResultKind))
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsInt : ",      to_string(getAsInt))
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsLongLong : ", to_string(getAsLongLong))
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_isUnsignedInt : ", to_string(isUnsignedInt))
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsUnsigned : ", to_string(getAsUnsigned))
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsDouble : ",   to_string(getAsDouble))
+        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsStr : ",      getAsStr)
     }
     else
-        strData += tabOffset(curLevel + 2) + "-NULL-\n";
+        ADD_STRING_OUT_NAME(curLevel + 1, "-NULL-")
 }
 
 CXString                _18_getClangVersion             (void)

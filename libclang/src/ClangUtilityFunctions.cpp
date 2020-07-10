@@ -72,23 +72,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
 
         _15_printTypeInformationForCXCursors(translationUnit, out, cursor, 0, false);
 
-        // 18. Miscellaneous utility functions
-
-        CXEvalResult evalResult = _18_evaluate(cursor);
-        if(evalResult)
-        {
-            out += tabOffset(1) + "Miscellaneous utility functions : \n";
-
-            out += tabOffset(2) + "_18_getKind : "                           + CXEvalResultKind2String(_18_getKind(evalResult))                             + '\n';
-            out += tabOffset(2) + "_18_getAsInt : "                          + to_string(_18_getAsInt(evalResult))                                          + '\n';
-            out += tabOffset(2) + "_18_getAsLongLong : "                     + to_string(_18_getAsLongLong(evalResult))                                     + '\n';
-            out += tabOffset(2) + "_18_isUnsignedInt : "                     + to_string(_18_isUnsignedInt(evalResult))                                     + '\n';
-            out += tabOffset(2) + "_18_getAsUnsigned : "                     + to_string(_18_getAsUnsigned(evalResult))                                     + '\n';
-            out += tabOffset(2) + "_18_getAsDouble : "                       + to_string(_18_getAsDouble(evalResult))                                       + '\n';
-            out += tabOffset(2) + "_18_getAsStr : "                          + _18_getAsStr(evalResult)                                                     + '\n';
-
-            _18_dispose(evalResult);
-        }
+        _18_printMiscellaneousUtilityFunctions(out, cursor, 0);
 
         // 19. Cursor manipulations
 
