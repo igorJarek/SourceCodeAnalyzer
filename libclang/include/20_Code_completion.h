@@ -7,6 +7,8 @@
 
 using namespace std;
 
+// Clang Functions
+
 enum CXCompletionChunkKind      _20_getCompletionChunkKind                      (CXCompletionString completion_string, unsigned chunk_number);                                          // 1.
 CXString                        _20_getCompletionChunkText                      (CXCompletionString completion_string, unsigned chunk_number);                                          // 2.
 CXCompletionString              _20_getCompletionChunkCompletionString          (CXCompletionString completion_string, unsigned chunk_number);                                          // 3.
