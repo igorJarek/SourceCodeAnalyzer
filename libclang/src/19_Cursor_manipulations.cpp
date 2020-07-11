@@ -1,25 +1,23 @@
 #include "19_Cursor_manipulations.h"
 
-void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel)
+void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
 {
-    strData += tabOffset(curLevel + 1) + "Cursor manipulations : \n";
-
-    uint32_t               hashCursor           = clang_hashCursor(cursor);                                                                                                     // 5.
-    CXCursorKind           cursorKind           = clang_getCursorKind(cursor);                                                                                                  // 6.
-    uint32_t               isDeclaration        = clang_isDeclaration(cursorKind);                                                                                              // 7.
-    uint32_t               isInvalidDeclaration = clang_isInvalidDeclaration(cursor);                                                                                           // 8.
-    uint32_t               isReference          = clang_isReference(cursorKind);                                                                                                // 9.
-    uint32_t               isExpression         = clang_isExpression(cursorKind);                                                                                               // 10.
-    uint32_t               isStatement          = clang_isStatement(cursorKind);                                                                                                // 11.
-    uint32_t               isAttribute          = clang_isAttribute(cursorKind);                                                                                                // 12.
-    uint32_t               hasAttrs             = clang_Cursor_hasAttrs(cursor);                                                                                                // 13.
-    uint32_t               isInvalid            = clang_isInvalid(cursorKind);                                                                                                  // 14.
-    uint32_t               isTranslationUnit    = clang_isTranslationUnit(cursorKind);                                                                                          // 15.
-    uint32_t               isPreprocessing      = clang_isPreprocessing(cursorKind);                                                                                            // 16.
-    uint32_t               isUnexposed          = clang_isUnexposed(cursorKind);                                                                                                // 17.
-    CXLinkageKind          cursorLinkage        = clang_getCursorLinkage(cursor);                                                                                               // 18.
-    CXVisibilityKind       cursorVisibility     = clang_getCursorVisibility(cursor);                                                                                            // 19.
-    CXAvailabilityKind     cursorAvailability   = clang_getCursorAvailability(cursor);                                                                                          // 20.
+    uint32_t               hashCursor           = clang_hashCursor(cursor);                                                                                         // 5.
+    CXCursorKind           cursorKind           = clang_getCursorKind(cursor);                                                                                      // 6.
+    uint32_t               isDeclaration        = clang_isDeclaration(cursorKind);                                                                                  // 7.
+    uint32_t               isInvalidDeclaration = clang_isInvalidDeclaration(cursor);                                                                               // 8.
+    uint32_t               isReference          = clang_isReference(cursorKind);                                                                                    // 9.
+    uint32_t               isExpression         = clang_isExpression(cursorKind);                                                                                   // 10.
+    uint32_t               isStatement          = clang_isStatement(cursorKind);                                                                                    // 11.
+    uint32_t               isAttribute          = clang_isAttribute(cursorKind);                                                                                    // 12.
+    uint32_t               hasAttrs             = clang_Cursor_hasAttrs(cursor);                                                                                    // 13.
+    uint32_t               isInvalid            = clang_isInvalid(cursorKind);                                                                                      // 14.
+    uint32_t               isTranslationUnit    = clang_isTranslationUnit(cursorKind);                                                                              // 15.
+    uint32_t               isPreprocessing      = clang_isPreprocessing(cursorKind);                                                                                // 16.
+    uint32_t               isUnexposed          = clang_isUnexposed(cursorKind);                                                                                    // 17.
+    CXLinkageKind          cursorLinkage        = clang_getCursorLinkage(cursor);                                                                                   // 18.
+    CXVisibilityKind       cursorVisibility     = clang_getCursorVisibility(cursor);                                                                                // 19.
+    CXAvailabilityKind     cursorAvailability   = clang_getCursorAvailability(cursor);                                                                              // 20.
 
     int32_t                alwaysDeprecated;
     CXString               deprecatedMessage;
@@ -27,89 +25,84 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, stri
     CXString               unavailableMessage;
     CXPlatformAvailability platformAvailability;
 
-    int32_t cursorPlatformAvailability          = clang_getCursorPlatformAvailability(cursor,                                                                                   /* 21. */
-                                                                                      &alwaysDeprecated, 
-                                                                                      &deprecatedMessage, 
-                                                                                      &alwaysUnavailable, 
-                                                                                      &unavailableMessage, 
-                                                                                      &platformAvailability, 
-                                                                                      0);                                                                                       // check last parameter
+    int32_t cursorPlatformAvailability          = clang_getCursorPlatformAvailability(cursor, &alwaysDeprecated, &deprecatedMessage, &alwaysUnavailable, 
+                                                                                      &unavailableMessage, &platformAvailability, 0);                               // 21. check last parameter
 
-    CXLanguageKind     cursorLanguage           = clang_getCursorLanguage(cursor);                                                                                              // 23.
-    CXTLSKind          TLSKind                  = clang_getCursorTLSKind(cursor);                                                                                               // 24.
+    CXLanguageKind     cursorLanguage           = clang_getCursorLanguage(cursor);                                                                                  // 23.
+    CXTLSKind          TLSKind                  = clang_getCursorTLSKind(cursor);                                                                                   // 24.
 
-    CXCursor           cursorSemanticParent     = clang_getCursorSemanticParent(cursor);                                                                                        // 30.
-    CXCursor           cursorLexicalParent      = clang_getCursorLexicalParent(cursor);                                                                                         // 31.
+    CXCursor           cursorSemanticParent     = clang_getCursorSemanticParent(cursor);                                                                            // 30.
+    CXCursor           cursorLexicalParent      = clang_getCursorLexicalParent(cursor);                                                                             // 31.
 
     CXCursor*          overriddens = nullptr;
     uint32_t           num_overridden;
-    clang_getOverriddenCursors(cursor, &overriddens, &num_overridden);                                                                                                          // 32.
+    clang_getOverriddenCursors(cursor, &overriddens, &num_overridden);                                                                                              // 32.
 
-    CXFile             includedFile             = clang_getIncludedFile(cursor);                                                                                                // 34.
+    CXFile             includedFile             = clang_getIncludedFile(cursor);                                                                                    // 34.
 
-    strData += tabOffset(curLevel + 2)     + "clang_hashCursor : "                                          + to_string(hashCursor)                                             + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_getCursorKind : "                                       + CXCursorKind2String(cursorKind)                                   + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isDeclaration : "                                       + to_string(isDeclaration)                                          + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isInvalidDeclaration : "                                + to_string(isInvalidDeclaration)                                   + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isReference : "                                         + to_string(isReference)                                            + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isExpression : "                                        + to_string(isExpression)                                           + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isStatement : "                                         + to_string(isStatement)                                            + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isAttribute : "                                         + to_string(isAttribute)                                            + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_Cursor_hasAttrs : "                                     + to_string(hasAttrs)                                               + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isInvalid : "                                           + to_string(isInvalid)                                              + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isTranslationUnit : "                                   + to_string(isTranslationUnit)                                      + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isPreprocessing : "                                     + to_string(isPreprocessing)                                        + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_isUnexposed : "                                         + to_string(isUnexposed)                                            + '\n';
+    ADD_STRING_OUT_NAME(curLevel + 1, "19. Cursor manipulations : ")
 
-    strData += tabOffset(curLevel + 2)     + "clang_getCursorLinkage : "                                    + CXLinkageKind2String(cursorLinkage)                               + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_getCursorVisibility : "                                 + CXVisibilityKind2String(cursorVisibility)                         + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_getCursorAvailability : "                               + CXAvailabilityKind2String(cursorAvailability)                     + '\n';
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_hashCursor : ",             to_string(hashCursor))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorKind : ",          CXCursorKind2String(cursorKind))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isDeclaration : ",          to_string(isDeclaration))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isInvalidDeclaration : ",   to_string(isInvalidDeclaration))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isReference : ",            to_string(isReference))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isExpression : ",           to_string(isExpression))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isStatement : ",            to_string(isStatement))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isAttribute : ",            to_string(isAttribute))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_hasAttrs : ",        to_string(hasAttrs))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isInvalid : ",              to_string(isInvalid))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isTranslationUnit : ",      to_string(isTranslationUnit))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isPreprocessing : ",        to_string(isPreprocessing))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_isUnexposed : ",            to_string(isUnexposed))
 
-    strData += tabOffset(curLevel + 2)     + "clang_getCursorPlatformAvailability [return] : "              + to_string(cursorPlatformAvailability)                             + '\n';
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorLinkage : ",       CXLinkageKind2String(cursorLinkage))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorVisibility : ",    CXVisibilityKind2String(cursorVisibility))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorAvailability : " , CXAvailabilityKind2String(cursorAvailability))
+
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorPlatformAvailability [return] : ", to_string(cursorPlatformAvailability))
     if(cursorPlatformAvailability > 0)
     {
-        strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [always_deprecated] : "   + to_string(alwaysDeprecated)                                       + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [deprecated_message] : "  + CXString2String(deprecatedMessage)                                + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [always_unavailable] : "  + to_string(alwaysUnavailable)                                      + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [unavailable_message] : " + CXString2String(unavailableMessage)                               + '\n';
-        strData += tabOffset(curLevel + 2) + "clang_getCursorPlatformAvailability [availability] : \n"      + CXPlatformAvailability2String(platformAvailability, curLevel + 3) + '\n';
+        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [always_deprecated] : ",   to_string(alwaysDeprecated))
+        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [deprecated_message] : ",  CXString2String(deprecatedMessage))
+        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [always_unavailable] : ",  to_string(alwaysUnavailable))
+        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [unavailable_message] : ", CXString2String(unavailableMessage))
+        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [availability] : \n",      CXPlatformAvailability2String(platformAvailability, curLevel + 3))
 
-        clang_disposeCXPlatformAvailability(&platformAvailability);                                                                                                             // 22.
+        clang_disposeCXPlatformAvailability(&platformAvailability);                                                                                                 // 22.
     }
 
-    strData += tabOffset(curLevel + 2)     + "clang_getCursorLanguage : "                                   + CXLanguageKind2String(cursorLanguage)                             + '\n';
-    strData += tabOffset(curLevel + 2)     + "clang_getCursorTLSKind : "                                    + CXTLSKind2String(TLSKind)                                         + '\n';
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorLanguage : ", CXLanguageKind2String(cursorLanguage))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorTLSKind : ",  CXTLSKind2String(TLSKind))
 
     if(!clang_Cursor_isNull(cursorSemanticParent))
-        strData += tabOffset(curLevel + 2) + "clang_getCursorSemanticParent : lib/cursors.cur -> "          + to_string(saveBaseCXCursorInfo(translationUnit, 
-                                                                                                                                             cursorSemanticParent))             + '\n';
-    else 
-        strData += tabOffset(curLevel + 2) + "clang_getCursorSemanticParent : -NULL-\n";
+        ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getCursorSemanticParent : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursorSemanticParent)))
+    else
+        ADD_STRING_OUT_NAME(curLevel + 2,  "clang_getCursorSemanticParent : -NULL-")
 
     if(!clang_Cursor_isNull(cursorLexicalParent))
-        strData += tabOffset(curLevel + 2) + "clang_getCursorLexicalParent : lib/cursors.cur -> "           + to_string(saveBaseCXCursorInfo(translationUnit, 
-                                                                                                                                             cursorLexicalParent))              + '\n';
+        ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getCursorLexicalParent : lib/cursors.cur -> ",  to_string(saveBaseCXCursorInfo(translationUnit, cursorLexicalParent)))
     else 
-        strData += tabOffset(curLevel + 2) + "clang_getCursorLexicalParent : -NULL-\n";
+        ADD_STRING_OUT_NAME(curLevel + 2,  "clang_getCursorLexicalParent : -NULL-")
 
-    strData += tabOffset(curLevel + 2)     + "clang_getOverriddenCursors [num_overridden] : "               + to_string(num_overridden)                                         + '\n';
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_getOverriddenCursors [num_overridden] : ", to_string(num_overridden))
     if(num_overridden > 0)
     {
         for(uint32_t index { 0 }; index < num_overridden; ++index)
         {
             const CXCursor& overridden = overriddens[index];
             if(!clang_Cursor_isNull(overridden))
-                strData += tabOffset(curLevel + 2) + "clang_getOverriddenCursors [" + to_string(index + 1) + "] : lib/cursors.cur -> " 
-                                                                                                                 + to_string(saveBaseCXCursorInfo(translationUnit, overridden)) + '\n';
+                ADD_STRING_OUT_IF_NL(curLevel + 3, "clang_getOverriddenCursors [" + to_string(index + 1) + "] : lib/cursors.cur -> ", 
+                                                   to_string(saveBaseCXCursorInfo(translationUnit, overridden)))
         }
 
-        clang_disposeOverriddenCursors(overriddens);                                                                                                                            // 33.
+        clang_disposeOverriddenCursors(overriddens);                                                                                                                // 33.
     }
 
     if(includedFile)
-        strData += tabOffset(curLevel + 2) + "clang_getIncludedFile : \n"                                   + getBaseCXFileInfo(translationUnit, includedFile, curLevel + 3)    + '\n';
+        ADD_STRING_OUT_NL(curLevel + 2,   "clang_getIncludedFile : \n", getBaseCXFileInfo(translationUnit, includedFile, curLevel + 3))
     else
-        strData += tabOffset(curLevel + 2) + "clang_getIncludedFile : -NULL-\n";
+        ADD_STRING_OUT_NAME(curLevel + 2, "clang_getIncludedFile : -NULL-")
 }
 
 CXCursor                        _19_getNullCursor                       (void)

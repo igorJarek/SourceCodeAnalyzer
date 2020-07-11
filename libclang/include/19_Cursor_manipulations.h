@@ -10,52 +10,56 @@ using namespace std;
 
 /*
 
-	Used:
+    Used:
 
-		5. unsigned							clang_hashCursor										(CXCursor)
-		6. enum CXCursorKind				clang_getCursorKind										(CXCursor)
-		7. unsigned							clang_isDeclaration										(enum CXCursorKind)
-		8. unsigned							clang_isInvalidDeclaration								(CXCursor)
-		9. unsigned							clang_isReference										(enum CXCursorKind)
-		10. unsigned						clang_isExpression										(enum CXCursorKind)
-		11. unsigned						clang_isStatement										(enum CXCursorKind)
-		12. unsigned						clang_isAttribute										(enum CXCursorKind)
-		13. unsigned						clang_Cursor_hasAttrs									(CXCursor C)
-		14. unsigned						clang_isInvalid											(enum CXCursorKind)
-		15. unsigned						clang_isTranslationUnit									(enum CXCursorKind)
-		16. unsigned						clang_isPreprocessing									(enum CXCursorKind)
-		17. unsigned						clang_isUnexposed										(enum CXCursorKind)
-		18. enum CXLinkageKind				clang_getCursorLinkage									(CXCursor cursor)
-		19. enum CXVisibilityKind			clang_getCursorVisibility								(CXCursor cursor)
-		20. enum CXAvailabilityKind			clang_getCursorAvailability								(CXCursor cursor)
-		21. int								clang_getCursorPlatformAvailability						(CXCursor cursor, int *always_deprecated, CXString *deprecated_message, int *always_unavailable, 
-																									CXString *unavailable_message, CXPlatformAvailability *availability, int availability_size)
-		22. void							clang_disposeCXPlatformAvailability						(CXPlatformAvailability *availability)
-		23. enum CXLanguageKind				clang_getCursorLanguage									(CXCursor cursor)
-		24. enum CXTLSKind					clang_getCursorTLSKind									(CXCursor cursor)
+        5. unsigned                         clang_hashCursor                                        (CXCursor Cursor)
+        6. enum CXCursorKind                clang_getCursorKind                                     (CXCursor Cursor)
+        7. unsigned                         clang_isDeclaration                                     (enum CXCursorKind CursorKind)
+        8. unsigned                         clang_isInvalidDeclaration                              (CXCursor Cursor)
+        9. unsigned                         clang_isReference                                       (enum CXCursorKind CursorKind)
+        10. unsigned                        clang_isExpression                                      (enum CXCursorKind CursorKind)
+        11. unsigned                        clang_isStatement                                       (enum CXCursorKind CursorKind)
+        12. unsigned                        clang_isAttribute                                       (enum CXCursorKind CursorKind)
+        13. unsigned                        clang_Cursor_hasAttrs                                   (CXCursor Cursor)
+        14. unsigned                        clang_isInvalid                                         (enum CXCursorKind CursorKind)
+        15. unsigned                        clang_isTranslationUnit                                 (enum CXCursorKind CursorKind)
+        16. unsigned                        clang_isPreprocessing                                   (enum CXCursorKind CursorKind)
+        17. unsigned                        clang_isUnexposed                                       (enum CXCursorKind CursorKind)
+        18. enum CXLinkageKind              clang_getCursorLinkage                                  (CXCursor Cursor)
+        19. enum CXVisibilityKind           clang_getCursorVisibility                               (CXCursor Cursor)
+        20. enum CXAvailabilityKind         clang_getCursorAvailability                             (CXCursor Cursor)
+        21. int                             clang_getCursorPlatformAvailability                     (CXCursor Cursor, int *always_deprecated, CXString *deprecated_message, int *always_unavailable, 
+                                                                                                    CXString *unavailable_message, CXPlatformAvailability *availability, int availability_size)
+        22. void                            clang_disposeCXPlatformAvailability                     (CXPlatformAvailability *availability)
+        23. enum CXLanguageKind             clang_getCursorLanguage                                 (CXCursor Cursor)
+        24. enum CXTLSKind                  clang_getCursorTLSKind                                  (CXCursor Cursor)
 
-		30. CXCursor						clang_getCursorSemanticParent							(CXCursor cursor)
-		31. CXCursor						clang_getCursorLexicalParent							(CXCursor cursor)
-		32. void							clang_getOverriddenCursors								(CXCursor cursor, CXCursor **overridden, unsigned *num_overridden)
-		33. void							clang_disposeOverriddenCursors							(CXCursor *overridden)
-		34. CXFile							clang_getIncludedFile									(CXCursor cursor)
+        30. CXCursor                        clang_getCursorSemanticParent                           (CXCursor Cursor)
+        31. CXCursor                        clang_getCursorLexicalParent                            (CXCursor Cursor)
+        32. void                            clang_getOverriddenCursors                              (CXCursor Cursor, CXCursor **overridden, unsigned *num_overridden)
+        33. void                            clang_disposeOverriddenCursors                          (CXCursor *overridden)
+        34. CXFile                          clang_getIncludedFile                                   (CXCursor Cursor)
 
-	Unused:
+    Unused:
 
-		1. CXCursor							clang_getNullCursor										(void)
-		2. CXCursor							clang_getTranslationUnitCursor							(CXTranslationUnit)
-		3. unsigned							clang_equalCursors										(CXCursor, CXCursor)
-		4. int								clang_Cursor_isNull										(CXCursor cursor)
+        1. CXCursor                         clang_getNullCursor                                     (void)
+        2. CXCursor                         clang_getTranslationUnitCursor                          (CXTranslationUnit TU)
+        3. unsigned                         clang_equalCursors                                      (CXCursor Cursor, CXCursor Cursor)
+        4. int                              clang_Cursor_isNull                                     (CXCursor Cursor)
 
-		25. CXTranslationUnit				clang_Cursor_getTranslationUnit							(CXCursor)
-		26. CXCursorSet						clang_createCXCursorSet									(void)
-		27. void							clang_disposeCXCursorSet								(CXCursorSet cset)
-		28. unsigned						clang_CXCursorSet_contains								(CXCursorSet cset, CXCursor cursor)
-		29. unsigned						clang_CXCursorSet_insert								(CXCursorSet cset, CXCursor cursor)
+        25. CXTranslationUnit               clang_Cursor_getTranslationUnit                         (CXCursor Cursor)
+        26. CXCursorSet                     clang_createCXCursorSet                                 (void)
+        27. void                            clang_disposeCXCursorSet                                (CXCursorSet CursorSet)
+        28. unsigned                        clang_CXCursorSet_contains                              (CXCursorSet CursorSet, CXCursor Cursor)
+        29. unsigned                        clang_CXCursorSet_insert                                (CXCursorSet CursorSet, CXCursor Cursor)
 
 */
 
-void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel);
+// Print Function
+
+void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel, bool print = true);
+
+// Clang Functions
 
 CXCursor                        _19_getNullCursor                       (void);                                                                                             // 1.
 CXCursor                        _19_getTranslationUnitCursor            (CXTranslationUnit TranslationUnit);                                                                // 2.
