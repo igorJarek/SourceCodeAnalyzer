@@ -26,7 +26,7 @@ void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cur
         ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsStr : ",      getAsStr)
     }
     else
-        ADD_STRING_OUT_NAME(curLevel + 1, "-NULL-")
+        ADD_STRING_OUT_NAME(curLevel + 2, "-NULL-")
 }
 
 CXString                _18_getClangVersion             (void)

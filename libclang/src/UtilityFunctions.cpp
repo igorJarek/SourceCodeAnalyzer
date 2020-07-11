@@ -139,7 +139,7 @@ void processFile(const string& folderPath, const string& fileName)
 
     if (isFileHeader(fileExtension) || isFileSource(fileExtension))
     {
-        ExecutionTimeMeasurement timeMeasurement("File " + absoluteFilePath + " parsed in");
+        ExecutionTimeMeasurement timeMeasurement("File " + absoluteFilePath + " has parsed in");
 
         CXIndex index = clang_createIndex(0, 0);
         CXTranslationUnit* translationUnit = _6_translation_unit_manipulation(index, absoluteFilePath);
@@ -166,7 +166,7 @@ void processFile(const string& folderPath, const string& fileName)
     }
 }
 
-CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data)
+CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
 {
     ClientData* clientDataPtr = reinterpret_cast<ClientData*>(client_data);
     CXTranslationUnit translationUnit = clientDataPtr->translationUnit;

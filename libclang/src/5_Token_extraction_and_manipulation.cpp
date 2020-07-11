@@ -36,7 +36,7 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
 
             // tokenization whole file
             CXSourceLocation beginLocation  = _21_getLocation(translationUnit, file, 1, 1);
-            CXSourceLocation endLocation    = _21_getLocation(translationUnit, file, lineCount, lastLineColumns);
+            CXSourceLocation endLocation    = _21_getLocation(translationUnit, file, static_cast<unsigned int>(lineCount), static_cast<unsigned int>(lastLineColumns));
             CXSourceRange    tokenizerRange = _21_getRange(beginLocation, endLocation);
 
             CXToken*         tokensOut      = nullptr;
