@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <windows.h>
+#include <chrono>
 
 #include "ClangUtilityFunctions.h"
 #include "2_Diagnostic_Reporting.h"
@@ -24,6 +25,29 @@
 #define ADD_STRING_OUT_IF_NL(    tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue + '\n';
 
 using namespace std;
+
+class ExecutionTimeMeasurement
+{
+public:
+    ExecutionTimeMeasurement(string&& text) : m_text(text)
+    {
+        m_startTime = std::chrono::system_clock::now();
+    }
+
+    ~ExecutionTimeMeasurement()
+    {
+        m_endTime = std::chrono::system_clock::now();
+        std::chrono::duration<double, std::ratio<1, 1000>> elapsedSeconds = m_endTime - m_startTime;
+
+        cout << m_text << " " <<  elapsedSeconds.count() << " milliseconds." << endl;
+    }
+
+private:
+    const string m_text;
+
+    std::chrono::time_point<std::chrono::system_clock> m_startTime; 
+    std::chrono::time_point<std::chrono::system_clock> m_endTime; 
+};
 
 class ClientData
 {

@@ -115,7 +115,7 @@ bool saveFile(const string& path, const string& data, ios_base::openmode mode)
 
 void processBeforeAll()
 {
-    cout << "Clang version : " << CXString2String(_18_getClangVersion()) << endl;
+    cout << "Clang version : " << CXString2String(_18_getClangVersion()) << endl << endl;
     _18_toggleCrashRecovery(1);
 }
 
@@ -139,12 +139,12 @@ void processFile(const string& folderPath, const string& fileName)
 
     if (isFileHeader(fileExtension) || isFileSource(fileExtension))
     {
+        ExecutionTimeMeasurement timeMeasurement("File " + absoluteFilePath + " parsed in");
+
         CXIndex index = clang_createIndex(0, 0);
         CXTranslationUnit* translationUnit = _6_translation_unit_manipulation(index, absoluteFilePath);
         if (translationUnit)
         {
-            cout << "Parse file : " << absoluteFilePath << endl;
-
             ClientData clientData(*translationUnit);
             CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
 
@@ -174,7 +174,7 @@ CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client
     string& astExtStringData = clientDataPtr->astExtStringData;
     uint32_t curLevel = clientDataPtr->treeLevel;
 
-    astStringData += tabOffset(curLevel);
+    astStringData    += tabOffset(curLevel);
     astExtStringData += tabOffset(curLevel);
 
     dumpAST(astStringData, cursor);
@@ -183,7 +183,7 @@ CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client
     ClientData nextClientData(translationUnit, curLevel + 1);
     clang_visitChildren(cursor, visitor, &nextClientData);
 
-    astStringData += nextClientData.astStringData;
+    astStringData    += nextClientData.astStringData;
     astExtStringData += nextClientData.astExtStringData;
 
     return CXChildVisit_Continue;
