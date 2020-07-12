@@ -2,8 +2,9 @@
 
 void dumpAST(string& strData, const CXCursor& cursor)
 {
-    CXCursorKind kind = clang_getCursorKind(cursor);
-    CXString kindSpelling = clang_getCursorKindSpelling(kind);
+    CXCursorKind    cursorKind      = _19_getCursorKind(cursor);
+    CXString        kindSpelling    = _17_getCursorKindSpelling(cursorKind);
+
     strData += CXString2String(kindSpelling) + " ";
 
     CXSourceLocation cursorLocation = clang_getCursorLocation(cursor);

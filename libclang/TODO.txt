@@ -3,15 +3,14 @@
 1. Change folder browsing functions to boost or C++17 filesystem
 2. Rewrite  dumpAST func
 3. Optimize process that prints variables to the files (something like table, maybe HTML table ?)
-4. Change CXCursorKind2String to CXCursorKingSpelling()
-5. Check CXType == isNull in _15_CXType2String()
-6. Change print values to this pattern -> "clang_getFileContents [size] : ";
+4. Check CXType == isNull in _15_CXType2String()
+5. Change print values to this pattern -> "clang_getFileContents [size] : ";
 									   -> "clang_getFileContents [return value] : ";
 
-7. Add https://clang.llvm.org/doxygen/group__BUILD__SYSTEM.html and https://clang.llvm.org/doxygen/group__CINDEX__COMMENT.html
-8. Complete saveBaseCXCursorInfo() in ClangUtilityFunctions.cpp
-9. Change #include "" to #include <>
-10. In functions check CXCursor by clang_Cursor_isNull() function
+6. Add https://clang.llvm.org/doxygen/group__BUILD__SYSTEM.html and https://clang.llvm.org/doxygen/group__CINDEX__COMMENT.html
+7. Complete saveBaseCXCursorInfo() in ClangUtilityFunctions.cpp
+8. Change #include "" to #include <>
+9. In functions check CXCursor by clang_Cursor_isNull() function
 
 Fix :
 1. _11_releaseCXStringSet // VS2019 throws Heap problem 

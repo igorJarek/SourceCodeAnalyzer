@@ -43,7 +43,7 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, stri
     ADD_STRING_OUT_NAME(curLevel + 1, "19. Cursor manipulations : ")
 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_hashCursor : ",             to_string(hashCursor))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorKind : ",          CXCursorKind2String(cursorKind))
+    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorKind : ",          CXString2String(_17_getCursorKindSpelling(cursorKind)))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_isDeclaration : ",          to_string(isDeclaration))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_isInvalidDeclaration : ",   to_string(isInvalidDeclaration))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_isReference : ",            to_string(isReference))

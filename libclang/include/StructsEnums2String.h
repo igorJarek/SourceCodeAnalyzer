@@ -21,8 +21,6 @@ string CXDiagnosticDisplayOptions2String		(uint32_t options);
 string CXSourceLocation2String					(const CXSourceLocation sourceLocation,		uint32_t offset);
 string CXSourceRange2String						(const CXSourceRange sourceRange,			uint32_t offset);
 
-string CXCursorKind2String						(CXCursorKind cursorKind);
-
 string CXTUResourceUsage2String					(const CXTUResourceUsage& TUResourceUsage,	uint32_t offset);
 string CXErrorCode2String						(CXErrorCode errorCode);
 string CXSaveError2String						(int32_t saveError);
