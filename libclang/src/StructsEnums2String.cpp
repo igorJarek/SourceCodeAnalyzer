@@ -1107,3 +1107,75 @@ string CXTLSKind2String(const CXTLSKind LSKind)
             return "Undefined CXTLSKind";
     }
 }
+
+string CXCommentKind2String(const CXCommentKind commentKind)
+{
+    switch (commentKind)
+    {
+        case CXComment_Null:
+            return "CXComment_Null";
+        case CXComment_Text:
+            return "CXComment_Text";
+        case CXComment_InlineCommand:
+            return "CXComment_InlineCommand";
+        case CXComment_HTMLStartTag:
+            return "CXComment_HTMLStartTag";
+        case CXComment_HTMLEndTag:
+            return "CXComment_HTMLEndTag";
+        case CXComment_Paragraph:
+            return "CXComment_Paragraph";
+        case CXComment_BlockCommand:
+            return "CXComment_BlockCommand";
+        case CXComment_ParamCommand:
+            return "CXComment_ParamCommand";
+        case CXComment_TParamCommand:
+            return "CXComment_TParamCommand";
+        case CXComment_VerbatimBlockCommand:
+            return "CXComment_VerbatimBlockCommand";
+        case CXComment_VerbatimBlockLine:
+            return "CXComment_VerbatimBlockLine";
+        case CXComment_VerbatimLine:
+            return "CXComment_VerbatimLine";
+        case CXComment_FullComment:
+            return "CXComment_FullComment";
+
+        default:
+            return "Undefined CXCommentKind";
+    }
+}
+
+string CXCommentInlineCommandRenderKind2String(const CXCommentInlineCommandRenderKind commentInlineCommandRenderKind)
+{
+    switch (commentInlineCommandRenderKind)
+    {
+        case CXCommentInlineCommandRenderKind_Normal:
+            return "CXCommentInlineCommandRenderKind_Normal";
+        case CXCommentInlineCommandRenderKind_Bold:
+            return "CXCommentInlineCommandRenderKind_Bold";
+        case CXCommentInlineCommandRenderKind_Monospaced:
+            return "CXCommentInlineCommandRenderKind_Monospaced";
+        case CXCommentInlineCommandRenderKind_Emphasized:
+            return "CXCommentInlineCommandRenderKind_Emphasized";
+        case CXCommentInlineCommandRenderKind_Anchor:
+            return "CXCommentInlineCommandRenderKind_Anchor";
+
+        default:
+            return "Undefined CXCommentInlineCommandRenderKind";
+    }
+}
+
+string CXCommentParamPassDirection2String(const CXCommentParamPassDirection commentParamPassDirection)
+{
+    switch (commentParamPassDirection)
+    {
+        case CXCommentParamPassDirection_In:
+            return "CXCommentParamPassDirection_In";
+        case CXCommentParamPassDirection_Out:
+            return "CXCommentParamPassDirection_Out";
+        case CXCommentParamPassDirection_InOut:
+            return "CXCommentParamPassDirection_InOut";
+
+        default:
+            return "Undefined CXCommentParamPassDirection";
+    }
+}

@@ -122,6 +122,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\0_1_Comment_introspection.cpp" />
     <ClCompile Include="src\10_Mapping_between_cursors_and_source_code.cpp" />
     <ClCompile Include="src\11_String_manipulation_routines.cpp" />
     <ClCompile Include="src\12_CompilationDatabase_functions.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="src\UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\0_1_Comment_introspection.h" />
     <ClInclude Include="include\10_Mapping_between_cursors_and_source_code.h" />
     <ClInclude Include="include\11_String_manipulation_routines.h" />
     <ClInclude Include="include\12_CompilationDatabase_functions.h" />

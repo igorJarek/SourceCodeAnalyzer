@@ -93,6 +93,9 @@
     <ClCompile Include="src\ClangUtilityFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\0_1_Comment_introspection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\10_Mapping_between_cursors_and_source_code.h">
@@ -168,6 +171,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ClangUtilityFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\0_1_Comment_introspection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

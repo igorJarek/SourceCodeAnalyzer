@@ -38,6 +38,7 @@ void dumpAST(string& strData, const CXCursor& cursor)
 void printCursor(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel)
 {
     strData += "Token str : \n";
+    _0_1_printCommentIntrospection(strData, cursor, curLevel);
     _1_printMangling(strData, cursor, curLevel);
     _3_printASTIntrospection(translationUnit, strData, cursor, curLevel);
     _7_printInformationForAttributes(strData, cursor, curLevel);
@@ -60,6 +61,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit& translationUnit, const CX
         out += tabOffset(1) + "cursor.kind = CXCursor_NoDeclFound\n";
     else
     {
+        _0_1_printCommentIntrospection              (out, cursor, 0);
         _1_printMangling                            (out, cursor, 0);
         _3_printASTIntrospection                    (translationUnit, out, cursor, 0, false);
         _7_printInformationForAttributes            (out, cursor, 0);
