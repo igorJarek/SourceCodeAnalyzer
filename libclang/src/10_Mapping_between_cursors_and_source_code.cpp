@@ -5,7 +5,7 @@ void _10_printMappingBetweenCursorsAndSourceCode(string& strData, const CXCursor
     CXSourceLocation cursorLocation = clang_getCursorLocation(cursor);      // 2.
     CXSourceRange    cursorExtent   = clang_getCursorExtent(cursor);        // 3.
 
-    ADD_STRING_OUT_NAME(curLevel + 1, "10. Mapping between cursors and source code : ")
+    ADD_STRING_OUT_TEXT(curLevel + 1, "10. Mapping between cursors and source code : ")
 
     ADD_STRING_OUT(curLevel + 2, "clang_getCursorLocation : \n", CXSourceLocation2String(cursorLocation, curLevel + 3))
     ADD_STRING_OUT(curLevel + 2, "clang_getCursorExtent : \n",   CXSourceRange2String(cursorExtent, curLevel + 3))

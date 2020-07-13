@@ -4,11 +4,11 @@ void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string
 {
     string strData;
 
-    ADD_STRING_OUT_NAME(0, "8. File manipulation routines : ")
+    ADD_STRING_OUT_TEXT(0, "8. File manipulation routines : ")
 
     CXFile file = clang_getFile(translationUnit, filePath.c_str());                                                                     // 5.
     if(!file)
-        ADD_STRING_OUT_NAME(1, "clang_getFile : null")
+        ADD_STRING_OUT_TEXT(1, "clang_getFile : null")
     else
     {
         CXString        fileName = clang_getFileName(file);                                                                             // 1.
@@ -37,8 +37,8 @@ void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string
         ADD_STRING_OUT_NL(1, "clang_isFileMultipleIncludeGuarded [return value] : ", to_string(isFileMultipleIncludeGuarded))
         ADD_STRING_OUT_NL(1, "clang_File_tryGetRealPathName [return value] : ",      CXString2String(realPathName))
         ADD_STRING_OUT_NL(1, "clang_getFileContents [size] : ",                      to_string(size))
-        ADD_STRING_OUT_NAME(1, "clang_getFileContents [return value] : ")
-        ADD_STRING_OUT_NAME(2, fileContents)
+        ADD_STRING_OUT_TEXT(1, "clang_getFileContents [return value] : ")
+        ADD_STRING_OUT_TEXT(2, fileContents)
     }
 
     string saveFilePath{ filePath + ".file" };

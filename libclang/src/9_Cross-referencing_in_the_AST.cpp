@@ -24,7 +24,7 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
     CXString         rawCommentText          = clang_Cursor_getRawCommentText(cursor);                                                                         // 31.
     CXString         briefCommentText        = clang_Cursor_getBriefCommentText(cursor);                                                                       // 32.
 
-    ADD_STRING_OUT_NAME  (curLevel + 1, "9. Cross-referencing in the AST : ")
+    ADD_STRING_OUT_TEXT  (curLevel + 1, "9. Cross-referencing in the AST : ")
 
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorUSR : ",                           CXString2String(cursorUSR))
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorSpelling : ",                      CXString2String(cursorSpelling))
@@ -39,12 +39,12 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorPrettyPrinted : \n",               CXString2String(cursorPrettyPrinted))
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorDisplayName : ",                   CXString2String(cursorDisplayName))
 
-    ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursorReferenced)))
-    ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursorDefinition)))
+    ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> ", to_string(getBaseCXCursorInfo(&translationUnit, &cursorReferenced)))
+    ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> ", to_string(getBaseCXCursorInfo(&translationUnit, &cursorDefinition)))
 
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_isCursorDefinition : ",                     to_string(isCursorDefinition))
 
-    ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCanonicalCursor : lib/cursors.cur -> ",  to_string(saveBaseCXCursorInfo(translationUnit, canonicalCursor)))
+    ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCanonicalCursor : lib/cursors.cur -> ",  to_string(getBaseCXCursorInfo(&translationUnit, &canonicalCursor)))
 
     ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_isDynamicCall : ",                   to_string(isDynamicCall))
 

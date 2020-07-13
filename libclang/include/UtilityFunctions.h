@@ -15,14 +15,16 @@
 #include "8_File_manipulation_routines.h"
 #include "11_String_manipulation_routines.h"
 
-#define ADD_STRING_OUT_NAME(     tabCount, functionName)                          strData += tabOffset(tabCount) + functionName                 + '\n';
-#define ADD_STRING_OUT_NEWLINE()                                                  strData +=                                                      '\n';
+#define ADD_STRING_OUT_CURSOR_KIND( cursorKind)                                      strData += "Cursor "           + cursorKind                   + " : \n";
 
-#define ADD_STRING_OUT(          tabCount, functionName, functionValue)           strData += tabOffset(tabCount) + functionName + functionValue;
-#define ADD_STRING_OUT_NL(       tabCount, functionName, functionValue)           strData += tabOffset(tabCount) + functionName + functionValue + '\n';
+#define ADD_STRING_OUT_TEXT(        tabCount, functionName)                          strData += tabOffset(tabCount) + functionName                 + '\n';
+#define ADD_STRING_OUT_NEWLINE()                                                     strData +=                                                      '\n';
 
-#define ADD_STRING_OUT_IF(       tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue;
-#define ADD_STRING_OUT_IF_NL(    tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue + '\n';
+#define ADD_STRING_OUT(             tabCount, functionName, functionValue)           strData += tabOffset(tabCount) + functionName + functionValue;
+#define ADD_STRING_OUT_NL(          tabCount, functionName, functionValue)           strData += tabOffset(tabCount) + functionName + functionValue + '\n';
+
+#define ADD_STRING_OUT_IF(          tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue;
+#define ADD_STRING_OUT_IF_NL(       tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue + '\n';
 
 using namespace std;
 
@@ -49,39 +51,21 @@ private:
     std::chrono::time_point<std::chrono::system_clock> m_endTime; 
 };
 
-class ClientData
-{
-public:
+string      tabOffset               (uint32_t offset);
 
-    ClientData(CXTranslationUnit tu, uint32_t level = 0)
-    {
-        translationUnit = tu;
-        treeLevel = level;
-    }
+bool        isFileHeader            (const string& extension);
+bool        isFileSource            (const string& extension);
 
-    CXTranslationUnit translationUnit;
-    uint32_t treeLevel{ 0 };
-    string astStringData{};
-    string astExtStringData{};
-};
+int64_t     countStringLines        (const string& str);
+int64_t     countFileLines          (const string& filePath);
+int64_t     countFileLineColumns    (const string& filePath, int64_t line);
 
-string tabOffset(uint32_t offset);
+bool        recursiveFolderSearch   (const string& folderPath);
 
-int64_t countStringLines(const string& str);
-int64_t countFileLines(const string& filePath);
-int64_t countFileLineColumns(const string& filePath, int64_t line);
+void        processBeforeAll        (void);
+void        processAfterAll         (void);
 
-bool isFileHeader(const string& extension);
-bool isFileSource(const string& extension);
+bool        processFolder           (const string& path);
+void        processFile             (const string& folderPath, const string& fileName);
 
-CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data);
-bool recursiveFolderSearch(const string& folderPath);
-
-void processBeforeAll();
-bool processFolder(const string& path);
-void processFile(const string& folderPath, const string& fileName);
-
-bool saveToFile(const string& path, const string& data);
-bool appendToFile(const string& path, const string& data);
-
-bool saveFile(const string& path, const string& data, ios_base::openmode mode);
+bool        saveToFile              (const string& path, const string& data);

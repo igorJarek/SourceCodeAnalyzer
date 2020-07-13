@@ -23,7 +23,7 @@ void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, string& 
     CXSourceRange cursorReferenceNameRange_CXNameRange_WantTemplateArgs = clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0);       // 15.
     CXSourceRange cursorReferenceNameRange_CXNameRange_WantSinglePiece  = clang_getCursorReferenceNameRange(cursor, CXNameRange_WantSinglePiece,  0);       // 15.
 
-    ADD_STRING_OUT_NAME(curLevel + 1, "3. ASTIntrospection : ")
+    ADD_STRING_OUT_TEXT(curLevel + 1, "3. ASTIntrospection : ")
 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXConstructor_isConvertingConstructor : ",             to_string(isConvertingConstructor))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXConstructor_isCopyConstructor : ",                   to_string(isCopyConstructor))
@@ -39,7 +39,7 @@ void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, string& 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXMethod_isConst : ",                                  to_string(isConst))
 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getTemplateCursorKind : ",                              CXString2String(_17_getCursorKindSpelling(templateCursorKind)))
-    ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, specializedCursorTemplate)))
+    ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ", to_string(getBaseCXCursorInfo(&translationUnit, &specializedCursorTemplate)))
 
     ADD_STRING_OUT   (curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantQualifier, 0) :\n",    CXSourceRange2String(cursorReferenceNameRange_CXNameRange_WantQualifier,    curLevel + 3))
     ADD_STRING_OUT   (curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0) :\n", CXSourceRange2String(cursorReferenceNameRange_CXNameRange_WantTemplateArgs, curLevel + 3))

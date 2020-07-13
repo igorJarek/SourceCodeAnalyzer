@@ -33,7 +33,7 @@ void _0_1_printCommentIntrospection(string& strData, const CXCursor& cursor, uin
     CXString                            asHTML               = clang_FullComment_getAsHTML(parsedComment);                                              // 33.
     CXString                            asXML                = clang_FullComment_getAsXML(parsedComment);                                               // 34.
 
-    ADD_STRING_OUT_NAME(curLevel + 1, "0-1. Comment introspection : ")
+    ADD_STRING_OUT_TEXT(curLevel + 1, "0-1. Comment introspection : ")
 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_Comment_getKind : ",                                 CXCommentKind2String(commentKind))
 

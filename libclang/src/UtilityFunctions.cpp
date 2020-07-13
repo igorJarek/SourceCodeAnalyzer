@@ -1,5 +1,10 @@
 #include "UtilityFunctions.h"
 
+string tabOffset(uint32_t offset)
+{
+    return string(offset, '\t');
+}
+
 bool isFileHeader(const string& extension)
 {
     if (extension.compare("h") == 0 || extension.compare("hpp") == 0)
@@ -14,11 +19,6 @@ bool isFileSource(const string& extension)
         return true;
     else
         return false;
-}
-
-string tabOffset(uint32_t offset)
-{
-    return string(offset, '\t');
 }
 
 int64_t countStringLines(const string& str)
@@ -88,35 +88,47 @@ int64_t countFileLineColumns(const string& filePath, int64_t line)
     return columns;
 }
 
-bool saveToFile(const string& path, const string& data)
+bool recursiveFolderSearch(const string& folderPath)
 {
-    return saveFile(path, data, std::fstream::trunc);
-}
-
-bool appendToFile(const string& path, const string& data)
-{
-    return saveFile(path, data, std::fstream::app);
-}
-
-bool saveFile(const string& path, const string& data, ios_base::openmode mode)
-{
-    fstream stream;
-    stream.open(path, std::fstream::out | mode);
-    if (stream.is_open())
+    WIN32_FIND_DATAA findDataStruct;
+    string startDir{ folderPath + "*.*" };
+    HANDLE hFind = FindFirstFileA(startDir.c_str(), &findDataStruct);
+    if (hFind == INVALID_HANDLE_VALUE)
     {
-        stream << data;
-        stream.flush();
-        stream.close();
-        return true;
-    }
-    else
+        cout << "\tError : " << "Unable to open directory (Error code : " << GetLastError() << ") : " << folderPath << endl;
         return false;
+    }
+
+    do
+    {
+        const string fileName{ findDataStruct.cFileName };
+        if (findDataStruct.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY && (fileName.compare(".") == 0 || fileName.compare("..") == 0))
+            continue;
+
+        if (findDataStruct.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        {
+            string nextDir{ folderPath + fileName + "\\" };
+            if (!processFolder(nextDir))
+                return false;
+        }
+        else
+            processFile(folderPath, fileName);
+
+    } while (FindNextFileA(hFind, &findDataStruct) != 0);
+
+    FindClose(hFind);
+    return true;
 }
 
 void processBeforeAll()
 {
     cout << "Clang version : " << CXString2String(_18_getClangVersion()) << endl << endl;
     _18_toggleCrashRecovery(1);
+}
+
+void processAfterAll()
+{
+    getBaseCXCursorInfo(nullptr, nullptr, true);
 }
 
 bool processFolder(const string& path)
@@ -166,25 +178,17 @@ void processFile(const string& folderPath, const string& fileName)
     }
 }
 
-CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
+bool saveToFile(const string& path, const string& data)
 {
-    ClientData* clientDataPtr = reinterpret_cast<ClientData*>(client_data);
-    CXTranslationUnit translationUnit = clientDataPtr->translationUnit;
-    string& astStringData = clientDataPtr->astStringData;
-    string& astExtStringData = clientDataPtr->astExtStringData;
-    uint32_t curLevel = clientDataPtr->treeLevel;
+    fstream stream;
+    stream.open(path, std::fstream::out | std::fstream::trunc);
+    if (stream.is_open())
+    {
+        stream << data;
+        stream.close();
 
-    astStringData    += tabOffset(curLevel);
-    astExtStringData += tabOffset(curLevel);
-
-    dumpAST(astStringData, cursor);
-    printCursor(translationUnit, astExtStringData, cursor, curLevel);
-
-    ClientData nextClientData(translationUnit, curLevel + 1);
-    clang_visitChildren(cursor, visitor, &nextClientData);
-
-    astStringData    += nextClientData.astStringData;
-    astExtStringData += nextClientData.astExtStringData;
-
-    return CXChildVisit_Continue;
+        return true;
+    }
+    else
+        return false;
 }

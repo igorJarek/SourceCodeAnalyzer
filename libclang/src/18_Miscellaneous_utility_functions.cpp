@@ -2,7 +2,7 @@
 
 void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cursor, uint32_t curLevel)
 {
-    ADD_STRING_OUT_NAME(curLevel + 1, "18. Miscellaneous utility functions : ")
+    ADD_STRING_OUT_TEXT(curLevel + 1, "18. Miscellaneous utility functions : ")
 
     CXEvalResult         evalResult     = clang_Cursor_Evaluate(cursor);                    // 4.
     if(evalResult)
@@ -26,7 +26,7 @@ void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cur
         ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsStr : ",      getAsStr)
     }
     else
-        ADD_STRING_OUT_NAME(curLevel + 2, "-NULL-")
+        ADD_STRING_OUT_TEXT(curLevel + 2, "-NULL-")
 }
 
 CXString                _18_getClangVersion             (void)

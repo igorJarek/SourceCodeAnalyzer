@@ -7,7 +7,7 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
 
     if (cursorType.kind == CXType_Invalid || cursorType.kind == CXType_Unexposed)
     {
-        ADD_STRING_OUT_NAME(curLevel + 1, "15. Type information for CXCursors : ")
+        ADD_STRING_OUT_TEXT(curLevel + 1, "15. Type information for CXCursors : ")
         ADD_STRING_OUT_NL  (curLevel + 2, "clang_getTypeSpelling : ", CXString2String(typeSpelling))
 
         return;
@@ -85,7 +85,7 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
 
     uint32_t                    numOverloadedDecls                      = clang_getNumOverloadedDecls                   (cursor);                           // 67.
 
-    ADD_STRING_OUT_NAME(curLevel + 1, "15. Type information for CXCursors : ")
+    ADD_STRING_OUT_TEXT(curLevel + 1, "15. Type information for CXCursors : ")
 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getTypeSpelling : ",                           CXString2String(typeSpelling))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getTypedefDeclUnderlyingType : ",              CXType2String(typedefDeclUnderlyingType))
@@ -98,7 +98,7 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
     for (int32_t index{ 0 }; index < numArguments; ++index)
     {
         CXCursor cursor_getArgument = clang_Cursor_getArgument(cursor, index);                                                                              // 9.
-        ADD_STRING_OUT_IF_NL(curLevel + 3, "clang_Cursor_getArgument : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursor_getArgument)))
+        ADD_STRING_OUT_IF_NL(curLevel + 3, "clang_Cursor_getArgument : lib/cursors.cur -> ", to_string(getBaseCXCursorInfo(&translationUnit, &cursor_getArgument)))
     }
 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getNumTemplateArguments : ",            to_string(cursorNumTemplateArguments))
@@ -121,7 +121,7 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getAddressSpace : ",                             to_string(getAddressSpace))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getTypedefName : ",                              CXString2String(getTypedefName))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getPointeeType : ",                              CXType2String(getPointeeType))
-    ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getTypeDeclaration : lib/cursors.cur -> ",    to_string(saveBaseCXCursorInfo(translationUnit, getTypeDeclaration)))
+    ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getTypeDeclaration : lib/cursors.cur -> ",    to_string(getBaseCXCursorInfo(&translationUnit, &getTypeDeclaration)))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getTypeKindSpelling : ",                         CXString2String(typeKindSpelling))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getFunctionTypeCallingConv : ",                  CXCallingConv2String(functionTypeCallingConv))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getResultType : ",                               CXType2String(resultType))
@@ -171,7 +171,7 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
     for (uint32_t index{ 0 }; index < numOverloadedDecls; ++index)
     {
         CXCursor overloadedDecl = clang_getOverloadedDecl(cursor, index);                                                                                   // 68.
-        ADD_STRING_OUT_IF_NL(curLevel + 3, "clang_getOverloadedDecl : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, overloadedDecl)))
+        ADD_STRING_OUT_IF_NL(curLevel + 3, "clang_getOverloadedDecl : lib/cursors.cur -> ", to_string(getBaseCXCursorInfo(&translationUnit, &overloadedDecl)))
     }
 }
 

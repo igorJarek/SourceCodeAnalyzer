@@ -40,7 +40,7 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, stri
 
     CXFile             includedFile             = clang_getIncludedFile(cursor);                                                                                    // 34.
 
-    ADD_STRING_OUT_NAME(curLevel + 1, "19. Cursor manipulations : ")
+    ADD_STRING_OUT_TEXT(curLevel + 1, "19. Cursor manipulations : ")
 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_hashCursor : ",             to_string(hashCursor))
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorKind : ",          CXString2String(_17_getCursorKindSpelling(cursorKind)))
@@ -76,14 +76,14 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, stri
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorTLSKind : ",  CXTLSKind2String(TLSKind))
 
     if(!clang_Cursor_isNull(cursorSemanticParent))
-        ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getCursorSemanticParent : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursorSemanticParent)))
+        ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getCursorSemanticParent : lib/cursors.cur -> ", to_string(getBaseCXCursorInfo(&translationUnit, &cursorSemanticParent)))
     else
-        ADD_STRING_OUT_NAME(curLevel + 2,  "clang_getCursorSemanticParent : -NULL-")
+        ADD_STRING_OUT_TEXT(curLevel + 2,  "clang_getCursorSemanticParent : -NULL-")
 
     if(!clang_Cursor_isNull(cursorLexicalParent))
-        ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getCursorLexicalParent : lib/cursors.cur -> ",  to_string(saveBaseCXCursorInfo(translationUnit, cursorLexicalParent)))
+        ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getCursorLexicalParent : lib/cursors.cur -> ",  to_string(getBaseCXCursorInfo(&translationUnit, &cursorLexicalParent)))
     else 
-        ADD_STRING_OUT_NAME(curLevel + 2,  "clang_getCursorLexicalParent : -NULL-")
+        ADD_STRING_OUT_TEXT(curLevel + 2,  "clang_getCursorLexicalParent : -NULL-")
 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getOverriddenCursors [num_overridden] : ", to_string(num_overridden))
     if(num_overridden > 0)
@@ -93,7 +93,7 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, stri
             const CXCursor& overridden = overriddens[index];
             if(!clang_Cursor_isNull(overridden))
                 ADD_STRING_OUT_IF_NL(curLevel + 3, "clang_getOverriddenCursors [" + to_string(index + 1) + "] : lib/cursors.cur -> ", 
-                                                   to_string(saveBaseCXCursorInfo(translationUnit, overridden)))
+                                                   to_string(getBaseCXCursorInfo(&translationUnit, &overridden)))
         }
 
         clang_disposeOverriddenCursors(overriddens);                                                                                                                // 33.
@@ -102,7 +102,7 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, stri
     if(includedFile)
         ADD_STRING_OUT_NL(curLevel + 2,   "clang_getIncludedFile : \n", getBaseCXFileInfo(translationUnit, includedFile, curLevel + 3))
     else
-        ADD_STRING_OUT_NAME(curLevel + 2, "clang_getIncludedFile : -NULL-")
+        ADD_STRING_OUT_TEXT(curLevel + 2, "clang_getIncludedFile : -NULL-")
 }
 
 CXCursor                        _19_getNullCursor                       (void)

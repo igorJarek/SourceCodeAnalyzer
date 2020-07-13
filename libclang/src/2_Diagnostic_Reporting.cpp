@@ -12,7 +12,7 @@ void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& f
 
     for (uint32_t errorIndex = 0; errorIndex < errorNumber; ++errorIndex)
     {
-        ADD_STRING_OUT_NAME(1, "CXDiagnostic [" + to_string(errorIndex + 1) + "] : ")
+        ADD_STRING_OUT_TEXT(1, "CXDiagnostic [" + to_string(errorIndex + 1) + "] : ")
         CXDiagnostic currentDiagnostic = clang_getDiagnostic(translationUnit, errorIndex);                                                                                         // 7.
         _2_printDiagnostic(strData, currentDiagnostic);
         clang_disposeDiagnostic(currentDiagnostic);                                                                                                                                // 9.
@@ -23,7 +23,7 @@ void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& f
 
     for (uint32_t errorIndex = 0; errorIndex < errorNumber; ++errorIndex)
     {
-        ADD_STRING_OUT_NAME(1, "CXDiagnostic [" + to_string(errorIndex + 1) + "] : ")
+        ADD_STRING_OUT_TEXT(1, "CXDiagnostic [" + to_string(errorIndex + 1) + "] : ")
         CXDiagnostic currentDiagnostic = clang_getDiagnosticInSet(diagnosticSet, errorIndex);                                                                                      // 2.
         _2_printDiagnostic(strData, currentDiagnostic);
         clang_disposeDiagnostic(currentDiagnostic);                                                                                                                                // 9.

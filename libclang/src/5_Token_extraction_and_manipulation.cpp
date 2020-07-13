@@ -4,18 +4,18 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
 {
     string strData;
 
-    ADD_STRING_OUT_NAME(0, "5. Token extraction and manipulation : ")
+    ADD_STRING_OUT_TEXT(0, "5. Token extraction and manipulation : ")
 
     CXFile file = _8_getFile(translationUnit, filePath.c_str());
 
     const int64_t lineCount = countFileLines(filePath);
     if (lineCount == -1)
-        ADD_STRING_OUT_NAME(1, "File is empty.")
+        ADD_STRING_OUT_TEXT(1, "File is empty.")
     else
     {
         const int64_t lastLineColumns = countFileLineColumns(filePath, lineCount);
         if(lastLineColumns == -1)
-            ADD_STRING_OUT_NAME(1, "Something is wrong with last line or file.")
+            ADD_STRING_OUT_TEXT(1, "Something is wrong with last line or file.")
         else
         {
             //  For first char '#' CXSourceLocation is <1, 1>
@@ -48,7 +48,7 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
 
             if (tokensNum > 0)
             {
-                ADD_STRING_OUT_NAME(1, "Tokens : ")
+                ADD_STRING_OUT_TEXT(1, "Tokens : ")
 
                 for (uint32_t index{ 0 }; index < tokensNum; ++index)
                 {
@@ -63,7 +63,7 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
 
                     ADD_STRING_OUT_NL(2, to_string(index + 1) + ")\tclang_getTokenSpelling : ",         CXString2String(tokenSpelling))
                     ADD_STRING_OUT_NL(3, "clang_getTokenKind : ",                                       CXTokenKind2String(tokenKind))
-                    ADD_STRING_OUT_NL(3, "_10_getCursor(clang_getTokenLocation) : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(translationUnit, cursor)))
+                    ADD_STRING_OUT_NL(3, "_10_getCursor(clang_getTokenLocation) : lib/cursors.cur -> ", to_string(getBaseCXCursorInfo(&translationUnit, &cursor)))
                     ADD_STRING_OUT_NL(3, "clang_getTokenExtent : \n",                                   CXSourceRange2String(tokenRange, 4))
                 }
             }
