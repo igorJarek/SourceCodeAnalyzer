@@ -131,10 +131,10 @@ string getBaseCXFileInfo(const CXTranslationUnit& translationUnit, const CXFile&
     CXFileUniqueID  fileUniqueIDStruct;
     size_t          size;
 
-    time_t      fileTime                = _8_getFileTime(file);
-    int32_t     fileUniqueID            = _8_getFileUniqueID(file, &fileUniqueIDStruct);
-    uint32_t    multipleIncludeGuarded  = _8_isFileMultipleIncludeGuarded(translationUnit, file);
-    const char* fileContents            = _8_getFileContents(translationUnit, file, &size);
+    time_t          fileTime                = _8_getFileTime(file);
+    int32_t         fileUniqueID            = _8_getFileUniqueID(file, &fileUniqueIDStruct);
+    uint32_t        multipleIncludeGuarded  = _8_isFileMultipleIncludeGuarded(translationUnit, file);
+    const char*     fileContents            = _8_getFileContents(translationUnit, file, &size);
 
     ctime_s(timeBuff, sizeof(timeBuff), &fileTime);
 
