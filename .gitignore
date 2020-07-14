@@ -27,8 +27,8 @@
 
 # Application files
 *.ast
-*.diagnostic
-*.astext
+*.diagn
+*.astExt
 *.tunit
 *.tunitBin
 *.file
