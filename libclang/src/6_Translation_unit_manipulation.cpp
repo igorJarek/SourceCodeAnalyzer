@@ -2,7 +2,7 @@
 
 CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string& filePath)
 {
-    const string tUnitSavePath{ filePath + ".tunit" };
+    const string tUnitSavePath{ filePath + ".tunitBin" };
     string strData;
 
     CXTranslationUnit*    translationUnit                      = new CXTranslationUnit;
@@ -53,7 +53,7 @@ CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string
         translationUnit = nullptr;
     }
 
-    string saveFilePath{ filePath + ".tunitLog" };
+    string saveFilePath{ filePath + ".tunit" };
     if (!saveToFile(saveFilePath, strData))
         cout << "Couldn't create file : " << saveFilePath << endl;
 

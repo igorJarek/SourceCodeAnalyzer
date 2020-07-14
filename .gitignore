@@ -30,7 +30,7 @@
 *.diagnostic
 *.astext
 *.tunit
-*.tunitLog
+*.tunitBin
 *.file
 *.tokens
 *.cur
