@@ -93,7 +93,7 @@
     <ClCompile Include="src\0_1_Comment_introspection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\LibPath.cpp">
+    <ClCompile Include="src\Paths.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,7 +173,7 @@
     <ClInclude Include="include\0_1_Comment_introspection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\LibPath.h">
+    <ClInclude Include="include\Paths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
