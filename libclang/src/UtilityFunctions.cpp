@@ -170,8 +170,8 @@ void processFile(const string& folderPath, const string& fileName)
             translationUnit = nullptr;
 
             bool ret;
-            ret = saveToFile(absoluteFilePath + ".ast", clientData.astStringData);
-            ret = saveToFile(absoluteFilePath + ".astExt", clientData.astExtStringData);
+            ret = saveToFile(absoluteFilePath + AST_FILE_EXT,     clientData.astStringData);
+            ret = saveToFile(absoluteFilePath + AST_EXT_FILE_EXT, clientData.astExtStringData);
         }
 
         clang_disposeIndex(index);

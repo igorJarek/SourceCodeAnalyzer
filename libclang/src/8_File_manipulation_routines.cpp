@@ -41,7 +41,7 @@ void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string
         ADD_STRING_OUT_TEXT(2, fileContents)
     }
 
-    string saveFilePath{ filePath + ".file" };
+    string saveFilePath{ filePath + FILE_FILE_EXT };
     if (!saveToFile(saveFilePath, strData))
         cout << "Couldn't save file : " << saveFilePath << endl;
 }

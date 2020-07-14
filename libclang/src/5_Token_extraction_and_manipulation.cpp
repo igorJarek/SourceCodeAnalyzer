@@ -73,7 +73,7 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
         }
     }
 
-    string saveFilePath{ filePath + ".tokens" };
+    string saveFilePath{ filePath + TOKENS_FILE_EXT };
     if (!saveToFile(saveFilePath, strData))
         cout << "Couldn't create file : " << saveFilePath << endl;
 }

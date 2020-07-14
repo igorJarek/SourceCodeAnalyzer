@@ -32,7 +32,7 @@ void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& f
     if(errorNumberInSet)
         clang_disposeDiagnosticSet(diagnosticSet);                                                                                                                                 // 4.
 
-    if(!saveToFile(filePath + ".diagn", strData))
+    if(!saveToFile(filePath + DIAGN_FILE_EXT, strData))
         cout << "Couldn't create file : " << filePath << endl;
 }
 
