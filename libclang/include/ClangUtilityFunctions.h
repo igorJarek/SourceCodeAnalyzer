@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "UtilityFunctions.h"
-#include "LibPath.h"
+#include "Paths.h"
 
 #include "0_1_Comment_introspection.h"
 #include "1_Name_Mangling_API_Functions.h"

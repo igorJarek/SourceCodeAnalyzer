@@ -1,4 +1,4 @@
-#include "LibPath.h"
+#include "Paths.h"
 
 #ifdef _DEBUG
     const string LIB_PATH           { "..\\lib\\" };
