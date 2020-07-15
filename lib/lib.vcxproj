@@ -108,7 +108,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="src\Class.cpp" />
     <ClCompile Include="src\Function.cpp" />
   </ItemGroup>
