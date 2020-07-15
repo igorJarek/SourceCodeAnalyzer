@@ -2,10 +2,10 @@
 
 class Class
 {
-	public:
-		Class(void);
-		~Class(void);
-		Class(const Class& klasa);
-		
-		void classMethod(void);
+    public:
+        Class(void);
+        ~Class(void);
+        Class(const Class& klasa);
+
+        void classMethod(void);
 };
