@@ -111,10 +111,12 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="src\Class.cpp" />
     <ClCompile Include="src\Function.cpp" />
+    <ClCompile Include="src\Primitives.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Class.hpp" />
     <ClInclude Include="include\Function.hpp" />
+    <ClInclude Include="include\Primitives.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
