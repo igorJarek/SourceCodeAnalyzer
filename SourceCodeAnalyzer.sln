@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib", "lib\lib.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "html", "html\html.vcxproj", "{A09F5B96-0E36-49F5-803B-8831AFED4CD5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "analyzer", "analyzer\analyzer.vcxproj", "{5FF14451-7F24-4C63-BA7B-9482523DCA13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,12 @@ Global
 		{A09F5B96-0E36-49F5-803B-8831AFED4CD5}.Release|x64.Build.0 = Release|x64
 		{A09F5B96-0E36-49F5-803B-8831AFED4CD5}.Release|x86.ActiveCfg = Release|Win32
 		{A09F5B96-0E36-49F5-803B-8831AFED4CD5}.Release|x86.Build.0 = Release|Win32
+		{5FF14451-7F24-4C63-BA7B-9482523DCA13}.Debug|x64.ActiveCfg = Debug|x64
+		{5FF14451-7F24-4C63-BA7B-9482523DCA13}.Debug|x64.Build.0 = Debug|x64
+		{5FF14451-7F24-4C63-BA7B-9482523DCA13}.Debug|x86.ActiveCfg = Debug|x64
+		{5FF14451-7F24-4C63-BA7B-9482523DCA13}.Release|x64.ActiveCfg = Release|x64
+		{5FF14451-7F24-4C63-BA7B-9482523DCA13}.Release|x64.Build.0 = Release|x64
+		{5FF14451-7F24-4C63-BA7B-9482523DCA13}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
