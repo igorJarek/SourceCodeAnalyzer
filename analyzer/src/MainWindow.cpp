@@ -3,21 +3,31 @@
 #include <QTextEdit.h>
 #include <QTextStream.h>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+MainWindow::MainWindow(App& app, QWidget *parent) : 
+    QMainWindow(parent),
+    m_app(app)
 {
-    m_ui.setupUi(this);
-
-    QList<int> widths = {200, 400};
-    m_ui.splitter->setSizes(widths);
-
-    connect(m_ui.actionExplore_Folder, SIGNAL(triggered()), this, SLOT(file_explore_folder()));
-    connect(m_ui.filesTree, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(handleDoubleClick(const QModelIndex &)));
-    connect(m_ui.filesTab, SIGNAL(tabCloseRequested(int)), this, SLOT(handleCloseRequest(int)));
+    initUi();
+    initSignalsConnections();
 }
 
 MainWindow::~MainWindow()
 {
 
+}
+
+void MainWindow::initUi()
+{
+    m_ui.setupUi(this);
+
+    m_ui.splitter->setSizes({200, 400});
+}
+
+void MainWindow::initSignalsConnections()
+{
+    connect(m_ui.actionExplore_Folder,  SIGNAL(triggered()),                        this, SLOT(file_explore_folder()));
+    connect(m_ui.filesTree,             SIGNAL(doubleClicked(const QModelIndex&)),  this, SLOT(filesTree_doubleClick(const QModelIndex &)));
+    connect(m_ui.filesTab,              SIGNAL(tabCloseRequested(int)),             this, SLOT(filesTab_closeTab(int)));
 }
 
 void MainWindow::file_explore_folder()
@@ -37,7 +47,7 @@ void MainWindow::file_explore_folder()
     }
 }
 
-void MainWindow::handleDoubleClick(const QModelIndex& modelIndex)
+void MainWindow::filesTree_doubleClick(const QModelIndex& modelIndex)
 {
     QTabWidget* filesTab = m_ui.filesTab;
     QString absoluteFilePath = model.filePath(modelIndex);
@@ -68,7 +78,7 @@ void MainWindow::handleDoubleClick(const QModelIndex& modelIndex)
     }
 }
 
-void MainWindow::handleCloseRequest(int index)
+void MainWindow::filesTab_closeTab(int index)
 {
     QTabWidget* filesTab = m_ui.filesTab;
 

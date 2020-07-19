@@ -88,7 +88,6 @@
       <string>Open ...</string>
      </property>
      <addaction name="actionVisual_Studio_Project"/>
-     <addaction name="actionDatabase_2"/>
     </widget>
     <addaction name="actionExplore_Folder"/>
     <addaction name="separator"/>

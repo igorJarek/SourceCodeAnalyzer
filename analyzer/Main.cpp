@@ -5,8 +5,8 @@ int main(int argc, char *argv[])
 {
     App app(argc, argv);
 
-    MainWindow w;
-    w.show();
+    MainWindow mainWindow(app);
+    mainWindow.show();
 
     return app.exec();
 }
