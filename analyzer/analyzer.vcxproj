@@ -91,11 +91,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\App.cpp" />
     <QtRcc Include="rsc/MainWindow.qrc" />
     <QtUic Include="ui/MainWindow.ui" />
     <QtMoc Include="include/MainWindow.h" />
     <ClCompile Include="src/MainWindow.cpp" />
     <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\App.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
