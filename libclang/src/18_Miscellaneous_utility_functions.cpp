@@ -23,7 +23,9 @@ void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cur
         ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_isUnsignedInt : ", to_string(isUnsignedInt))
         ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsUnsigned : ", to_string(getAsUnsigned))
         ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsDouble : ",   to_string(getAsDouble))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsStr : ",      getAsStr)
+
+        if(evalResultKind != CXEval_Int && evalResultKind != CXEval_Float)
+            ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsStr : ",      getAsStr)
     }
     else
         ADD_STRING_OUT_TEXT(curLevel + 2, "-NULL-")
