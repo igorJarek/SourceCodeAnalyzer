@@ -76,7 +76,7 @@ void printCursor(const CXTranslationUnit& translationUnit, string& strData, cons
     ADD_STRING_OUT_NEWLINE()
 }
 
-uint64_t getBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CXCursor* cursor, bool saveFile /* = false */)
+uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CXCursor* cursor, bool saveFile /* = false */)
 {
     static string  strStaticData;
     static int64_t staticLinesCounter { 1 };

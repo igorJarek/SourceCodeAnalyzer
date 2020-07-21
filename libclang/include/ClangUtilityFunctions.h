@@ -43,5 +43,5 @@ CXChildVisitResult visitor                  (CXCursor cursor, CXCursor parent, C
 void               dumpAST                  (string& strData, const CXCursor& cursor);
 void               printCursor              (const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel);
 
-uint64_t           getBaseCXCursorInfo      (const CXTranslationUnit* translationUnit, const CXCursor* cursor, bool saveFile = false);
+uint64_t           saveBaseCXCursorInfo      (const CXTranslationUnit* translationUnit, const CXCursor* cursor, bool saveFile = false);
 string             getBaseCXFileInfo        (const CXTranslationUnit& translationUnit, const CXFile& file, uint32_t curLevel);

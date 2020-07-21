@@ -39,7 +39,7 @@ void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, string& 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXMethod_isConst : ",                                  to_string(isConst))
 
     ADD_STRING_OUT_NL(curLevel + 2, "clang_getTemplateCursorKind : ",                              CXString2String(_17_getCursorKindSpelling(templateCursorKind)))
-    ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ", to_string(getBaseCXCursorInfo(&translationUnit, &specializedCursorTemplate)))
+    ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(&translationUnit, &specializedCursorTemplate)))
 
     ADD_STRING_OUT   (curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantQualifier, 0) :\n",    CXSourceRange2String(cursorReferenceNameRange_CXNameRange_WantQualifier,    curLevel + 3))
     ADD_STRING_OUT   (curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0) :\n", CXSourceRange2String(cursorReferenceNameRange_CXNameRange_WantTemplateArgs, curLevel + 3))

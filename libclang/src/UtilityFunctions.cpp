@@ -128,7 +128,7 @@ void processBeforeAll()
 
 void processAfterAll()
 {
-    getBaseCXCursorInfo(nullptr, nullptr, true);
+    saveBaseCXCursorInfo(nullptr, nullptr, true);
 }
 
 bool processFolder(const string& path)
