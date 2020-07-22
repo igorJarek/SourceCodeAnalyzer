@@ -76,12 +76,14 @@ void printCursor(const CXTranslationUnit& translationUnit, string& strData, cons
     ADD_STRING_OUT_NEWLINE()
 }
 
-uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CXCursor* cursor, bool saveFile /* = false */)
+uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CXCursor* cursor, SaveCursorAction action /* = SaveCursorAction::ADD_CXCURSOR_BASE_INFO */)
 {
-    static string  strStaticData;
-    static int64_t staticLinesCounter { 1 };
+    static string       strStaticCursorData;
+    static stringstream sstreamStaticCursorInfoData;
 
-    if(!saveFile)
+    static int64_t      staticCurFileLinesCounter { 1 };
+
+    if(action == SaveCursorAction::ADD_CXCURSOR_BASE_INFO)
     {
         if(!translationUnit && !cursor)
             return 0;
@@ -107,17 +109,39 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
 
         ADD_STRING_OUT_TEXT(0, "------------------------------------------------------------")
 
-        strStaticData += strData;
+        strStaticCursorData += strData;
 
         int64_t outLinesCount = countStringLines(strData);
-        staticLinesCounter += outLinesCount;
+        staticCurFileLinesCounter += outLinesCount;
 
-        return staticLinesCounter - outLinesCount;
+        return staticCurFileLinesCounter - outLinesCount;
     }
-    else
+    else if(action == SaveCursorAction::ADD_FILE_BASE_INFO)
+    {
+        if(!translationUnit)
+            return 0;
+
+        CXString sourceCodeFileName = _6_getTranslationUnitSpelling(*translationUnit);
+
+        sstreamStaticCursorInfoData.width(31);
+        sstreamStaticCursorInfoData << left << CXString2String(sourceCodeFileName);
+
+        sstreamStaticCursorInfoData.width(0);
+        sstreamStaticCursorInfoData << " : " << to_string(staticCurFileLinesCounter) << endl;
+
+        return 0;
+    }
+    else if(action == SaveCursorAction::SAVE_CURSOR_CUR_FILE)
     {   
-        if (!saveToFile(CURSORS_REF_PATH, strStaticData))
+        if (!saveToFile(CURSORS_REF_PATH, strStaticCursorData))
             cout << "Couldn't save file : " << CURSORS_REF_PATH << endl;
+
+        return 0;
+    }
+    else if(action == SaveCursorAction::SAVE_CURSOR_CURINFO_FILE)
+    {   
+        if (!saveToFile(CURSORS_INFO_REF_PATH, sstreamStaticCursorInfoData))
+            cout << "Couldn't save file : " << CURSORS_INFO_REF_PATH << endl;
 
         return 0;
     }

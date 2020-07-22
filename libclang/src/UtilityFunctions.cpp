@@ -128,7 +128,8 @@ void processBeforeAll()
 
 void processAfterAll()
 {
-    saveBaseCXCursorInfo(nullptr, nullptr, true);
+    saveBaseCXCursorInfo(nullptr, nullptr, SaveCursorAction::SAVE_CURSOR_CUR_FILE);
+    saveBaseCXCursorInfo(nullptr, nullptr, SaveCursorAction::SAVE_CURSOR_CURINFO_FILE);
 }
 
 bool processFolder(const string& path)
@@ -160,6 +161,8 @@ void processFile(const string& folderPath, const string& fileName)
             ClientData clientData(*translationUnit);
             CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
 
+            saveBaseCXCursorInfo(translationUnit, nullptr, SaveCursorAction::ADD_FILE_BASE_INFO);
+
             _5_token_extraction(*translationUnit, absoluteFilePath);
             _8_file_manipulation(*translationUnit, absoluteFilePath);
 
@@ -185,6 +188,21 @@ bool saveToFile(const string& path, const string& data)
     if (stream.is_open())
     {
         stream << data;
+        stream.close();
+
+        return true;
+    }
+    else
+        return false;
+}
+
+bool saveToFile(const string& path, const stringstream& data)
+{
+    fstream stream;
+    stream.open(path, std::fstream::out | std::fstream::trunc);
+    if (stream.is_open())
+    {
+        stream << data.rdbuf();
         stream.close();
 
         return true;

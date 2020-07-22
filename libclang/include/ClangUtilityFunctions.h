@@ -4,6 +4,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #include "UtilityFunctions.h"
 #include "Paths.h"
@@ -38,10 +39,19 @@ public:
     string              astExtStringData{};
 };
 
+enum class SaveCursorAction
+{
+    ADD_CXCURSOR_BASE_INFO,
+    ADD_FILE_BASE_INFO,
+
+    SAVE_CURSOR_CUR_FILE,
+    SAVE_CURSOR_CURINFO_FILE,
+};
+
 CXChildVisitResult visitor                  (CXCursor cursor, CXCursor parent, CXClientData client_data);
 
 void               dumpAST                  (string& strData, const CXCursor& cursor);
 void               printCursor              (const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel);
 
-uint64_t           saveBaseCXCursorInfo      (const CXTranslationUnit* translationUnit, const CXCursor* cursor, bool saveFile = false);
+uint64_t           saveBaseCXCursorInfo     (const CXTranslationUnit* translationUnit, const CXCursor* cursor, SaveCursorAction action = SaveCursorAction::ADD_CXCURSOR_BASE_INFO);
 string             getBaseCXFileInfo        (const CXTranslationUnit& translationUnit, const CXFile& file, uint32_t curLevel);

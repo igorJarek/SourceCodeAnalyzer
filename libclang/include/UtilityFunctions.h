@@ -7,6 +7,7 @@
 #include <string>
 #include <windows.h>
 #include <chrono>
+#include <sstream>
 
 #include "ClangUtilityFunctions.h"
 #include "2_Diagnostic_Reporting.h"
@@ -69,3 +70,4 @@ bool        processFolder           (const string& path);
 void        processFile             (const string& folderPath, const string& fileName);
 
 bool        saveToFile              (const string& path, const string& data);
+bool        saveToFile              (const string& path, const stringstream& data);
