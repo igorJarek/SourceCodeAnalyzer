@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "html", "html\html.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "analyzer", "analyzer\analyzer.vcxproj", "{5FF14451-7F24-4C63-BA7B-9482523DCA13}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "database", "database\database.vcxproj", "{35A38B96-DF94-41FF-9A54-E0DAE18DB38B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -49,6 +51,14 @@ Global
 		{5FF14451-7F24-4C63-BA7B-9482523DCA13}.Release|x64.ActiveCfg = Release|x64
 		{5FF14451-7F24-4C63-BA7B-9482523DCA13}.Release|x64.Build.0 = Release|x64
 		{5FF14451-7F24-4C63-BA7B-9482523DCA13}.Release|x86.ActiveCfg = Release|x64
+		{35A38B96-DF94-41FF-9A54-E0DAE18DB38B}.Debug|x64.ActiveCfg = Debug|x64
+		{35A38B96-DF94-41FF-9A54-E0DAE18DB38B}.Debug|x64.Build.0 = Debug|x64
+		{35A38B96-DF94-41FF-9A54-E0DAE18DB38B}.Debug|x86.ActiveCfg = Debug|Win32
+		{35A38B96-DF94-41FF-9A54-E0DAE18DB38B}.Debug|x86.Build.0 = Debug|Win32
+		{35A38B96-DF94-41FF-9A54-E0DAE18DB38B}.Release|x64.ActiveCfg = Release|x64
+		{35A38B96-DF94-41FF-9A54-E0DAE18DB38B}.Release|x64.Build.0 = Release|x64
+		{35A38B96-DF94-41FF-9A54-E0DAE18DB38B}.Release|x86.ActiveCfg = Release|Win32
+		{35A38B96-DF94-41FF-9A54-E0DAE18DB38B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
