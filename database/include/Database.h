@@ -27,6 +27,9 @@ public:
 
     DatabaseQueryErrMsg& operator=(DatabaseQueryErrMsg&& queryErr)
     {
+        if(m_errorMessagePtr)
+            sqlite3_free(reinterpret_cast<void*>(m_errorMessagePtr));
+
         m_errorMessagePtr = queryErr.m_errorMessagePtr;
         queryErr.m_errorMessagePtr = nullptr;
 
