@@ -1,4 +1,7 @@
 #include "UtilityFunctions.h"
+#include "Database.h"
+
+Database database("..\\lib\\lib.sqlite3");
 
 string tabOffset(uint32_t offset)
 {
@@ -124,6 +127,10 @@ void processBeforeAll()
 {
     cout << "Clang version : " << CXString2String(_18_getClangVersion()) << endl << endl;
     _18_toggleCrashRecovery(1);
+
+    string dbErrMsg = database.createGlobalTable();
+    if(database.isNotOK())
+        cout << "Database error : " << dbErrMsg << endl;
 }
 
 void processAfterAll()
@@ -153,6 +160,10 @@ void processFile(const string& folderPath, const string& fileName)
     if (isFileHeader(fileExtension) || isFileSource(fileExtension))
     {
         ExecutionTimeMeasurement timeMeasurement("File " + absoluteFilePath + " has parsed in");
+
+        string dbErrMsg = database.createSourceCodeTable(absoluteFilePath);
+        if(database.isNotOK())
+            cout << "Database error : " << dbErrMsg << endl;
 
         CXIndex index = clang_createIndex(0, 0);
         CXTranslationUnit* translationUnit = _6_translation_unit_manipulation(index, absoluteFilePath);

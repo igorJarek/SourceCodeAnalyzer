@@ -103,7 +103,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>include;..\extlib\include;..\html\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;..\extlib\include;..\html\include\;..\database\include</AdditionalIncludeDirectories>
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Link>
@@ -182,6 +182,9 @@
     <Text Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\database\database.vcxproj">
+      <Project>{35a38b96-df94-41ff-9a54-e0dae18db38b}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\html\html.vcxproj">
       <Project>{a09f5b96-0e36-49f5-803b-8831afed4cd5}</Project>
     </ProjectReference>

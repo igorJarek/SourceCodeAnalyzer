@@ -58,3 +58,6 @@
 *.db-shm
 *.db-wal
 *.enc
+
+# Databases
+*.sqlite3
