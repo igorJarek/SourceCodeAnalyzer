@@ -1,5 +1,8 @@
 #include "Paths.h"
 
+const string APP_NAME           { "libclang" };
+const string APP_VERSION        { "0.9" };
+
 const string AST_FILE_EXT       { ".ast" };
 const string AST_EXT_FILE_EXT   { ".astExt" };
 const string DIAGN_FILE_EXT     { ".diagn" };

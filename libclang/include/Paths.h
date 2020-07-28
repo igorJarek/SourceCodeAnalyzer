@@ -4,6 +4,9 @@
 
 using namespace std;
 
+extern const string APP_NAME;
+extern const string APP_VERSION;
+
 extern const string LIB_PATH;
 extern const string CURSORS_REF_PATH;
 extern const string CURSORS_INFO_REF_PATH;
