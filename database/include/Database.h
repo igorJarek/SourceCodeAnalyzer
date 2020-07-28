@@ -2,11 +2,7 @@
 
 #include "sqlite3.h"
 
-#include "ColumnDefinition.h"
-
-#include <initializer_list>
 #include <string>
-#include <vector>
 #include <map>
 #include <list>
 
@@ -40,7 +36,7 @@ public:
     operator char**()       { return &m_errorMessagePtr; }
     operator const char*()  { return reinterpret_cast<const char*>(m_errorMessagePtr); }
 
-    std::string string()
+    std::string getString()
     {
         if(m_errorMessagePtr)
             return std::string(*this);
@@ -87,39 +83,36 @@ class Database
 public:
     Database(const std::string& databaseName);
     ~Database();
+    
+public:
+    DatabaseQueryErrMsg             sendQuery(const std::string& query);
+
+    std::string                     createGlobalTable(const std::string& clangVersion, const std::string& appName, const std::string& appVersion);
+    std::string                     createSourceCodeTable(const std::string& tableName);
 
 public:
-    DatabaseQueryErrMsg                   sendQuery(const std::string& query);
-    std::string                           createGlobalTable();
-    std::string                           createSourceCodeTable(const std::string& tableName);
-
-public:
-    bool                                  isOK()              const { return m_lastError == SQLITE_OK; }
-    bool                                  isNotOK()           const { return m_lastError != SQLITE_OK; }
-    int32_t                               lastErrorCode()     const { return m_lastError; }
-    std::string                           lastErrorMsg()      const { return sqlite3_errmsg(m_database); }
+    bool                            isOK()              const { return m_lastError == SQLITE_OK; }
+    bool                            isNotOK()           const { return m_lastError != SQLITE_OK; }
+    int32_t                         lastErrorCode()     const { return m_lastError; }
+    std::string                     lastErrorMsg()      const { return sqlite3_errmsg(m_database); }
 
 private:
-    void                                  createGlobalTableTemplateQuery();
-    void                                  createTokenTableTemplateQuery();
-    void                                  createSourceCodeTableTemplateQuery();
+    void                            createGlobalTableTemplateQuery();
+    void                            createTokenTableTemplateQuery();
+    void                            createSourceCodeTableTemplateQuery();
 
 private:
-    template<class T>
-    using MapEnumString                   = std::map<T, std::string>;
+    sqlite3*                        m_database      = nullptr;
+    const std::string               m_databaseName;
 
-private:
-    sqlite3*                              m_database      = nullptr;
-    const std::string                     m_databaseName;
+    int32_t                         m_lastError;
 
-    int32_t                               m_lastError;
+    std::string                     m_globalTableTemplateQuery;
+    std::map<uint32_t, std::string> m_globalTableColNameMap;
 
-    std::string                           m_globalTableTemplateQuery;
-    MapEnumString<GlobalTableColName>     m_globalTableColNameMap;
+    std::string                     m_tokenTableTemplateQuery;
+    std::map<uint32_t, std::string> m_tokenTableColNameMap;
 
-    std::string                           m_tokenTableTemplateQuery;
-    MapEnumString<TokenTableColName>      m_tokenTableColNameMap;
-
-    std::string                           m_sourceCodeTableTemplateQuery;
-    MapEnumString<SourceCodeTableColName> m_sourceCodeTableColNameMap;
+    std::string                     m_sourceCodeTableTemplateQuery;
+    std::map<uint32_t, std::string> m_sourceCodeTableColNameMap;
 };

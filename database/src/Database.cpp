@@ -126,6 +126,7 @@ Database::~Database()
 void Database::createGlobalTableTemplateQuery()
 {
     m_globalTableColNameMap.emplace(GlobalTableColName::ClangVersion, "ClangVersion");
+    m_globalTableColNameMap.emplace(GlobalTableColName::AppName,      "AppName");
     m_globalTableColNameMap.emplace(GlobalTableColName::AppVersion,   "AppVersion");
 
     m_globalTableTemplateQuery =
@@ -133,6 +134,7 @@ void Database::createGlobalTableTemplateQuery()
         "CREATE TABLE Global"
         "("
             "ClangVersion VARCHAR(255),"
+            "AppName VARCHAR(255),"
             "AppVersion VARCHAR(255)"
         ");"
     };
@@ -162,7 +164,7 @@ void Database::createTokenTableTemplateQuery()
 void Database::createSourceCodeTableTemplateQuery()
 {
     m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorID,              "CursorID");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::TokenID,               "TokenID");
+    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::TokenTable_TokenID,    "TokenTable_TokenID");
     m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorMangling,        "CursorMangling");
     m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorIsBits,          "CursorIsBits");
     m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorUSR,             "CursorUSR");
@@ -202,7 +204,7 @@ void Database::createSourceCodeTableTemplateQuery()
     };
 }
 
-std::string Database::createGlobalTable()
+std::string Database::createGlobalTable(const std::string& clangVersion, const std::string& appName, const std::string& appVersion)
 {
     DatabaseQueryErrMsg queryErrMsg;
     std::string         queryErrMsgStr;
@@ -212,6 +214,20 @@ std::string Database::createGlobalTable()
         queryErrMsg = sendQuery(m_globalTableTemplateQuery);
         if(isNotOK())
             queryErrMsgStr += queryErrMsg;
+
+        if(isOK())
+        {
+            DatabaseInsertQuery insertQueryBuilder;
+            insertQueryBuilder.newQuery("Global", m_globalTableColNameMap);
+
+            insertQueryBuilder.addColumnValue(GlobalTableColName::ClangVersion, clangVersion);
+            insertQueryBuilder.addColumnValue(GlobalTableColName::AppName,      appName);
+            insertQueryBuilder.addColumnValue(GlobalTableColName::AppVersion,   appVersion);
+
+            queryErrMsg = sendQuery(insertQueryBuilder.buildQuery());
+            if(isNotOK())
+                queryErrMsgStr += queryErrMsg;
+        }
     }
     else
         return lastErrorMsg();
@@ -238,7 +254,7 @@ std::string Database::createSourceCodeTable(const std::string& tableName)
 
         queryErrMsg = sendQuery(tokenTableQuery);
         if(isNotOK())
-            return queryErrMsg.string();
+            return queryErrMsg.getString();
 
         pos = sourceCodeTableQuery.find(keyword);
         if (pos != std::string::npos)
@@ -256,7 +272,7 @@ std::string Database::createSourceCodeTable(const std::string& tableName)
 
         queryErrMsg = sendQuery(sourceCodeTableQuery);
         if(isNotOK())
-            return queryErrMsg.string();
+            return queryErrMsg.getString();
     }
     else
         return lastErrorMsg();

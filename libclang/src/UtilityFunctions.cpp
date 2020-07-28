@@ -125,10 +125,12 @@ bool recursiveFolderSearch(const string& folderPath)
 
 void processBeforeAll()
 {
-    cout << "Clang version : " << CXString2String(_18_getClangVersion()) << endl << endl;
+    string clangVersion = CXString2String(_18_getClangVersion());
+    cout << "Clang version : " << clangVersion << endl << endl;
+
     _18_toggleCrashRecovery(1);
 
-    string dbErrMsg = database.createGlobalTable();
+    string dbErrMsg = database.createGlobalTable(clangVersion, APP_NAME, APP_VERSION);
     if(database.isNotOK())
         cout << "Database error : " << dbErrMsg << endl;
 }
