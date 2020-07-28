@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <list>
 
 class DatabaseQueryErrMsg
 {
@@ -53,6 +54,31 @@ private:
 
 private:
     char* m_errorMessagePtr = nullptr;
+};
+
+class DatabaseInsertQuery
+{
+public:
+    DatabaseInsertQuery();
+    ~DatabaseInsertQuery();
+
+public:
+    void                                   newQuery(const std::string& tableName, const std::map<uint32_t, std::string>& columnDefMap);
+
+    void                                   addColumnValue( uint32_t columnIndex, const int64_t& value);
+    void                                   addColumnValue( uint32_t columnIndex, const std::string& value);
+    void                                   addColumnValue( uint32_t columnIndex, const double& value);
+
+    std::string&                           buildQuery();
+
+private:
+    std::string                            m_tableName;
+    const std::map<uint32_t, std::string>* m_colDefMap;
+
+    std::list<std::string>                 m_colNameList;
+    std::list<std::string>                 m_colValueList;
+
+    std::string                            m_query;
 };
 
 // in the future that class may be base class for another database engines

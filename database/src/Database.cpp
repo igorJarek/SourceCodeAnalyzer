@@ -1,4 +1,107 @@
 #include "Database.h"
+#include "ColumnDefinition.h"
+
+// ***************** DatabaseInsertQuery *****************
+
+DatabaseInsertQuery::DatabaseInsertQuery()
+{
+    
+}
+
+DatabaseInsertQuery::~DatabaseInsertQuery()
+{
+    
+}
+
+void DatabaseInsertQuery::newQuery(const std::string& tableName, const std::map<uint32_t, std::string>& columnDefMap)
+{
+    m_tableName = tableName;
+    m_colDefMap = &columnDefMap;
+
+    m_colValueList.clear();
+    m_colNameList.clear();
+
+    m_query.clear();
+}
+
+void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const int64_t& value)
+{
+    m_colValueList.push_back(std::to_string(value));
+
+    auto iter = m_colDefMap->find(columnIndex);
+
+    if (iter != m_colDefMap->cend())
+        m_colNameList.push_back(iter->second);
+    else
+        m_colNameList.push_back(std::string("--ColumnMissing--"));
+}
+
+void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const double& value)
+{
+    m_colValueList.push_back(std::to_string(value));
+
+    auto iter = m_colDefMap->find(columnIndex);
+
+    if (iter != m_colDefMap->cend())
+        m_colNameList.push_back(iter->second);
+    else
+        m_colNameList.push_back(std::string("--ColumnMissing--"));
+}
+
+void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const std::string& value)
+{
+    m_colValueList.push_back(value);
+
+    auto iter = m_colDefMap->find(columnIndex);
+
+    if (iter != m_colDefMap->cend())
+        m_colNameList.push_back(iter->second);
+    else
+        m_colNameList.push_back(std::string("--ColumnMissing--"));
+}
+
+std::string& DatabaseInsertQuery::buildQuery()
+{
+    m_query.clear();
+
+    if(m_colNameList.size() == m_colValueList.size())
+    if(!m_tableName.empty())
+    {
+        m_query += "INSERT INTO " + m_tableName + " ("; 
+
+        auto colNameIter = m_colNameList.cbegin();
+        bool iteratorCompare = colNameIter != m_colNameList.cend();
+
+        while( iteratorCompare)
+        {
+            m_query += *colNameIter;
+
+            ++colNameIter;
+            if(iteratorCompare = (colNameIter != m_colNameList.cend()))
+                m_query += ", ";
+        }
+
+        m_query += ") VALUES (";
+
+        auto colValueIter = m_colValueList.cbegin();
+        iteratorCompare = colValueIter != m_colValueList.cend();
+
+        while( iteratorCompare)
+        {
+            m_query += '\"' + *colValueIter + '\"';
+
+            ++colValueIter;
+            if(iteratorCompare = (colValueIter != m_colValueList.cend()))
+                m_query += ", ";
+        }
+
+        m_query += ");";
+    }
+
+    return m_query;
+}
+
+// *********************** Database ***********************
 
 Database::Database(const std::string& databaseName) :
     m_databaseName(databaseName)
