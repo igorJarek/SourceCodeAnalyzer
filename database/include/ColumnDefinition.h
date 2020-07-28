@@ -1,14 +1,15 @@
 #pragma once
 
-enum class GlobalTableColName
+enum GlobalTableColName : uint32_t
 {
     ClangVersion,
+    AppName,
     AppVersion,
 
     GlobalTableLast
 };
 
-enum class TokenTableColName
+enum TokenTableColName : uint32_t
 {
     TokenID,
     TokenKind,
@@ -19,10 +20,10 @@ enum class TokenTableColName
     TokenTableLast
 };
 
-enum class SourceCodeTableColName
+enum SourceCodeTableColName : uint32_t
 {
     CursorID,
-    TokenID,
+    TokenTable_TokenID,
     CursorMangling,
     CursorIsBits,
     CursorUSR,
