@@ -14,15 +14,28 @@ DatabaseInsertQuery::~DatabaseInsertQuery()
     
 }
 
-void DatabaseInsertQuery::newQuery(const std::string& tableName, const std::map<uint32_t, std::string>& columnDefMap)
+void DatabaseInsertQuery::clear()
 {
-    m_tableName = tableName;
-    m_colDefMap = &columnDefMap;
+    m_tableName.clear();
+    m_colDefMap = nullptr;
 
+    clearForNewQuery();
+}
+
+void DatabaseInsertQuery::clearForNewQuery()
+{
     m_colValueList.clear();
     m_colNameList.clear();
 
     m_query.clear();
+}
+
+void DatabaseInsertQuery::newQuery(const std::string& tableName, const std::map<uint32_t, std::string>& columnDefMap)
+{
+    clear();
+
+    m_tableName = tableName;
+    m_colDefMap = &columnDefMap;
 }
 
 void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const int64_t& value)

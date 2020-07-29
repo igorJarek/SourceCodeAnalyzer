@@ -59,6 +59,9 @@ public:
     ~DatabaseInsertQuery();
 
 public:
+    void                                   clear();
+    void                                   clearForNewQuery();
+
     void                                   newQuery(const std::string& tableName, const std::map<uint32_t, std::string>& columnDefMap);
 
     void                                   addColumnValue( uint32_t columnIndex, const int64_t& value);
