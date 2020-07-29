@@ -1,9 +1,9 @@
 #include "DatabaseColumnDict.h"
 #include "ColumnDefinition.h"
 
-GlobalColumnDict     globalColumnDict;
-TokenColumnDict      tokenColumnDict;
-SourceCodeColumnDict sourceCodeColumnDict;
+GlobalColumnDict     g_globalColumnDict;
+TokenColumnDict      g_tokenColumnDict;
+SourceCodeColumnDict g_sourceCodeColumnDict;
 
 GlobalColumnDict::GlobalColumnDict()
 {

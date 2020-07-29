@@ -193,7 +193,7 @@ std::string Database::createGlobalTable(const std::string& clangVersion, const s
         if(isOK())
         {
             DatabaseInsertQuery insertQueryBuilder;
-            insertQueryBuilder.newQuery("Global", globalColumnDict);
+            insertQueryBuilder.newQuery("Global", g_globalColumnDict);
 
             insertQueryBuilder.addColumnValue(GlobalTableColName::ClangVersion, clangVersion);
             insertQueryBuilder.addColumnValue(GlobalTableColName::AppName,      appName);
