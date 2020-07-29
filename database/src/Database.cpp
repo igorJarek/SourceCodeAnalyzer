@@ -81,7 +81,7 @@ std::string& DatabaseInsertQuery::buildQuery()
     if(m_colNameList.size() == m_colValueList.size())
     if(!m_tableName.empty())
     {
-        m_query += "INSERT INTO " + m_tableName + " ("; 
+        m_query += "INSERT INTO \"" + m_tableName + "\" ("; 
 
         auto colNameIter = m_colNameList.cbegin();
         bool iteratorCompare = colNameIter != m_colNameList.cend();
@@ -223,7 +223,7 @@ std::string Database::createGlobalTable(const std::string& clangVersion, const s
     return queryErrMsgStr;
 }
 
-std::string Database::createSourceCodeTable(const std::string& tableName)
+std::string Database::createSourceCodeTables(const std::string& tableName)
 {
     DatabaseQueryErrMsg queryErrMsg;
     std::string tokenTableQuery      = m_tokenTableTemplateQuery;

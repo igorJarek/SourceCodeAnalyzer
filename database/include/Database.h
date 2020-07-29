@@ -91,7 +91,7 @@ public:
     DatabaseQueryErrMsg             sendQuery(const std::string& query);
 
     std::string                     createGlobalTable(const std::string& clangVersion, const std::string& appName, const std::string& appVersion);
-    std::string                     createSourceCodeTable(const std::string& tableName);
+    std::string                     createSourceCodeTables(const std::string& tableName);
 
 public:
     bool                            isOK()              const { return m_lastError == SQLITE_OK; }
