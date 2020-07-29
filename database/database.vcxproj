@@ -157,9 +157,11 @@
   <ItemGroup>
     <ClInclude Include="include\ColumnDefinition.h" />
     <ClInclude Include="include\Database.h" />
+    <ClInclude Include="include\DatabaseColumnDict.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Database.cpp" />
+    <ClCompile Include="src\DatabaseColumnDict.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

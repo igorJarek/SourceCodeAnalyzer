@@ -1,5 +1,6 @@
 #include "Database.h"
 #include "ColumnDefinition.h"
+#include "DatabaseColumnDict.h"
 
 // ***************** DatabaseInsertQuery *****************
 
@@ -125,10 +126,6 @@ Database::~Database()
 
 void Database::createGlobalTableTemplateQuery()
 {
-    m_globalTableColNameMap.emplace(GlobalTableColName::ClangVersion, "ClangVersion");
-    m_globalTableColNameMap.emplace(GlobalTableColName::AppName,      "AppName");
-    m_globalTableColNameMap.emplace(GlobalTableColName::AppVersion,   "AppVersion");
-
     m_globalTableTemplateQuery =
     {
         "CREATE TABLE Global"
@@ -142,12 +139,6 @@ void Database::createGlobalTableTemplateQuery()
 
 void Database::createTokenTableTemplateQuery()
 {
-    m_tokenTableColNameMap.emplace(TokenTableColName::TokenID,       "TokenID");
-    m_tokenTableColNameMap.emplace(TokenTableColName::TokenKind,     "TokenKind");
-    m_tokenTableColNameMap.emplace(TokenTableColName::TokenSpelling, "TokenSpelling");
-    m_tokenTableColNameMap.emplace(TokenTableColName::TokenStartPos, "TokenStartPos");
-    m_tokenTableColNameMap.emplace(TokenTableColName::TokenEndPos,   "TokenEndPos");
-
     m_tokenTableTemplateQuery =
     {
         "CREATE TABLE \"<?filePath?>\\tokens\""
@@ -163,22 +154,6 @@ void Database::createTokenTableTemplateQuery()
 
 void Database::createSourceCodeTableTemplateQuery()
 {
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorID,              "CursorID");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::TokenTable_TokenID,    "TokenTable_TokenID");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorMangling,        "CursorMangling");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorIsBits,          "CursorIsBits");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorUSR,             "CursorUSR");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorAccessSpecifier, "CursorAccessSpecifier");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorStorageClass,    "CursorStorageClass");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorDisplayName,     "CursorDisplayName");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorHash,            "CursorHash");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorKind,            "CursorKind");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorAttr,            "CursorAttr");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorLinkage,         "CursorLinkage");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorVisibility,      "CursorVisibility");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorAvailability,    "CursorAvailability");
-    m_sourceCodeTableColNameMap.emplace(SourceCodeTableColName::CursorTLSKind,         "CursorTLSKind");
-
     m_sourceCodeTableTemplateQuery =
     {
         "CREATE TABLE \"<?filePath?>\\cursors\""
@@ -218,7 +193,7 @@ std::string Database::createGlobalTable(const std::string& clangVersion, const s
         if(isOK())
         {
             DatabaseInsertQuery insertQueryBuilder;
-            insertQueryBuilder.newQuery("Global", m_globalTableColNameMap);
+            insertQueryBuilder.newQuery("Global", globalColumnDict);
 
             insertQueryBuilder.addColumnValue(GlobalTableColName::ClangVersion, clangVersion);
             insertQueryBuilder.addColumnValue(GlobalTableColName::AppName,      appName);

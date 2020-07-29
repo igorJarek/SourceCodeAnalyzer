@@ -108,11 +108,6 @@ private:
     int32_t                         m_lastError;
 
     std::string                     m_globalTableTemplateQuery;
-    std::map<uint32_t, std::string> m_globalTableColNameMap;
-
     std::string                     m_tokenTableTemplateQuery;
-    std::map<uint32_t, std::string> m_tokenTableColNameMap;
-
     std::string                     m_sourceCodeTableTemplateQuery;
-    std::map<uint32_t, std::string> m_sourceCodeTableColNameMap;
 };
