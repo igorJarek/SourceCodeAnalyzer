@@ -146,7 +146,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
         return 0;
     }
 
-    return -1;
+    return 0;
 }
 
 string getBaseCXFileInfo(const CXTranslationUnit& translationUnit, const CXFile& file, uint32_t curLevel)
