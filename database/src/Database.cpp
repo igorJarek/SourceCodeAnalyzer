@@ -64,7 +64,19 @@ void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const double& val
 
 void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const std::string& value)
 {
-    m_colValueList.push_back(value);
+    string inputCopy;
+
+    for(size_t index {0}; index < value.size(); ++index)
+    {
+        char c = value.at(index);
+            
+        inputCopy += c;
+
+        if(c == '\'')
+            inputCopy += '\'';
+    }
+
+    m_colValueList.push_back(inputCopy);
 
     auto iter = m_colDefMap->find(columnIndex);
 
@@ -81,7 +93,7 @@ std::string& DatabaseInsertQuery::buildQuery()
     if(m_colNameList.size() == m_colValueList.size())
     if(!m_tableName.empty())
     {
-        m_query += "INSERT INTO \"" + m_tableName + "\" ("; 
+        m_query += "INSERT INTO \'" + m_tableName + "\' ("; 
 
         auto colNameIter = m_colNameList.cbegin();
         bool iteratorCompare = colNameIter != m_colNameList.cend();
@@ -102,7 +114,7 @@ std::string& DatabaseInsertQuery::buildQuery()
 
         while( iteratorCompare)
         {
-            m_query += '\"' + *colValueIter + '\"';
+            m_query += '\'' + *colValueIter + '\'';
 
             ++colValueIter;
             if(iteratorCompare = (colValueIter != m_colValueList.cend()))
