@@ -168,7 +168,7 @@ void Database::createTokenTableTemplateQuery()
     {
         "CREATE TABLE \"<?filePath?>\\tokens\""
         "("
-            "TokenID INT PRIMARY KEY,"
+            "TokenID INTEGER PRIMARY KEY AUTOINCREMENT,"
             "TokenKind TINYINT NOT NULL,"
             "TokenSpelling VARCHAR(255) NOT NULL,"
             "TokenStartPos BIGINT NOT NULL,"
@@ -183,7 +183,7 @@ void Database::createSourceCodeTableTemplateQuery()
     {
         "CREATE TABLE \"<?filePath?>\\cursors\""
         "("
-            "CursorID INT PRIMARY KEY,"
+            "CursorID INTEGER PRIMARY KEY AUTOINCREMENT,"
             "TokenID INT, "
             "CursorMangling VARCHAR(255),"
             "CursorIsBits INT,"
