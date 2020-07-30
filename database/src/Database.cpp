@@ -153,7 +153,7 @@ void Database::createGlobalTableTemplateQuery()
 {
     m_globalTableTemplateQuery =
     {
-        "CREATE TABLE Global"
+        "CREATE TABLE \'..\\global\'"
         "("
             "ClangVersion VARCHAR(255),"
             "AppName VARCHAR(255),"
@@ -218,7 +218,7 @@ std::string Database::createGlobalTable(const std::string& clangVersion, const s
         if(isOK())
         {
             DatabaseInsertQuery insertQueryBuilder;
-            insertQueryBuilder.newQuery("Global", g_globalColumnDict);
+            insertQueryBuilder.newQuery("..\\global", g_globalColumnDict);
 
             insertQueryBuilder.addColumnValue(GlobalTableColName::ClangVersion, clangVersion);
             insertQueryBuilder.addColumnValue(GlobalTableColName::AppName,      appName);
