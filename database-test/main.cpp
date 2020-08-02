@@ -5,6 +5,7 @@
 #include <clang-c/Index.h>
 
 #include "FolderBrowser.h"
+
 #include "Database.h"
 #include "DatabaseColumnDict.h"
 #include "ColumnDefinition.h"
