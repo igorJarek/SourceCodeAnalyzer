@@ -99,7 +99,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>..\extlib\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sqlite3.lib;libclang.lib</AdditionalDependencies>
+      <AdditionalDependencies>sqlite3.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
