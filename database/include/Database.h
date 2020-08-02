@@ -1,5 +1,6 @@
 #pragma once
 
+#include "clang-c/CXString.h"
 #include "sqlite3.h"
 
 #include <string>
@@ -67,6 +68,7 @@ public:
     void                                   addColumnValue( uint32_t columnIndex, const int64_t& value);
     void                                   addColumnValue( uint32_t columnIndex, const std::string& value);
     void                                   addColumnValue( uint32_t columnIndex, const double& value);
+    void                                   addColumnValue( uint32_t columnIndex, const CXString& value);
 
     std::string&                           buildQuery();
 
@@ -80,17 +82,29 @@ private:
     std::string                            m_query;
 };
 
+enum DatabaseFileMode
+{
+    TRUNCATE_DB_FILE    = (1 << 1),
+
+    READONLY_DB_FILE    = (1 << 2),
+    READ_WRITE_DB_FILE  = (1 << 3),
+
+    IN_MEMORY_DB_FILE   = (1 << 4),
+    FILE_DB_FILE        = (1 << 5)
+};
+
 // in the future that class may be base class for another database engines
 class Database
 {
 public:
-    Database(const std::string& databaseName);
+    Database(const std::string& databasePath);
     ~Database();
-    
+
 public:
+    void                            openDatabase(uint32_t databaseFileMode /* DatabaseFileMode enum */);
     DatabaseQueryErrMsg             sendQuery(const std::string& query);
 
-    std::string                     createGlobalTable(const std::string& clangVersion, const std::string& appName, const std::string& appVersion);
+    std::string                     createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion);
     std::string                     createSourceCodeTables(const std::string& tableName);
 
 public:
@@ -106,9 +120,9 @@ private:
 
 private:
     sqlite3*                        m_database      = nullptr;
-    const std::string               m_databaseName;
+    const std::string               m_databasePath;
 
-    int32_t                         m_lastError;
+    int32_t                         m_lastError = SQLITE_ERROR;
 
     std::string                     m_globalTableTemplateQuery;
     std::string                     m_tokenTableTemplateQuery;

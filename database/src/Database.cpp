@@ -2,6 +2,8 @@
 #include "ColumnDefinition.h"
 #include "DatabaseColumnDict.h"
 
+#include <filesystem>
+
 // ***************** DatabaseInsertQuery *****************
 
 DatabaseInsertQuery::DatabaseInsertQuery()
@@ -86,6 +88,19 @@ void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const std::string
         m_colNameList.push_back(std::string("--ColumnMissing--"));
 }
 
+void DatabaseInsertQuery::addColumnValue( uint32_t columnIndex, const CXString& value)
+{
+    string str("-NULL-");
+
+    if(value.data)
+    {
+        str = clang_getCString(value);
+        clang_disposeString(value);
+    }
+
+    addColumnValue(columnIndex, str);
+}
+
 std::string& DatabaseInsertQuery::buildQuery()
 {
     m_query.clear();
@@ -129,16 +144,9 @@ std::string& DatabaseInsertQuery::buildQuery()
 
 // *********************** Database ***********************
 
-Database::Database(const std::string& databaseName) :
-    m_databaseName(databaseName)
+Database::Database(const std::string& databasePath) :
+    m_databasePath(databasePath)
 {
-    m_lastError = sqlite3_open_v2(
-                                      m_databaseName.c_str(), 
-                                      &m_database, 
-                                      SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE /* | SQLITE_OPEN_MEMORY */, 
-                                      nullptr
-                                  );
-
     createGlobalTableTemplateQuery();
     createTokenTableTemplateQuery();
     createSourceCodeTableTemplateQuery();
@@ -147,6 +155,41 @@ Database::Database(const std::string& databaseName) :
 Database::~Database()
 {
     sqlite3_close(m_database);
+}
+
+void Database::openDatabase(uint32_t databaseFileMode)
+{
+    if(m_databasePath.empty())
+        return;
+
+    if(databaseFileMode == 0)
+        return;
+
+    const bool inMemory  = databaseFileMode & DatabaseFileMode::IN_MEMORY_DB_FILE;
+
+    const bool    readOnly    = databaseFileMode & DatabaseFileMode::READONLY_DB_FILE;
+    const bool    readWrite   = databaseFileMode & DatabaseFileMode::READ_WRITE_DB_FILE;
+
+    const int32_t sqliteFlags =  (readOnly  ? SQLITE_OPEN_READONLY : (readWrite ? (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE) : 0)) | 
+                                 (inMemory  ? SQLITE_OPEN_MEMORY : 0);
+
+    const std::filesystem::path path(m_databasePath);
+
+    if (std::filesystem::exists(path))
+    {
+        if(databaseFileMode & TRUNCATE_DB_FILE)
+        {
+            if(std::filesystem::is_regular_file(path))
+                std::filesystem::remove(path);
+        }
+    }
+
+    m_lastError = sqlite3_open_v2(
+                                    m_databasePath.c_str(), 
+                                    &m_database, 
+                                    sqliteFlags, 
+                                    nullptr
+                                 );
 }
 
 void Database::createGlobalTableTemplateQuery()
@@ -184,7 +227,7 @@ void Database::createSourceCodeTableTemplateQuery()
         "CREATE TABLE \"<?filePath?>\\cursors\""
         "("
             "CursorID INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "TokenID INT, "
+            "TokenTable_TokenID INT, "
             "CursorMangling VARCHAR(255),"
             "CursorIsBits INT,"
             "CursorUSR VARCHAR(255),"
@@ -199,12 +242,12 @@ void Database::createSourceCodeTableTemplateQuery()
             "CursorAvailability TINYINT,"
             "CursorTLSKind TINYINT,"
 
-            "FOREIGN KEY (TokenID) REFERENCES \"<?filePath?>\\tokens\"(TokenID)"
+            "FOREIGN KEY (TokenTable_TokenID) REFERENCES \"<?filePath?>\\tokens\"(TokenID)"
         ");"
     };
 }
 
-std::string Database::createGlobalTable(const std::string& clangVersion, const std::string& appName, const std::string& appVersion)
+std::string Database::createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion)
 {
     DatabaseQueryErrMsg queryErrMsg;
     std::string         queryErrMsgStr;
@@ -243,7 +286,7 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
 
     if(isOK())
     {
-        std::string keyword = "<?filePath?>";
+        const std::string keyword = "<?filePath?>";
 
         size_t pos = tokenTableQuery.find(keyword);
         if (pos != std::string::npos)
