@@ -1,11 +1,5 @@
 #include "UtilityFunctions.h"
 
-#include "Database.h"
-#include "DatabaseColumnDict.h"
-#include "ColumnDefinition.h"
-
-Database database("..\\lib\\lib.sqlite3");
-
 string tabOffset(uint32_t offset)
 {
     return string(offset, '\t');
@@ -132,10 +126,6 @@ void processBeforeAll()
     cout << "Clang version : " << clangVersion << endl << endl;
 
     _18_toggleCrashRecovery(1);
-
-    string dbErrMsg = database.createGlobalTable(clangVersion, APP_NAME, APP_VERSION);
-    if(database.isNotOK())
-        cout << "Database error : " << dbErrMsg << endl;
 }
 
 void processAfterAll()
@@ -170,8 +160,6 @@ void processFile(const string& folderPath, const string& fileName)
         CXTranslationUnit* translationUnit = _6_translation_unit_manipulation(index, absoluteFilePath);
         if (translationUnit)
         {
-            processDatabase(*translationUnit, absoluteFilePath);
-
             ClientData clientData(*translationUnit);
             CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
 
@@ -193,75 +181,6 @@ void processFile(const string& folderPath, const string& fileName)
 
         clang_disposeIndex(index);
     }
-}
-
-void processDatabase(const CXTranslationUnit& translationUnit, const string& filePath)
-{
-    string dbErrMsg = database.createSourceCodeTables(filePath);
-    if(database.isNotOK())
-        cout << "Database error : " << dbErrMsg << endl;
-
-    CXFile file = _8_getFile(translationUnit, filePath.c_str());
-
-    const int64_t    lineCount       = countFileLines(filePath);
-    const int64_t    lastLineColumns = countFileLineColumns(filePath, lineCount);
-
-    CXSourceLocation beginLocation   = _21_getLocation(translationUnit, file, 1, 1);
-    CXSourceLocation endLocation     = _21_getLocation(translationUnit, file, static_cast<unsigned int>(lineCount), static_cast<unsigned int>(lastLineColumns));
-    CXSourceRange    tokenizerRange  = _21_getRange(beginLocation, endLocation);
-
-    CXToken*         tokensOut       = nullptr;
-    uint32_t         tokensNum       = 0;
-
-    _5_tokenize(translationUnit, tokenizerRange, &tokensOut, &tokensNum);
-
-    if (tokensNum > 0)
-    {
-        for (uint32_t index{ 0 }; index < tokensNum; ++index)
-        {
-            const CXToken&   token = tokensOut[index];
-
-            //CXSourceLocation tokenLocation = _5_getTokenLocation(translationUnit, token);
-            //CXCursor         cursor        = _10_getCursor(translationUnit, tokenLocation);
-
-            CXTokenKind      tokenKind     = _5_getTokenKind(token);
-            CXString         tokenSpelling = _5_getTokenSpelling(translationUnit, token);
-            CXSourceRange    tokenRange    = _5_getTokenExtent(translationUnit, token);
-
-            // Database Data Preparing
-
-            CXSourceLocation rangeStart = _21_getRangeStart(tokenRange);
-            CXSourceLocation rangeEnd   = _21_getRangeEnd(tokenRange);
-
-            int64_t tokenStartPos, tokenEndPos;
-
-            uint32_t startExpansionLine, startExpansioColumn;
-            uint32_t endExpansionLine, endExpansioColumn;
-
-            _21_getExpansionLocation(rangeStart, nullptr, &startExpansionLine, &startExpansioColumn, nullptr);
-            _21_getExpansionLocation(rangeEnd,   nullptr, &endExpansionLine,   &endExpansioColumn,   nullptr);
-
-            tokenStartPos = startExpansionLine << 31 | startExpansioColumn;
-            tokenEndPos   = endExpansionLine   << 31 | endExpansioColumn;
-
-            // Add Data To Token Table
-
-            DatabaseInsertQuery insertQueryBuilder;
-            insertQueryBuilder.newQuery(filePath + "\\tokens", g_tokenColumnDict);
-
-            insertQueryBuilder.addColumnValue(TokenKind,     (int64_t)tokenKind);
-            insertQueryBuilder.addColumnValue(TokenSpelling, CXString2String(tokenSpelling));
-            insertQueryBuilder.addColumnValue(TokenStartPos, tokenStartPos);
-            insertQueryBuilder.addColumnValue(TokenEndPos,   tokenEndPos);
-
-            DatabaseQueryErrMsg queryErrMsg = database.sendQuery(insertQueryBuilder.buildQuery());
-            if(database.isNotOK())
-                cout << "Database error : " << queryErrMsg << endl;
-        }
-    }
-
-    if (tokensOut)
-        _5_disposeTokens(translationUnit, tokensOut, tokensNum);
 }
 
 bool saveToFile(const string& path, const string& data)

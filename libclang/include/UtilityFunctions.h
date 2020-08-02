@@ -69,7 +69,5 @@ void        processAfterAll         (void);
 bool        processFolder           (const string& path);
 void        processFile             (const string& folderPath, const string& fileName);
 
-void        processDatabase         (const CXTranslationUnit& translationUnit, const string& filePath);
-
 bool        saveToFile              (const string& path, const string& data);
 bool        saveToFile              (const string& path, const stringstream& data);
