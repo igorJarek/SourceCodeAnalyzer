@@ -90,7 +90,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
 
         string strData;
 
-        ADD_STRING_OUT_TEXT(0, "------------------------------------------------------------")
+        ADD_STRING_OUT_TEXT(0, "-------------------- " + CXString2String(_17_getCursorKindSpelling(cursor->kind)) + " --------------------")
 
         if(cursor->kind == CXCursor_NoDeclFound)
             ADD_STRING_OUT_TEXT(0, "Cursor == CXCursor_NoDeclFound")
