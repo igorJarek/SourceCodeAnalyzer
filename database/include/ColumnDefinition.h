@@ -26,17 +26,46 @@ enum SourceCodeTableColName : uint32_t
     TokenTable_TokenID,
     CursorMangling,
     CursorIsBits,
+    CursorTemplateCursorKind,
     CursorUSR,
+    CursorDisplayName,
+    CursorTable_CursorReferenced,
+    TypeTable_CursorType,
+    CursorEnumConstantDeclValue,
+    CursorEnumConstantDeclUValue,
+    CursorFieldDeclBitWidth,
+    CursorExceptionSpecification,
+    CursorOffsetOfField,
     CursorAccessSpecifier,
     CursorStorageClass,
-    CursorDisplayName,
+    CursorEvalResultKind,
     CursorHash,
     CursorKind,
     CursorAttr,
-    CursorLinkage,
-    CursorVisibility,
-    CursorAvailability,
+    CursorLinkageKind,
+    CursorVisibilityKind,
+    CursorAvailabilityKind,
+    CursorLanguageKind,
     CursorTLSKind,
 
     SourceCodeTableLast
+};
+
+enum TypeTableColName : uint32_t
+{
+    TypeID,
+    TypeSpelling,
+    TypeIsBits,
+    TypeAddressSpace,
+    TypeTypedefName,
+    TypeKindSpelling,
+    TypeFuncCallingConv,
+    TypeExceptionSpecification,
+    TypeArraySize,
+    TypeNullabilityKind,
+    TypeAlignOf,
+    TypeSizeOf,
+    TypeRefQualifierKind,
+
+    TypeTableLast
 };

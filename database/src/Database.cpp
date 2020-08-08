@@ -40,31 +40,7 @@ void DatabaseInsertQuery::newQuery(const std::string& tableName, const std::map<
     m_colDefMap = &columnDefMap;
 }
 
-void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const int64_t& value)
-{
-    m_colValueList.push_back(std::to_string(value));
-
-    auto iter = m_colDefMap->find(columnIndex);
-
-    if (iter != m_colDefMap->cend())
-        m_colNameList.push_back(iter->second);
-    else
-        m_colNameList.push_back(std::string("--ColumnMissing--"));
-}
-
-void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const double& value)
-{
-    m_colValueList.push_back(std::to_string(value));
-
-    auto iter = m_colDefMap->find(columnIndex);
-
-    if (iter != m_colDefMap->cend())
-        m_colNameList.push_back(iter->second);
-    else
-        m_colNameList.push_back(std::string("--ColumnMissing--"));
-}
-
-void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const std::string& value)
+void DatabaseInsertQuery::addStringColumnValue(uint32_t columnIndex, const std::string& value)
 {
     string inputCopy;
 
@@ -88,7 +64,7 @@ void DatabaseInsertQuery::addColumnValue(uint32_t columnIndex, const std::string
         m_colNameList.push_back(std::string("--ColumnMissing--"));
 }
 
-void DatabaseInsertQuery::addColumnValue( uint32_t columnIndex, const CXString& value)
+void DatabaseInsertQuery::addCXStringColumnValue( uint32_t columnIndex, const CXString& value)
 {
     string str("-NULL-");
 
@@ -98,7 +74,7 @@ void DatabaseInsertQuery::addColumnValue( uint32_t columnIndex, const CXString& 
         clang_disposeString(value);
     }
 
-    addColumnValue(columnIndex, str);
+    addStringColumnValue(columnIndex, str);
 }
 
 std::string& DatabaseInsertQuery::buildQuery()
@@ -149,7 +125,8 @@ Database::Database(const std::string& databasePath) :
 {
     createGlobalTableTemplateQuery();
     createTokenTableTemplateQuery();
-    createSourceCodeTableTemplateQuery();
+    createCursorTableTemplateQuery();
+    createTypeTableTemplateQuery();
 }
 
 Database::~Database()
@@ -161,7 +138,7 @@ Database::~Database()
     sqlite3_close(m_database);
 }
 
-void Database::openDatabase(uint32_t databaseFileMode)
+void Database::openDatabase(uint32_t databaseOptions)
 {
     if(m_databasePath.empty())
         return;
@@ -171,7 +148,6 @@ void Database::openDatabase(uint32_t databaseFileMode)
 
     m_databaseOptions = databaseOptions;
 
-    const bool    readWrite   = databaseFileMode & DatabaseFileMode::READ_WRITE_DB_FILE;
     const bool    inMemory    = m_databaseOptions & DatabaseOptions::IN_MEMORY_DB_FILE;
 
     const bool    readOnly    = m_databaseOptions & DatabaseOptions::READONLY_DB_FILE;
@@ -221,7 +197,7 @@ void Database::createTokenTableTemplateQuery()
     {
         "CREATE TABLE \"<?filePath?>\\tokens\""
         "("
-            "TokenID INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "TokenID INT PRIMARY KEY,"
             "TokenKind TINYINT NOT NULL,"
             "TokenSpelling VARCHAR(255) NOT NULL,"
             "TokenStartPos BIGINT NOT NULL,"
@@ -230,29 +206,60 @@ void Database::createTokenTableTemplateQuery()
     };
 }
 
-void Database::createSourceCodeTableTemplateQuery()
+void Database::createCursorTableTemplateQuery()
 {
-    m_sourceCodeTableTemplateQuery =
+    m_cursorTableTemplateQuery =
     {
         "CREATE TABLE \"<?filePath?>\\cursors\""
         "("
-            "CursorID INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "TokenTable_TokenID INT, "
+            "CursorID INT PRIMARY KEY,"
+            "TokenTable_TokenID INT,"
             "CursorMangling VARCHAR(255),"
             "CursorIsBits INT,"
+            "CursorTemplateCursorKind SMALLINT,"
             "CursorUSR VARCHAR(255),"
+            "CursorDisplayName VARCHAR(255),"
+            "CursorTable_CursorReferenced INT,"
+            "TypeTable_CursorType INT,"
+            "CursorEnumConstantDeclValue BIGINT,"
+            "CursorEnumConstantDeclUValue BIGINT,"
+            "CursorFieldDeclBitWidth INT,"
+            "CursorExceptionSpecification INT,"
+            "CursorOffsetOfField BIGINT,"
             "CursorAccessSpecifier TINYINT,"
             "CursorStorageClass TINYINT,"
-            "CursorDisplayName VARCHAR(255),"
+            "CursorEvalResultKind TINYINT,"
             "CursorHash INT,"
-            "CursorKind SMALLINT,"
+            "CursorKind SHORTINT,"
             "CursorAttr INT,"
-            "CursorLinkage TINYINT,"
-            "CursorVisibility TINYINT,"
-            "CursorAvailability TINYINT,"
-            "CursorTLSKind TINYINT,"
+            "CursorLinkageKind TINYINT,"
+            "CursorVisibilityKind TINYINT,"
+            "CursorAvailabilityKind TINYINT,"
+            "CursorLanguageKind TINYINT,"
+            "CursorTLSKind TINYINT"
+        ");"
+    };
+}
 
-            "FOREIGN KEY (TokenTable_TokenID) REFERENCES \"<?filePath?>\\tokens\"(TokenID)"
+void Database::createTypeTableTemplateQuery()
+{
+    m_typeTableTemplateQuery =
+    {
+        "CREATE TABLE \"<?filePath?>\\types\""
+        "("
+            "TypeID INT PRIMARY KEY,"
+            "TypeSpelling VARCHAR(255),"
+            "TypeIsBits INT,"
+            "TypeAddressSpace INT,"
+            "TypeTypedefName VARCHAR(255),"
+            "TypeKindSpelling VARCHAR(255),"
+            "TypeFuncCallingConv TINYINT,"
+            "TypeExceptionSpecification INT,"
+            "TypeArraySize BIGINT,"
+            "TypeNullabilityKind TINYINT,"
+            "TypeAlignOf BIGINT,"
+            "TypeSizeOf BIGINT,"
+            "TypeRefQualifierKind TINYINT"
         ");"
     };
 }
@@ -273,9 +280,9 @@ std::string Database::createGlobalTable(const CXString& clangVersion, const std:
             DatabaseInsertQuery insertQueryBuilder;
             insertQueryBuilder.newQuery("..\\global", g_globalColumnDict);
 
-            insertQueryBuilder.addColumnValue(GlobalTableColName::ClangVersion, clangVersion);
-            insertQueryBuilder.addColumnValue(GlobalTableColName::AppName,      appName);
-            insertQueryBuilder.addColumnValue(GlobalTableColName::AppVersion,   appVersion);
+            insertQueryBuilder.addCXStringColumnValue(GlobalTableColName::ClangVersion, clangVersion);
+            insertQueryBuilder.addStringColumnValue(GlobalTableColName::AppName,        appName);
+            insertQueryBuilder.addStringColumnValue(GlobalTableColName::AppVersion,     appVersion);
 
             queryErrMsg = sendQuery(insertQueryBuilder.buildQuery());
             if(isNotOK())
@@ -292,7 +299,8 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
 {
     DatabaseQueryErrMsg queryErrMsg;
     std::string tokenTableQuery      = m_tokenTableTemplateQuery;
-    std::string sourceCodeTableQuery = m_sourceCodeTableTemplateQuery;
+    std::string sourceCodeTableQuery = m_cursorTableTemplateQuery;
+    std::string typeTableQuery       = m_typeTableTemplateQuery;
 
     if(isOK())
     {
@@ -316,14 +324,18 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
             sourceCodeTableQuery.insert(pos, tableName);
         }
 
-        pos = sourceCodeTableQuery.rfind(keyword);
+        queryErrMsg = sendQuery(sourceCodeTableQuery);
+        if(isNotOK())
+            return queryErrMsg.getString();
+
+        pos = typeTableQuery.find(keyword);
         if (pos != std::string::npos)
         {
-            sourceCodeTableQuery.erase(pos, keyword.size());
-            sourceCodeTableQuery.insert(pos, tableName);
+            typeTableQuery.erase(pos, keyword.size());
+            typeTableQuery.insert(pos, tableName);
         }
 
-        queryErrMsg = sendQuery(sourceCodeTableQuery);
+        queryErrMsg = sendQuery(typeTableQuery);
         if(isNotOK())
             return queryErrMsg.getString();
     }

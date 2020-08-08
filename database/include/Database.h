@@ -66,10 +66,21 @@ public:
 
     void                                   newQuery(const std::string& tableName, const std::map<uint32_t, std::string>& columnDefMap);
 
-    void                                   addColumnValue( uint32_t columnIndex, const int64_t& value);
-    void                                   addColumnValue( uint32_t columnIndex, const std::string& value);
-    void                                   addColumnValue( uint32_t columnIndex, const double& value);
-    void                                   addColumnValue( uint32_t columnIndex, const CXString& value);
+    template<typename T>
+    void                                   addColumnValue( uint32_t columnIndex, const T value)
+    {
+        m_colValueList.push_back(std::to_string(value));
+
+        auto iter = m_colDefMap->find(columnIndex);
+
+        if (iter != m_colDefMap->cend())
+            m_colNameList.push_back(iter->second);
+        else
+            m_colNameList.push_back(std::string("--ColumnMissing--"));
+    }
+
+    void                                   addStringColumnValue( uint32_t columnIndex, const std::string& value);
+    void                                   addCXStringColumnValue( uint32_t columnIndex, const CXString& value);
 
     std::string&                           buildQuery();
 
@@ -110,6 +121,14 @@ public:
     std::string                     createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion);
     std::string                     createSourceCodeTables(const std::string& tableName);
 
+    uint32_t                        getTokenID()  const { return m_tokenTableIdAllocator; }
+    uint32_t                        getCursorID() const { return m_cursorTableIdAllocator; }
+    uint32_t                        getTypeID()   const { return m_typeTableIdAllocator; }
+
+    uint32_t                        allocTokenID()  { return ++m_tokenTableIdAllocator;  }
+    uint32_t                        allocCursorID() { return ++m_cursorTableIdAllocator; }
+    uint32_t                        allocTypeID()   { return ++m_typeTableIdAllocator;   }
+
 public:
     bool                            isOK()              const { return m_lastError == SQLITE_OK; }
     bool                            isNotOK()           const { return m_lastError != SQLITE_OK; }
@@ -119,7 +138,8 @@ public:
 private:
     void                            createGlobalTableTemplateQuery();
     void                            createTokenTableTemplateQuery();
-    void                            createSourceCodeTableTemplateQuery();
+    void                            createCursorTableTemplateQuery();
+    void                            createTypeTableTemplateQuery();
 
     void                            dumpQueryToFile(const std::string& query, const char* comment = nullptr);
 
@@ -134,5 +154,10 @@ private:
 
     std::string                     m_globalTableTemplateQuery;
     std::string                     m_tokenTableTemplateQuery;
-    std::string                     m_sourceCodeTableTemplateQuery;
+    std::string                     m_cursorTableTemplateQuery;
+    std::string                     m_typeTableTemplateQuery;
+
+    uint32_t                        m_tokenTableIdAllocator = 0;
+    uint32_t                        m_cursorTableIdAllocator = 0;
+    uint32_t                        m_typeTableIdAllocator = 0;
 };
