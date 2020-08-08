@@ -154,6 +154,10 @@ Database::Database(const std::string& databasePath) :
 
 Database::~Database()
 {
+    if(m_databaseOptions & DUMP_QUERIES_TO_FILE)
+    if(m_dumpQueryFile.is_open())
+        m_dumpQueryFile.close();
+
     sqlite3_close(m_database);
 }
 
@@ -162,13 +166,16 @@ void Database::openDatabase(uint32_t databaseFileMode)
     if(m_databasePath.empty())
         return;
 
-    if(databaseFileMode == 0)
+    if(databaseOptions == 0)
         return;
 
-    const bool inMemory  = databaseFileMode & DatabaseFileMode::IN_MEMORY_DB_FILE;
+    m_databaseOptions = databaseOptions;
 
-    const bool    readOnly    = databaseFileMode & DatabaseFileMode::READONLY_DB_FILE;
     const bool    readWrite   = databaseFileMode & DatabaseFileMode::READ_WRITE_DB_FILE;
+    const bool    inMemory    = m_databaseOptions & DatabaseOptions::IN_MEMORY_DB_FILE;
+
+    const bool    readOnly    = m_databaseOptions & DatabaseOptions::READONLY_DB_FILE;
+    const bool    readWrite   = m_databaseOptions & DatabaseOptions::READ_WRITE_DB_FILE;
 
     const int32_t sqliteFlags =  (readOnly  ? SQLITE_OPEN_READONLY : (readWrite ? (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE) : 0)) | 
                                  (inMemory  ? SQLITE_OPEN_MEMORY : 0);
@@ -177,7 +184,7 @@ void Database::openDatabase(uint32_t databaseFileMode)
 
     if (std::filesystem::exists(path))
     {
-        if(databaseFileMode & TRUNCATE_DB_FILE)
+        if(m_databaseOptions & TRUNCATE_DB_FILE)
         {
             if(std::filesystem::is_regular_file(path))
                 std::filesystem::remove(path);
@@ -190,6 +197,9 @@ void Database::openDatabase(uint32_t databaseFileMode)
                                     sqliteFlags, 
                                     nullptr
                                  );
+
+    if(m_databaseOptions & DUMP_QUERIES_TO_FILE)
+        m_dumpQueryFile.open("dumpQueries.txt", std::ios::out | std::ios::trunc);
 }
 
 void Database::createGlobalTableTemplateQuery()
@@ -325,6 +335,8 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
 
 DatabaseQueryErrMsg Database::sendQuery(const std::string& query)
 {
+    dumpQueryToFile(query, "Send query");
+
     DatabaseQueryErrMsg errMsg;
 
     m_lastError = sqlite3_exec(
@@ -336,4 +348,18 @@ DatabaseQueryErrMsg Database::sendQuery(const std::string& query)
                               );
 
     return errMsg;
+}
+
+void Database::dumpQueryToFile(const std::string& query, const char* comment /* = nullptr */)
+{
+    if(m_databaseOptions & DUMP_QUERIES_TO_FILE)
+    {
+        if(m_dumpQueryFile.is_open())
+        {
+            if(comment)
+                m_dumpQueryFile << "!-- " << comment << " --!" << std::endl;
+
+            m_dumpQueryFile << query << std::endl << std::endl;
+        }
+    }
 }

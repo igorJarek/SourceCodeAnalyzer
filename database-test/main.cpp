@@ -41,6 +41,10 @@ int main()
     database.openDatabase(DatabaseFileMode::TRUNCATE_DB_FILE   | 
                           DatabaseFileMode::READ_WRITE_DB_FILE | 
                           DatabaseFileMode::FILE_DB_FILE);
+    database.openDatabase(DatabaseOptions::TRUNCATE_DB_FILE   | 
+                          DatabaseOptions::READ_WRITE_DB_FILE | 
+                          DatabaseOptions::FILE_DB_FILE       |
+                          DatabaseOptions::DUMP_QUERIES_TO_FILE);
 
     string dbErrMsg = database.createGlobalTable(clang_getClangVersion(), APP_NAME, APP_VERSION);
     if(database.isNotOK())
