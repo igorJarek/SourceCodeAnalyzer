@@ -15,7 +15,7 @@ using namespace std;
 void createDatabaseTables(Database& database, const string& filePath, const CXTranslationUnit& translationUnit);
 
 void createInsertTokensTableData(Database& database, const string& filePath, uint32_t tokenID, const CXTokenKind& tokenKind, const CXString& tokenSpelling, const CXSourceRange& tokenRange);
-void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t tokenID, uint32_t typeID, const CXCursor& cursor);
+void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t cursorRefID, uint32_t tokenID, uint32_t typeID, const CXCursor& cursor);
 void createInsertTypesTableData(Database& database, const string& filePath, uint32_t typeID, const CXType& cursorType);
 
 int64_t countFileLines(const string& filePath);
@@ -35,7 +35,7 @@ int main()
 
     FolderBrowser fb;
     fb.clearFileList();
-    fb.setFileTypeBrowser(FileType::SOURCE_AND_HEADER_FILE);
+    fb.setFileTypeBrowser(FileType::SOURCE_FILE);
     fb.startFolderBrowse(libPath);
 
     const size_t        fileCount = fb.getFileCount();
@@ -125,15 +125,25 @@ void createDatabaseTables(Database& database, const string& filePath, const CXTr
 
             CXCursor         cursor           = clang_getCursor(translationUnit, tokenLocation);
             CXCursor         cursorReferenced = clang_getCursorReferenced(cursor);
+
             CXType           cursorType       = clang_getCursorType(cursor);
+            CXType           cursorRefType    = clang_getCursorType(cursorReferenced);
 
             uint32_t         tokenID          = database.allocTokenID();
+
             uint32_t         cursorID         = database.allocCursorID();
+            uint32_t         cursorRefID      = database.allocCursorID();
+
             uint32_t         typeID           = database.allocTypeID();
+            uint32_t         typeRefID        = database.allocTypeID();
 
             createInsertTokensTableData (database, filePath, tokenID, tokenKind, tokenSpelling, tokenRange);
-            createInsertCursorsTableData(database, filePath, cursorID, tokenID, typeID, cursor);
-            createInsertTypesTableData  (database, filePath, typeID, cursorType);
+
+            createInsertCursorsTableData(database, filePath, cursorID,    cursorRefID, tokenID, typeID,    cursor);
+            createInsertCursorsTableData(database, filePath, cursorRefID, 0          , 0,       typeRefID, cursorReferenced);
+
+            createInsertTypesTableData  (database, filePath, typeID,    cursorType);
+            createInsertTypesTableData  (database, filePath, typeRefID, cursorRefType);
         }
     }
 
@@ -171,7 +181,7 @@ void createInsertTokensTableData(Database& database, const string& filePath, uin
         cout << "sendQuery() error : " << tokenQueryErrMsg << endl;
 }
 
-void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t tokenID, uint32_t typeID, const CXCursor& cursor)
+void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t cursorRefID, uint32_t tokenID, uint32_t typeID, const CXCursor& cursor)
 {
     CXString              mangling                            = clang_Cursor_getMangling(cursor);
     CXCursorKind          templateCursorKind                  = clang_getTemplateCursorKind(cursor);
@@ -204,7 +214,7 @@ void createInsertCursorsTableData(Database& database, const string& filePath, ui
     insertQueryBuilder.addColumnValue(CursorTemplateCursorKind,       (uint32_t)templateCursorKind);
     insertQueryBuilder.addCXStringColumnValue(CursorUSR,              cursorUSR);
     insertQueryBuilder.addCXStringColumnValue(CursorDisplayName,      cursorDisplayName);
-    insertQueryBuilder.addColumnValue(CursorTable_CursorReferenced,   0);
+    insertQueryBuilder.addColumnValue(CursorTable_CursorReferenced,   cursorRefID);
     insertQueryBuilder.addColumnValue(TypeTable_CursorType,           typeID);
     insertQueryBuilder.addColumnValue(CursorEnumConstantDeclValue,    cursorEnumConstantDeclValue);
     insertQueryBuilder.addColumnValue(CursorEnumConstantDeclUValue,   cursorEnumConstantDeclUnsignedValue);
@@ -266,7 +276,7 @@ void createInsertTypesTableData(Database& database, const string& filePath, uint
     if( cursorType.kind != CXType_Invalid)
     if( cursorType.kind != CXType_Unexposed)
     {
-        //insertQueryBuilder.addColumnValue(TypeIsBits,                   );
+        insertQueryBuilder.addColumnValue(TypeIsBits,                     0);
         insertQueryBuilder.addColumnValue(TypeAddressSpace,               typeAddressSpace);
         insertQueryBuilder.addCXStringColumnValue(TypeTypedefName,        typeTypedefName);
         insertQueryBuilder.addCXStringColumnValue(TypeKindSpelling,       typeKindSpelling);
