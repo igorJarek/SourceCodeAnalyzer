@@ -18,24 +18,24 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Class.cpp">
+    <ClCompile Include="src\TestClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Function.cpp">
+    <ClCompile Include="src\TestFunction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Primitives.cpp">
+    <ClCompile Include="src\TestPrimitives.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Class.hpp">
+    <ClInclude Include="include\TestClass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Function.hpp">
+    <ClInclude Include="include\TestFunction.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Primitives.hpp">
+    <ClInclude Include="include\TestPrimitives.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

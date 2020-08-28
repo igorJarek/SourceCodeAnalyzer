@@ -109,14 +109,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="src\Class.cpp" />
-    <ClCompile Include="src\Function.cpp" />
-    <ClCompile Include="src\Primitives.cpp" />
+    <ClCompile Include="src\TestClass.cpp" />
+    <ClCompile Include="src\TestFunction.cpp" />
+    <ClCompile Include="src\TestPrimitives.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Class.hpp" />
-    <ClInclude Include="include\Function.hpp" />
-    <ClInclude Include="include\Primitives.hpp" />
+    <ClInclude Include="include\TestClass.hpp" />
+    <ClInclude Include="include\TestFunction.hpp" />
+    <ClInclude Include="include\TestPrimitives.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

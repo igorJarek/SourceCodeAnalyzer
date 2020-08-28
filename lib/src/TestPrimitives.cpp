@@ -1,4 +1,4 @@
-#include "Primitives.hpp"
+#include "TestPrimitives.hpp"
 
 void primitivesFunction()
 {
