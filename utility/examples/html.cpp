@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Html.h"
 
 int main()
@@ -7,7 +6,7 @@ int main()
 
     htmlBuilder.setIndexTitle("main.cpp");
     htmlBuilder.setFileNameHeader("main.cpp");
-    htmlBuilder.setFilePathHeader("libclangAPITest\\testLib\\main.cpp");
+    htmlBuilder.setFilePathHeader("lib\\main.cpp");
 
     string tableID{ "FMR" };
     string treeID{ "AST" };

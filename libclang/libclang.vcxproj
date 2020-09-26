@@ -103,7 +103,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>include;..\extlib\include;..\html\include\;..\database\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;..\extlib\include;</AdditionalIncludeDirectories>
       <WarningLevel>Level4</WarningLevel>
     </ClCompile>
     <Link>
@@ -180,11 +180,6 @@
   <ItemGroup>
     <Text Include="LibClangFunctions.txt" />
     <Text Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\html\html.vcxproj">
-      <Project>{a09f5b96-0e36-49f5-803b-8831afed4cd5}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

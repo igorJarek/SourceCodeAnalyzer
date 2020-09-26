@@ -1,5 +1,5 @@
-#include "DatabaseColumnDict.h"
-#include "ColumnDefinition.h"
+#include <database/DatabaseColumnDict.h>
+#include <database/ColumnDefinition.h>
 
 GlobalColumnDict     g_globalColumnDict;
 TokenColumnDict      g_tokenColumnDict;

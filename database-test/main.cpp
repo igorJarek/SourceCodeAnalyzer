@@ -4,11 +4,11 @@
 
 #include <clang-c/Index.h>
 
-#include "FolderBrowser.h"
+#include <folderbrowser/FolderBrowser.h>
 
-#include "Database.h"
-#include "DatabaseColumnDict.h"
-#include "ColumnDefinition.h"
+#include <database/Database.h>
+#include <database/DatabaseColumnDict.h>
+#include <database/ColumnDefinition.h>
 
 using namespace std;
 

@@ -1,6 +1,6 @@
-#include "Database.h"
-#include "ColumnDefinition.h"
-#include "DatabaseColumnDict.h"
+#include <database/Database.h>
+#include <database/ColumnDefinition.h>
+#include <database/DatabaseColumnDict.h>
 
 #include <filesystem>
 

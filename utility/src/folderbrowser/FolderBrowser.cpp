@@ -1,4 +1,4 @@
-#include "FolderBrowser.h"
+#include <folderbrowser/FolderBrowser.h>
 
 FolderBrowser::FolderBrowser()
 {

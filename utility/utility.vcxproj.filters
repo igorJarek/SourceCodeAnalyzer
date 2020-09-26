@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\database">
+      <UniqueIdentifier>{11ea4f38-eba6-4879-adea-8473c4ab6662}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\html">
+      <UniqueIdentifier>{ea588c52-a8cc-4a2a-af86-e221787b128f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\folderbrowser">
+      <UniqueIdentifier>{b9475881-479d-470b-80f7-1e6eaa4dc49c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\database">
+      <UniqueIdentifier>{b2762ebf-c154-46c0-8778-d9e33d329f0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\html">
+      <UniqueIdentifier>{b4ee91f7-d7ae-45bc-8092-2ff65fcaddfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\folderbrowser">
+      <UniqueIdentifier>{c3bce576-b7fc-4bfa-82a6-ed01bebf627d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\database\DatabaseColumnDict.h">
+      <Filter>Header Files\database</Filter>
+    </ClInclude>
+    <ClInclude Include="include\database\ColumnDefinition.h">
+      <Filter>Header Files\database</Filter>
+    </ClInclude>
+    <ClInclude Include="include\database\Database.h">
+      <Filter>Header Files\database</Filter>
+    </ClInclude>
+    <ClInclude Include="include\html\Html.h">
+      <Filter>Header Files\html</Filter>
+    </ClInclude>
+    <ClInclude Include="include\html\HtmlTemplates.h">
+      <Filter>Header Files\html</Filter>
+    </ClInclude>
+    <ClInclude Include="include\folderbrowser\FolderBrowser.h">
+      <Filter>Header Files\folderbrowser</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\database\Database.cpp">
+      <Filter>Source Files\database</Filter>
+    </ClCompile>
+    <ClCompile Include="src\database\DatabaseColumnDict.cpp">
+      <Filter>Source Files\database</Filter>
+    </ClCompile>
+    <ClCompile Include="src\html\Html.cpp">
+      <Filter>Source Files\html</Filter>
+    </ClCompile>
+    <ClCompile Include="src\folderbrowser\FolderBrowser.cpp">
+      <Filter>Source Files\folderbrowser</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
