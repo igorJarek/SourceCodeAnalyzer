@@ -4,8 +4,9 @@
 #include <string>
 #include <list>
 
-using namespace std;
 namespace fs = std::filesystem;
+using std::string;
+using std::list;
 
 enum FileType : uint8_t
 {
