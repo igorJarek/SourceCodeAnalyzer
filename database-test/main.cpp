@@ -39,7 +39,7 @@ int main()
     fb.startFolderBrowse(libPath);
 
     const size_t        fileCount = fb.getFileCount();
-    const list<string>& fileFile  = fb.getFileList();
+    const list<string>& fileList  = fb.getFileList();
 
     Database database(databasePath);
     database.openDatabase(DatabaseOptions::TRUNCATE_DB_FILE   | 
@@ -52,7 +52,7 @@ int main()
         cout << "Database error : " << dbErrMsg << endl;
     else
     {
-        for(const string& filePath : fileFile)
+        for(const string& filePath : fileList)
         {
             CXIndex index = clang_createIndex(0, 0);
 

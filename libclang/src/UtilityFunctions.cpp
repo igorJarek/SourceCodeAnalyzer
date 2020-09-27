@@ -1,24 +1,10 @@
+#include <folderbrowser/FolderBrowser.h>
+
 #include "UtilityFunctions.h"
 
 string tabOffset(uint32_t offset)
 {
     return string(offset, '\t');
-}
-
-bool isFileHeader(const string& extension)
-{
-    if (extension.compare("h") == 0 || extension.compare("hpp") == 0)
-        return true;
-    else
-        return false;
-}
-
-bool isFileSource(const string& extension)
-{
-    if (extension.compare("c") == 0 || extension.compare("cpp") == 0)
-        return true;
-    else
-        return false;
 }
 
 int64_t countStringLines(const string& str)
@@ -88,36 +74,18 @@ int64_t countFileLineColumns(const string& filePath, int64_t line)
     return columns;
 }
 
-bool recursiveFolderSearch(const string& folderPath)
+void recursiveFolderSearch(const string& folderPath)
 {
-    WIN32_FIND_DATAA findDataStruct;
-    string startDir{ folderPath + "*.*" };
-    HANDLE hFind = FindFirstFileA(startDir.c_str(), &findDataStruct);
-    if (hFind == INVALID_HANDLE_VALUE)
-    {
-        cout << "\tError : " << "Unable to open directory (Error code : " << GetLastError() << ") : " << folderPath << endl;
-        return false;
-    }
+    FolderBrowser folderBrowser;
 
-    do
-    {
-        const string fileName{ findDataStruct.cFileName };
-        if (findDataStruct.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY && (fileName.compare(".") == 0 || fileName.compare("..") == 0))
-            continue;
+    folderBrowser.clearFileList();
+    folderBrowser.setFileTypeBrowser(FileType::SOURCE_FILE);
+    folderBrowser.startFolderBrowse(folderPath);
 
-        if (findDataStruct.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-        {
-            string nextDir{ folderPath + fileName + "\\" };
-            if (!processFolder(nextDir))
-                return false;
-        }
-        else
-            processFile(folderPath, fileName);
+    const list<string>& fileList = folderBrowser.getFileList();
 
-    } while (FindNextFileA(hFind, &findDataStruct) != 0);
-
-    FindClose(hFind);
-    return true;
+    for(const string& absoluteFilePath : fileList)
+        processFile(absoluteFilePath);
 }
 
 void processBeforeAll()
@@ -134,53 +102,34 @@ void processAfterAll()
     saveBaseCXCursorInfo(nullptr, nullptr, SaveCursorAction::SAVE_CURSOR_CURINFO_FILE);
 }
 
-bool processFolder(const string& path)
+void processFile(const string& absoluteFilePath)
 {
-    bool ret = recursiveFolderSearch(path);
-    if (!ret)
+    ExecutionTimeMeasurement timeMeasurement("File " + absoluteFilePath + " has parsed in");
+
+    CXIndex index = clang_createIndex(0, 0);
+    CXTranslationUnit* translationUnit = _6_translation_unit_manipulation(index, absoluteFilePath);
+    if (translationUnit)
     {
-        cout << "\tError : " << "Unable to open directory (Error code : " << GetLastError() << ") : " << path << endl;
-        return false;
+        ClientData clientData(*translationUnit);
+        CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
+
+        saveBaseCXCursorInfo(translationUnit, nullptr, SaveCursorAction::ADD_FILE_BASE_INFO);
+
+        _5_token_extraction(*translationUnit, absoluteFilePath);
+        _8_file_manipulation(*translationUnit, absoluteFilePath);
+
+        clang_visitChildren(cursor, visitor, &clientData);
+
+        _6_disposeTranslationUnit(*translationUnit);
+        delete translationUnit;
+        translationUnit = nullptr;
+
+        bool ret;
+        ret = saveToFile(absoluteFilePath + AST_FILE_EXT,     clientData.astStringData);
+        ret = saveToFile(absoluteFilePath + AST_EXT_FILE_EXT, clientData.astExtStringData);
     }
 
-    return true;
-}
-
-void processFile(const string& folderPath, const string& fileName)
-{
-    string fileWithExtension{ fileName };
-    string absoluteFilePath{ folderPath + fileWithExtension };
-    string fileExtension{ fileWithExtension.substr(fileWithExtension.find_last_of(".") + 1) };
-
-    if (isFileHeader(fileExtension) || isFileSource(fileExtension))
-    {
-        ExecutionTimeMeasurement timeMeasurement("File " + absoluteFilePath + " has parsed in");
-
-        CXIndex index = clang_createIndex(0, 0);
-        CXTranslationUnit* translationUnit = _6_translation_unit_manipulation(index, absoluteFilePath);
-        if (translationUnit)
-        {
-            ClientData clientData(*translationUnit);
-            CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
-
-            saveBaseCXCursorInfo(translationUnit, nullptr, SaveCursorAction::ADD_FILE_BASE_INFO);
-
-            _5_token_extraction(*translationUnit, absoluteFilePath);
-            _8_file_manipulation(*translationUnit, absoluteFilePath);
-
-            clang_visitChildren(cursor, visitor, &clientData);
-
-            _6_disposeTranslationUnit(*translationUnit);
-            delete translationUnit;
-            translationUnit = nullptr;
-
-            bool ret;
-            ret = saveToFile(absoluteFilePath + AST_FILE_EXT,     clientData.astStringData);
-            ret = saveToFile(absoluteFilePath + AST_EXT_FILE_EXT, clientData.astExtStringData);
-        }
-
-        clang_disposeIndex(index);
-    }
+    clang_disposeIndex(index);
 }
 
 bool saveToFile(const string& path, const string& data)

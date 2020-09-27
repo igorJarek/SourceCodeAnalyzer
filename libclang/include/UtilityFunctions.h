@@ -54,20 +54,16 @@ private:
 
 string      tabOffset               (uint32_t offset);
 
-bool        isFileHeader            (const string& extension);
-bool        isFileSource            (const string& extension);
-
 int64_t     countStringLines        (const string& str);
 int64_t     countFileLines          (const string& filePath);
 int64_t     countFileLineColumns    (const string& filePath, int64_t line);
 
-bool        recursiveFolderSearch   (const string& folderPath);
+void        recursiveFolderSearch   (const string& folderPath);
 
 void        processBeforeAll        (void);
 void        processAfterAll         (void);
 
-bool        processFolder           (const string& path);
-void        processFile             (const string& folderPath, const string& fileName);
+void        processFile             (const string& absoluteFilePath);
 
 bool        saveToFile              (const string& path, const string& data);
 bool        saveToFile              (const string& path, const stringstream& data);

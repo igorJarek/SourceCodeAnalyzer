@@ -39,6 +39,9 @@
 
 *.html
 
+# Build output directories
+x64
+
 # Executables
 *.exe
 *.out
