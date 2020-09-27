@@ -5,8 +5,6 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
-
 CXResult                                    _14_findReferencesInFile            (CXCursor cursor, CXFile file, CXCursorAndRangeVisitor visitor);                                                // 1.
 CXResult                                    _14_findIncludesInFile              (CXTranslationUnit TU, CXFile file, CXCursorAndRangeVisitor visitor);                                           // 2.
 int                                         _14_isEntityObjCContainerKind       (CXIdxEntityKind IdxEntityKind);                                                                                // 3.

@@ -6,8 +6,6 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
-
 // Clang Functions
 
 CXCompilationDatabase   _12_CompilationDatabase_fromDirectory               (const char *BuildDir, CXCompilationDatabase_Error *ErrorCode);                 // 1.

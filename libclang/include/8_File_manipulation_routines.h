@@ -5,7 +5,7 @@
 #include "11_String_manipulation_routines.h"
 #include <ctime>
 
-using namespace std;
+using std::to_string;
 
 /*
 

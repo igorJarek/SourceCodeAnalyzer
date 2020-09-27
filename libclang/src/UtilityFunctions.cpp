@@ -25,7 +25,7 @@ int64_t countStringLines(const string& str)
 
 int64_t countFileLines(const string& filePath)
 {
-    fstream stream;
+    std::fstream stream;
     int64_t lines{ -1 };
 
     stream.open(filePath, std::fstream::in);
@@ -48,7 +48,7 @@ int64_t countFileLineColumns(const string& filePath, int64_t line)
     if (line < 0)
         return -1;
 
-    fstream stream;
+    std::fstream stream;
     int64_t columns{ -1 };
     int64_t lines{ -1 };
 
@@ -134,7 +134,7 @@ void processFile(const string& absoluteFilePath)
 
 bool saveToFile(const string& path, const string& data)
 {
-    fstream stream;
+    std::fstream stream;
     stream.open(path, std::fstream::out | std::fstream::trunc);
     if (stream.is_open())
     {
@@ -149,7 +149,7 @@ bool saveToFile(const string& path, const string& data)
 
 bool saveToFile(const string& path, const stringstream& data)
 {
-    fstream stream;
+    std::fstream stream;
     stream.open(path, std::fstream::out | std::fstream::trunc);
     if (stream.is_open())
     {

@@ -21,7 +21,7 @@
 #include "18_Miscellaneous_utility_functions.h"
 #include "19_Cursor_manipulations.h"
 
-using namespace std;
+using std::to_string;
 
 class ClientData
 {

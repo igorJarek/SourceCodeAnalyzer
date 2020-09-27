@@ -5,8 +5,6 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
-
 // Clang Functions
 // Only for libclang library debugging
 

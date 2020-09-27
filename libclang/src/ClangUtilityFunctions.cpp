@@ -124,7 +124,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
         CXString sourceCodeFileName = _6_getTranslationUnitSpelling(*translationUnit);
 
         sstreamStaticCursorInfoData.width(31);
-        sstreamStaticCursorInfoData << left << CXString2String(sourceCodeFileName);
+        sstreamStaticCursorInfoData << std::left << CXString2String(sourceCodeFileName);
 
         sstreamStaticCursorInfoData.width(0);
         sstreamStaticCursorInfoData << " : " << to_string(staticCurFileLinesCounter) << endl;

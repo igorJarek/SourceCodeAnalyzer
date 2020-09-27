@@ -2,7 +2,7 @@
 
 #include <string>
 
-using namespace std;
+using std::string;
 
 extern const string APP_NAME;
 extern const string APP_VERSION;

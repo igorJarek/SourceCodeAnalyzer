@@ -6,8 +6,6 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
-
 /*
     https://clang.llvm.org/docs/Modules.html
     Modules are useful insted #include

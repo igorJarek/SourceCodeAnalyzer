@@ -27,7 +27,9 @@
 #define ADD_STRING_OUT_IF(          tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue;
 #define ADD_STRING_OUT_IF_NL(       tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue + '\n';
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::stringstream;
 
 class ExecutionTimeMeasurement
 {

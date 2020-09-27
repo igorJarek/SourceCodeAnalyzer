@@ -5,8 +5,6 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
-
 /*
     1. CXRemapping 	clang_getRemappings                 (const char *path)
     2. CXRemapping 	clang_getRemappingsFromFileList     (const char **filePaths, unsigned numFiles)

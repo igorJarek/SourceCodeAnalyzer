@@ -5,8 +5,6 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
-
 // Clang Functions
 
 enum CXCompletionChunkKind      _20_getCompletionChunkKind                      (CXCompletionString completion_string, unsigned chunk_number);                                          // 1.

@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
+using std::to_string;
 
 /*
     For Doxygen documentation engine

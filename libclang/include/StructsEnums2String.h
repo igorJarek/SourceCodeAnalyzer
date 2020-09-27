@@ -8,7 +8,9 @@
 #include <string>
 #include <ostream>
 
-using namespace std;
+using std::vector;
+using std::to_string;
+using std::string;
 
 // Only one function produced std::vector
 vector<string> CXStringSet2StringVec            (CXStringSet*                             stringSet);
