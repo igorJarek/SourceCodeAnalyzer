@@ -27,6 +27,7 @@
     <ClInclude Include="include\html\HtmlTemplates.h" />
     <ClInclude Include="include\libclangstruct2str\LibClangStruct2Str.h" />
     <ClInclude Include="include\libclangstruct2str\PrintingPolicy.h" />
+    <ClInclude Include="include\outputtree\OutputTree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\database\Database.cpp" />
@@ -34,6 +35,7 @@
     <ClCompile Include="src\folderbrowser\FolderBrowser.cpp" />
     <ClCompile Include="src\html\Html.cpp" />
     <ClCompile Include="src\libclangstruct2str\LibClangStruct2Str.cpp" />
+    <ClCompile Include="src\outputtree\OutputTree.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
