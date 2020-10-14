@@ -25,12 +25,15 @@
     <ClInclude Include="include\folderbrowser\FolderBrowser.h" />
     <ClInclude Include="include\html\Html.h" />
     <ClInclude Include="include\html\HtmlTemplates.h" />
+    <ClInclude Include="include\libclangstruct2str\LibClangStruct2Str.h" />
+    <ClInclude Include="include\libclangstruct2str\PrintingPolicy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\database\Database.cpp" />
     <ClCompile Include="src\database\DatabaseColumnDict.cpp" />
     <ClCompile Include="src\folderbrowser\FolderBrowser.cpp" />
     <ClCompile Include="src\html\Html.cpp" />
+    <ClCompile Include="src\libclangstruct2str\LibClangStruct2Str.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -147,7 +150,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>sqlite3.lib</AdditionalDependencies>
+      <AdditionalDependencies>libclang.lib</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>..\extlib\lib</AdditionalLibraryDirectories>

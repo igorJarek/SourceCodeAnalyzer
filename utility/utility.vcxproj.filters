@@ -31,6 +31,12 @@
     <Filter Include="Source Files\folderbrowser">
       <UniqueIdentifier>{c3bce576-b7fc-4bfa-82a6-ed01bebf627d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\libclangstruct2str">
+      <UniqueIdentifier>{9e8667e3-785c-45df-8573-92572db5a673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libclangstruct2str">
+      <UniqueIdentifier>{1a89b28d-fa4b-44d7-8c0a-46446cd1d8ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\database\DatabaseColumnDict.h">
@@ -51,6 +57,12 @@
     <ClInclude Include="include\folderbrowser\FolderBrowser.h">
       <Filter>Header Files\folderbrowser</Filter>
     </ClInclude>
+    <ClInclude Include="include\libclangstruct2str\LibClangStruct2Str.h">
+      <Filter>Header Files\libclangstruct2str</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libclangstruct2str\PrintingPolicy.h">
+      <Filter>Header Files\libclangstruct2str</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\database\Database.cpp">
@@ -64,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="src\folderbrowser\FolderBrowser.cpp">
       <Filter>Source Files\folderbrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\libclangstruct2str\LibClangStruct2Str.cpp">
+      <Filter>Source Files\libclangstruct2str</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
