@@ -2,6 +2,11 @@
 
 namespace std
 {
+    string to_string(const string& string)
+    {
+        return string;
+    }
+
     string to_string(const CXString& string)
     {
         std::string str{ "-NULL-" };

@@ -8,6 +8,8 @@ using std::string;
 
 namespace std
 {
+    string to_string(const string&                            string);
+
     string to_string(const CXString&                          string);
     string to_string(const CXType&                            type);
     string to_string(const CXDiagnosticSeverity&              diagnosticSeverity);
