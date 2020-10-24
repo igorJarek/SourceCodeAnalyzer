@@ -57,7 +57,7 @@ public:
     void                        addCXPlatformAvailability(uint32_t level, const string&& str, const CXPlatformAvailability& platformAvailability);
     void                        addCXPrintingPolicy      (uint32_t level, const string&& str, const CXPrintingPolicy&       printingPolicy);
 
-    void                        saveToFile(const string& path);
+    bool                        saveToFile(const string& path);
 
 private:
     void                        saveNode(std::fstream& stream, const std::string& prefix, shared_ptr<OutputTreeNode> node);

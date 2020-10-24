@@ -28,7 +28,7 @@ void OutputTree::addString(uint32_t level, const string&& str)
 
     node->m_string = str;
 }
- 
+
 void OutputTree::addCXStringSet(uint32_t level, const string&& str, CXStringSet* stringSet)
 {
     addString(level, str);
@@ -57,6 +57,8 @@ void OutputTree::addCXSourceLocation (uint32_t level, const string&& str, const 
     clang_getExpansionLocation(sourceLocation, &expansionFile, &expansionLine, &expansioColumn, &expansioOffset);
     clang_getSpellingLocation (sourceLocation, &spellingFile,  &spellingLine,  &spellingColumn, &spellingOffset);
 
+    addString(level + 0, str);
+
     string strData;
     
     strData += "File : "   + std::to_string(clang_getFileName(expansionFile)) + ", ";
@@ -64,10 +66,7 @@ void OutputTree::addCXSourceLocation (uint32_t level, const string&& str, const 
     strData += "Column : " + std::to_string(expansioColumn)                   + ", ";
     strData += "Offset : " + std::to_string(expansioOffset);
 
-    addString(level + 0, str);
-
-    addString(level + 1, "ExpansionLocation");
-    addString(level + 2, strData);
+    addString(level + 1, "ExpansionLocation : ", strData);
 
     strData.clear();
 
@@ -76,8 +75,7 @@ void OutputTree::addCXSourceLocation (uint32_t level, const string&& str, const 
     strData += "Column : " + std::to_string(spellingColumn)                  + ", ";
     strData += "Offset : " + std::to_string(spellingOffset);
 
-    addString(level + 1, "SpellingLocation");
-    addString(level + 2, strData);
+    addString(level + 1, "SpellingLocation  : ", strData);
 }
 
 void OutputTree::addCXSourceRange(uint32_t level, const string&& str, const CXSourceRange& sourceRange)
@@ -204,19 +202,21 @@ void OutputTree::addCXPrintingPolicy(uint32_t level, const string&& str, const C
     addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_FullyQualifiedName)",                    fullyQualifiedName);
 }
 
-void OutputTree::saveToFile(const string& path)
+bool OutputTree::saveToFile(const string& path)
 {
     std::fstream stream;
     stream.open(path, std::fstream::out | std::fstream::trunc);
     if (stream.is_open())
     {
         for(list<shared_ptr<OutputTreeNode>>::iterator iter = m_rootPtr->m_children.begin(); iter != m_rootPtr->m_children.end(); ++iter)
-            saveNode(stream, "    ", *iter);
-
-        //saveNode(stream, "", m_rootPtr);
+            saveNode(stream, "", *iter);
 
         stream.close();
+
+        return true;
     }
+    else
+        return false;
 }
 
 void OutputTree::saveNode(std::fstream& stream, const std::string& prefix, shared_ptr<OutputTreeNode> node)
