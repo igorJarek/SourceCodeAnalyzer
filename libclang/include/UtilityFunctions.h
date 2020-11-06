@@ -16,17 +16,6 @@
 #include "8_File_manipulation_routines.h"
 #include "11_String_manipulation_routines.h"
 
-#define ADD_STRING_OUT_CURSOR_KIND( cursorKind)                                      strData += "Cursor "           + cursorKind                   + " : \n";
-
-#define ADD_STRING_OUT_TEXT(        tabCount, functionName)                          strData += tabOffset(tabCount) + functionName                 + '\n';
-#define ADD_STRING_OUT_NEWLINE()                                                     strData +=                                                      '\n';
-
-#define ADD_STRING_OUT(             tabCount, functionName, functionValue)           strData += tabOffset(tabCount) + functionName + functionValue;
-#define ADD_STRING_OUT_NL(          tabCount, functionName, functionValue)           strData += tabOffset(tabCount) + functionName + functionValue + '\n';
-
-#define ADD_STRING_OUT_IF(          tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue;
-#define ADD_STRING_OUT_IF_NL(       tabCount, functionName, functionValue) if(print) strData += tabOffset(tabCount) + functionName + functionValue + '\n';
-
 using std::cout;
 using std::endl;
 using std::stringstream;
@@ -54,8 +43,6 @@ private:
     std::chrono::time_point<std::chrono::system_clock> m_endTime; 
 };
 
-string      tabOffset               (uint32_t offset);
-
 int64_t     countStringLines        (const string& str);
 int64_t     countFileLines          (const string& filePath);
 int64_t     countFileLineColumns    (const string& filePath, int64_t line);
@@ -67,5 +54,4 @@ void        processAfterAll         (void);
 
 void        processFile             (const string& absoluteFilePath);
 
-bool        saveToFile              (const string& path, const string& data);
 bool        saveToFile              (const string& path, const stringstream& data);

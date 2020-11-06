@@ -3,7 +3,6 @@
 #include <clang-c/Index.h>
 #include "11_String_manipulation_routines.h"
 #include "UtilityFunctions.h"
-#include "StructsEnums2String.h"
 #include <fstream>
 #include <string>
 #include <iostream>
@@ -35,7 +34,7 @@ using std::to_string;
 
 // Print Function
 
-void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel, bool print = true);
+void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print = true);
 
 // Clang Functions
 

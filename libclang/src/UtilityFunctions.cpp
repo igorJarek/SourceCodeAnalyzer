@@ -2,11 +2,6 @@
 
 #include "UtilityFunctions.h"
 
-string tabOffset(uint32_t offset)
-{
-    return string(offset, '\t');
-}
-
 int64_t countStringLines(const string& str)
 {
     int64_t lines{ 0 };
@@ -90,7 +85,7 @@ void recursiveFolderSearch(const string& folderPath)
 
 void processBeforeAll()
 {
-    string clangVersion = CXString2String(_18_getClangVersion());
+    string clangVersion = to_string(_18_getClangVersion());
     cout << "Clang version : " << clangVersion << endl << endl;
 
     _18_toggleCrashRecovery(1);
@@ -108,7 +103,7 @@ void processFile(const string& absoluteFilePath)
 
     CXIndex index = clang_createIndex(0, 0);
     CXTranslationUnit* translationUnit = _6_translation_unit_manipulation(index, absoluteFilePath);
-    if (translationUnit)
+    if(translationUnit)
     {
         ClientData clientData(*translationUnit);
         CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
@@ -121,30 +116,16 @@ void processFile(const string& absoluteFilePath)
         clang_visitChildren(cursor, visitor, &clientData);
 
         _6_disposeTranslationUnit(*translationUnit);
+
         delete translationUnit;
         translationUnit = nullptr;
 
         bool ret;
-        ret = saveToFile(absoluteFilePath + AST_FILE_EXT,     clientData.astStringData);
-        ret = saveToFile(absoluteFilePath + AST_EXT_FILE_EXT, clientData.astExtStringData);
+        ret = clientData.astOutputTree.saveToFile(absoluteFilePath + AST_FILE_EXT);
+        ret = clientData.astExtOutputTree.saveToFile(absoluteFilePath + AST_EXT_FILE_EXT);
     }
 
     clang_disposeIndex(index);
-}
-
-bool saveToFile(const string& path, const string& data)
-{
-    std::fstream stream;
-    stream.open(path, std::fstream::out | std::fstream::trunc);
-    if (stream.is_open())
-    {
-        stream << data;
-        stream.close();
-
-        return true;
-    }
-    else
-        return false;
 }
 
 bool saveToFile(const string& path, const stringstream& data)

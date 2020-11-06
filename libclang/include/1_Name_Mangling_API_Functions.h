@@ -20,7 +20,7 @@
 
 // Print Function
 
-void _1_printMangling(string& strData, const CXCursor& cursor, const uint32_t curLevel);
+void _1_printMangling(OutputTree& astExtOutputTree, const CXCursor& cursor, const uint32_t curLevel);
 
 // Clang Functions
 

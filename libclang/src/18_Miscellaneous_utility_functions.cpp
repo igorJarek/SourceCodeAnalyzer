@@ -1,8 +1,8 @@
 #include "18_Miscellaneous_utility_functions.h"
 
-void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cursor, uint32_t curLevel)
+void _18_printMiscellaneousUtilityFunctions(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel)
 {
-    ADD_STRING_OUT_TEXT(curLevel + 1, "18. Miscellaneous utility functions : ")
+    astExtOutputTree.addString(curLevel + 1, "18. Miscellaneous utility functions : ");
 
     CXEvalResult         evalResult     = clang_Cursor_Evaluate(cursor);                    // 4.
     if(evalResult)
@@ -17,18 +17,18 @@ void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cur
 
         clang_EvalResult_dispose(evalResult);                                               // 12.
 
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getKind : ",       CXEvalResultKind2String(evalResultKind))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsInt : ",      to_string(getAsInt))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsLongLong : ", to_string(getAsLongLong))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_isUnsignedInt : ", to_string(isUnsignedInt))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsUnsigned : ", to_string(getAsUnsigned))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsDouble : ",   to_string(getAsDouble))
+        astExtOutputTree.addString(curLevel + 2, "clang_EvalResult_getKind : ",       evalResultKind);
+        astExtOutputTree.addString(curLevel + 2, "clang_EvalResult_getAsInt : ",      getAsInt);
+        astExtOutputTree.addString(curLevel + 2, "clang_EvalResult_getAsLongLong : ", getAsLongLong);
+        astExtOutputTree.addString(curLevel + 2, "clang_EvalResult_isUnsignedInt : ", isUnsignedInt);
+        astExtOutputTree.addString(curLevel + 2, "clang_EvalResult_getAsUnsigned : ", getAsUnsigned);
+        astExtOutputTree.addString(curLevel + 2, "clang_EvalResult_getAsDouble : ",   getAsDouble);
 
         if(evalResultKind != CXEval_Int && evalResultKind != CXEval_Float)
-            ADD_STRING_OUT_NL(curLevel + 2, "clang_EvalResult_getAsStr : ",      getAsStr)
+            astExtOutputTree.addString(curLevel + 2, "clang_EvalResult_getAsStr : ",  getAsStr);
     }
     else
-        ADD_STRING_OUT_TEXT(curLevel + 2, "-NULL-")
+        astExtOutputTree.addString(curLevel + 2, "-NULL-");
 }
 
 CXString                _18_getClangVersion             (void)

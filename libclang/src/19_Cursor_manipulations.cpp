@@ -1,6 +1,6 @@
 #include "19_Cursor_manipulations.h"
 
-void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
+void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
 {
     uint32_t               hashCursor           = clang_hashCursor(cursor);                                                                                         // 5.
     CXCursorKind           cursorKind           = clang_getCursorKind(cursor);                                                                                      // 6.
@@ -40,69 +40,71 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, stri
 
     CXFile             includedFile             = clang_getIncludedFile(cursor);                                                                                    // 34.
 
-    ADD_STRING_OUT_TEXT(curLevel + 1, "19. Cursor manipulations : ")
+    astExtOutputTree.addString(curLevel + 1, "19. Cursor manipulations : ");
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_hashCursor : ",             to_string(hashCursor))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorKind : ",          CXString2String(_17_getCursorKindSpelling(cursorKind)))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isDeclaration : ",          to_string(isDeclaration))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isInvalidDeclaration : ",   to_string(isInvalidDeclaration))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isReference : ",            to_string(isReference))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isExpression : ",           to_string(isExpression))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isStatement : ",            to_string(isStatement))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isAttribute : ",            to_string(isAttribute))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_hasAttrs : ",        to_string(hasAttrs))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isInvalid : ",              to_string(isInvalid))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isTranslationUnit : ",      to_string(isTranslationUnit))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isPreprocessing : ",        to_string(isPreprocessing))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isUnexposed : ",            to_string(isUnexposed))
+    astExtOutputTree.addString(curLevel + 2, "clang_hashCursor : ",             hashCursor);
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorKind : ",          cursorKind);
+    astExtOutputTree.addString(curLevel + 2, "clang_isDeclaration : ",          isDeclaration);
+    astExtOutputTree.addString(curLevel + 2, "clang_isInvalidDeclaration : ",   isInvalidDeclaration);
+    astExtOutputTree.addString(curLevel + 2, "clang_isReference : ",            isReference);
+    astExtOutputTree.addString(curLevel + 2, "clang_isExpression : ",           isExpression);
+    astExtOutputTree.addString(curLevel + 2, "clang_isStatement : ",            isStatement);
+    astExtOutputTree.addString(curLevel + 2, "clang_isAttribute : ",            isAttribute);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_hasAttrs : ",        hasAttrs);
+    astExtOutputTree.addString(curLevel + 2, "clang_isInvalid : ",              isInvalid);
+    astExtOutputTree.addString(curLevel + 2, "clang_isTranslationUnit : ",      isTranslationUnit);
+    astExtOutputTree.addString(curLevel + 2, "clang_isPreprocessing : ",        isPreprocessing);
+    astExtOutputTree.addString(curLevel + 2, "clang_isUnexposed : ",            isUnexposed);
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorLinkage : ",       CXLinkageKind2String(cursorLinkage))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorVisibility : ",    CXVisibilityKind2String(cursorVisibility))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorAvailability : " , CXAvailabilityKind2String(cursorAvailability))
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorLinkage : ",       cursorLinkage);
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorVisibility : ",    cursorVisibility);
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorAvailability : " , cursorAvailability);
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorPlatformAvailability [return] : ", to_string(cursorPlatformAvailability))
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorPlatformAvailability [return] : ", cursorPlatformAvailability);
     if(cursorPlatformAvailability > 0)
     {
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [always_deprecated] : ",   to_string(alwaysDeprecated))
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [deprecated_message] : ",  CXString2String(deprecatedMessage))
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [always_unavailable] : ",  to_string(alwaysUnavailable))
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [unavailable_message] : ", CXString2String(unavailableMessage))
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_getCursorPlatformAvailability [availability] : \n",      CXPlatformAvailability2String(platformAvailability, curLevel + 3))
+        astExtOutputTree.addString(curLevel + 3, "clang_getCursorPlatformAvailability [always_deprecated] : ",   alwaysDeprecated);
+        astExtOutputTree.addString(curLevel + 3, "clang_getCursorPlatformAvailability [deprecated_message] : ",  deprecatedMessage);
+        astExtOutputTree.addString(curLevel + 3, "clang_getCursorPlatformAvailability [always_unavailable] : ",  alwaysUnavailable);
+        astExtOutputTree.addString(curLevel + 3, "clang_getCursorPlatformAvailability [unavailable_message] : ", unavailableMessage);
+        astExtOutputTree.addCXPlatformAvailability(curLevel + 3, "clang_getCursorPlatformAvailability [availability] : ", platformAvailability);
 
         clang_disposeCXPlatformAvailability(&platformAvailability);                                                                                                 // 22.
     }
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorLanguage : ", CXLanguageKind2String(cursorLanguage))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorTLSKind : ",  CXTLSKind2String(TLSKind))
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorLanguage : ", cursorLanguage);
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorTLSKind : ",  TLSKind);
 
     if(!clang_Cursor_isNull(cursorSemanticParent))
-        ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getCursorSemanticParent : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(&translationUnit, &cursorSemanticParent)))
+    if(print)
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorSemanticParent : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorSemanticParent));
     else
-        ADD_STRING_OUT_TEXT(curLevel + 2,  "clang_getCursorSemanticParent : -NULL-")
+        astExtOutputTree.addString(curLevel + 2,  "clang_getCursorSemanticParent : -NULL-");
 
     if(!clang_Cursor_isNull(cursorLexicalParent))
-        ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getCursorLexicalParent : lib/cursors.cur -> ",  to_string(saveBaseCXCursorInfo(&translationUnit, &cursorLexicalParent)))
+    if(print)
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorLexicalParent : lib/cursors.cur -> ",  saveBaseCXCursorInfo(&translationUnit, &cursorLexicalParent));
     else 
-        ADD_STRING_OUT_TEXT(curLevel + 2,  "clang_getCursorLexicalParent : -NULL-")
+        astExtOutputTree.addString(curLevel + 2,  "clang_getCursorLexicalParent : -NULL-");
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getOverriddenCursors [num_overridden] : ", to_string(num_overridden))
+    astExtOutputTree.addString(curLevel + 2, "clang_getOverriddenCursors [num_overridden] : ", num_overridden);
     if(num_overridden > 0)
     {
         for(uint32_t index { 0 }; index < num_overridden; ++index)
         {
             const CXCursor& overridden = overriddens[index];
             if(!clang_Cursor_isNull(overridden))
-                ADD_STRING_OUT_IF_NL(curLevel + 3, "clang_getOverriddenCursors [" + to_string(index + 1) + "] : lib/cursors.cur -> ", 
-                                                   to_string(saveBaseCXCursorInfo(&translationUnit, &overridden)))
+            if(print)
+                astExtOutputTree.addString(curLevel + 3, "clang_getOverriddenCursors [" + to_string(index + 1) + "] : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &overridden));
         }
 
         clang_disposeOverriddenCursors(overriddens);                                                                                                                // 33.
     }
 
     if(includedFile)
-        ADD_STRING_OUT_NL(curLevel + 2,   "clang_getIncludedFile : \n", getBaseCXFileInfo(translationUnit, includedFile, curLevel + 3))
+        astExtOutputTree.addCXFileInfo(curLevel + 2,   "clang_getIncludedFile : ", includedFile, translationUnit);
     else
-        ADD_STRING_OUT_TEXT(curLevel + 2, "clang_getIncludedFile : -NULL-")
+        astExtOutputTree.addString(curLevel + 2, "clang_getIncludedFile : ", "-NULL-");
 }
 
 CXCursor                        _19_getNullCursor                       (void)

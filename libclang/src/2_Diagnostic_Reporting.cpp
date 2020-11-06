@@ -2,41 +2,42 @@
 
 void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& filePath)
 {
-    string strData;
+    OutputTree outputTree;
 
     uint32_t        errorNumber      = clang_getNumDiagnostics(translationUnit);                                                                                                   // 6.
     CXDiagnosticSet diagnosticSet    = clang_getDiagnosticSetFromTU(translationUnit);                                                                                              // 8.
     uint32_t        errorNumberInSet = clang_getNumDiagnosticsInSet(diagnosticSet);                                                                                                // 1.
 
-    ADD_STRING_OUT_NL(0, "clang_getNumDiagnostics : ", to_string(errorNumber))
+    outputTree.addString(0, "clang_getNumDiagnostics : ", errorNumber);
 
     for (uint32_t errorIndex = 0; errorIndex < errorNumber; ++errorIndex)
     {
-        ADD_STRING_OUT_TEXT(1, "CXDiagnostic [" + to_string(errorIndex + 1) + "] : ")
+        outputTree.addString(1, "CXDiagnostic [" + to_string(errorIndex + 1) + "] : ");
         CXDiagnostic currentDiagnostic = clang_getDiagnostic(translationUnit, errorIndex);                                                                                         // 7.
-        _2_printDiagnostic(strData, currentDiagnostic);
+        _2_printDiagnostic(outputTree, currentDiagnostic);
         clang_disposeDiagnostic(currentDiagnostic);                                                                                                                                // 9.
     }
 
-    ADD_STRING_OUT_NEWLINE()
-    ADD_STRING_OUT_NL(0, "clang_getNumDiagnosticsInSet : ", to_string(errorNumberInSet))
+    outputTree.addNewLine(0);
+
+    outputTree.addString(0, "clang_getNumDiagnosticsInSet : ", errorNumberInSet);
 
     for (uint32_t errorIndex = 0; errorIndex < errorNumber; ++errorIndex)
     {
-        ADD_STRING_OUT_TEXT(1, "CXDiagnostic [" + to_string(errorIndex + 1) + "] : ")
+        outputTree.addString(1, "CXDiagnostic [" + to_string(errorIndex + 1) + "] : ");
         CXDiagnostic currentDiagnostic = clang_getDiagnosticInSet(diagnosticSet, errorIndex);                                                                                      // 2.
-        _2_printDiagnostic(strData, currentDiagnostic);
+        _2_printDiagnostic(outputTree, currentDiagnostic);
         clang_disposeDiagnostic(currentDiagnostic);                                                                                                                                // 9.
     }
 
     if(errorNumberInSet)
         clang_disposeDiagnosticSet(diagnosticSet);                                                                                                                                 // 4.
 
-    if(!saveToFile(filePath + DIAGN_FILE_EXT, strData))
+    if(!outputTree.saveToFile(filePath + DIAGN_FILE_EXT))
         cout << "Couldn't create file : " << filePath << endl;
 }
 
-void _2_printDiagnostic(string& strData, const CXDiagnostic& currentDiagnostic)
+void _2_printDiagnostic(OutputTree& outputTree, const CXDiagnostic& currentDiagnostic)
 {
     uint32_t                defaultDiagnosticDisplayOption = clang_defaultDiagnosticDisplayOptions();                                                                              // 11.
 
@@ -55,33 +56,33 @@ void _2_printDiagnostic(string& strData, const CXDiagnostic& currentDiagnostic)
     uint32_t                diagnosticNumRanges            = clang_getDiagnosticNumRanges(currentDiagnostic);                                                                      // 19.
     uint32_t                diagnosticNumFixIts            = clang_getDiagnosticNumFixIts(currentDiagnostic);                                                                      // 21.
 
-    ADD_STRING_OUT_NL(2, "clang_defaultDiagnosticDisplayOptions : ", CXDiagnosticDisplayOptions2String(defaultDiagnosticDisplayOption))
-    ADD_STRING_OUT_NL(2, "clang_formatDiagnostic : ",                CXString2String(formatDiagnostic))
+    outputTree.addString(2, "clang_defaultDiagnosticDisplayOptions : ", defaultDiagnosticDisplayOption);
+    outputTree.addString(2, "clang_formatDiagnostic : ",                formatDiagnostic);
 
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticSeverity : ",           CXDiagnosticSeverity2String(diagnosticSeverity))
-    ADD_STRING_OUT   (2, "clang_getDiagnosticLocation :\n",          CXSourceLocation2String(sourceLocation, 3))
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticSpelling : ",           CXString2String(diagnosticSpelling))
+    outputTree.addString(2, "clang_getDiagnosticSeverity : ",           diagnosticSeverity);
+    outputTree.addCXSourceLocation(2, "clang_getDiagnosticLocation : ", sourceLocation);
+    outputTree.addString(2, "clang_getDiagnosticSpelling : ",           diagnosticSpelling);
 
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticOption Enable : ",      CXString2String(diagnosticOption))
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticOption Disable : ",     CXString2String(disableDiagnosticString))
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticCategory : ",           to_string(diagnosticCategory))
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticCategoryText : ",       CXString2String(diagnosticCategoryText))
+    outputTree.addString(2, "clang_getDiagnosticOption Enable : ",      diagnosticOption);
+    outputTree.addString(2, "clang_getDiagnosticOption Disable : ",     disableDiagnosticString);
+    outputTree.addString(2, "clang_getDiagnosticCategory : ",           diagnosticCategory);
+    outputTree.addString(2, "clang_getDiagnosticCategoryText : ",       diagnosticCategoryText);
 
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticNumRanges : ",          to_string(diagnosticNumRanges))
+    outputTree.addString(2, "clang_getDiagnosticNumRanges : ",          diagnosticNumRanges);
     for (uint32_t index{ 0 }; index < diagnosticNumRanges; ++index)
     {
         CXSourceRange       diagnosticRange                 = clang_getDiagnosticRange(currentDiagnostic, index);                                                                   // 20.
-        ADD_STRING_OUT_NL(3, "clang_getDiagnosticRange [" + to_string(index) + "] :\n", CXSourceRange2String(diagnosticRange, 3))
+        outputTree.addCXSourceRange(3, "clang_getDiagnosticRange [" + to_string(index) + "] : ", diagnosticRange);
     }
 
-    ADD_STRING_OUT_NL(2, "clang_getDiagnosticNumFixIts : ",          to_string(diagnosticNumFixIts))
+    outputTree.addString(2, "clang_getDiagnosticNumFixIts : ", diagnosticNumFixIts);
     for (uint32_t index{ 0 }; index < diagnosticNumFixIts; ++index)
     {
         CXSourceRange       diagnosticFixItSourceRange;
         CXString            diagnosticFixIt                = clang_getDiagnosticFixIt(currentDiagnostic, index, &diagnosticFixItSourceRange);                                      // 22.
 
-        ADD_STRING_OUT_NL(3, "clang_getDiagnosticFixIt [" + to_string(index) + "] [return] : ",            CXString2String(diagnosticFixIt))
-        ADD_STRING_OUT   (3, "clang_getDiagnosticFixIt [" + to_string(index) + "] [replacementRange] :\n", CXSourceRange2String(diagnosticFixItSourceRange, 4))
+        outputTree.addString(3, "clang_getDiagnosticFixIt [" + to_string(index) + "] [return] : ",            diagnosticFixIt);
+        outputTree.addCXSourceRange(3, "clang_getDiagnosticFixIt [" + to_string(index) + "] [replacementRange] :\n", diagnosticFixItSourceRange);
     }
 }
 

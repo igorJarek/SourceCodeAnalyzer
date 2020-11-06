@@ -33,7 +33,7 @@ using std::to_string;
 
 // Print Function
 
-void _18_printMiscellaneousUtilityFunctions(string& strData, const CXCursor& cursor, uint32_t curLevel);
+void _18_printMiscellaneousUtilityFunctions(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel);
 
 // Clang Functions
 

@@ -1,14 +1,14 @@
 #include "15_Type_information_for_CXCursors.h"
 
-void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
+void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
 {
     CXType                      cursorType                              = clang_getCursorType                           (cursor);                           // 1
     CXString                    typeSpelling                            = clang_getTypeSpelling                         (cursorType);                       // 2.
 
     if (cursorType.kind == CXType_Invalid || cursorType.kind == CXType_Unexposed)
     {
-        ADD_STRING_OUT_TEXT(curLevel + 1, "15. Type information for CXCursors : ")
-        ADD_STRING_OUT_NL  (curLevel + 2, "clang_getTypeSpelling : ", CXString2String(typeSpelling))
+        astExtOutputTree.addString(curLevel + 1, "15. Type information for CXCursors : ");
+        astExtOutputTree.addString(curLevel + 2, "clang_getTypeSpelling : ", typeSpelling);
 
         return;
     }
@@ -29,10 +29,10 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
     for (int32_t index{ 0 }; index < cursorNumTemplateArguments; ++index)
     {
         CXTemplateArgumentKind  templateArgumentKind = clang_Cursor_getTemplateArgumentKind(cursor, index);                                                 // 11.
-        templateArgumentKindStrings.push_back(CXTemplateArgumentKind2String(templateArgumentKind));
+        templateArgumentKindStrings.push_back(std::to_string(templateArgumentKind));
 
         CXType templateArgumentType = clang_Cursor_getTemplateArgumentType(cursor, index);                                                                  // 12.
-        templateArgumentTypeStrings.push_back(CXType2String(templateArgumentType));
+        templateArgumentTypeStrings.push_back(std::to_string(templateArgumentType));
 
         int64_t templateArgumentValue = clang_Cursor_getTemplateArgumentValue(cursor, index);                                                               // 13.
         templateArgumentValueStrings.push_back(to_string(templateArgumentValue));
@@ -85,93 +85,99 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
 
     uint32_t                    numOverloadedDecls                      = clang_getNumOverloadedDecls                   (cursor);                           // 67.
 
-    ADD_STRING_OUT_TEXT(curLevel + 1, "15. Type information for CXCursors : ")
+    astExtOutputTree.addString(curLevel + 1, "15. Type information for CXCursors : ");
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getTypeSpelling : ",                           CXString2String(typeSpelling))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getTypedefDeclUnderlyingType : ",              CXType2String(typedefDeclUnderlyingType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getEnumDeclIntegerType : ",                    CXType2String(enumDeclIntegerType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getEnumConstantDeclValue : ",                  to_string(enumConstantDeclValue))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getEnumConstantDeclUnsignedValue : ",          to_string(enumConstantDeclUnsignedValue))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getFieldDeclBitWidth : ",                      to_string(fieldDeclBitWidth))
+    astExtOutputTree.addString(curLevel + 2, "clang_getTypeSpelling : ",                           typeSpelling);
+    astExtOutputTree.addString(curLevel + 2, "clang_getTypedefDeclUnderlyingType : ",              typedefDeclUnderlyingType);
+    astExtOutputTree.addString(curLevel + 2, "clang_getEnumDeclIntegerType : ",                    enumDeclIntegerType);
+    astExtOutputTree.addString(curLevel + 2, "clang_getEnumConstantDeclValue : ",                  enumConstantDeclValue);
+    astExtOutputTree.addString(curLevel + 2, "clang_getEnumConstantDeclUnsignedValue : ",          enumConstantDeclUnsignedValue);
+    astExtOutputTree.addString(curLevel + 2, "clang_getFieldDeclBitWidth : ",                      fieldDeclBitWidth);
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getNumArguments : ",                    to_string(numArguments))
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getNumArguments : ",                    numArguments);
     for (int32_t index{ 0 }; index < numArguments; ++index)
     {
         CXCursor cursor_getArgument = clang_Cursor_getArgument(cursor, index);                                                                              // 9.
-        ADD_STRING_OUT_IF_NL(curLevel + 3, "clang_Cursor_getArgument : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(&translationUnit, &cursor_getArgument)))
+
+        if(print)
+            astExtOutputTree.addString(curLevel + 3, "clang_Cursor_getArgument : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursor_getArgument));
     }
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getNumTemplateArguments : ",            to_string(cursorNumTemplateArguments))
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getNumTemplateArguments : ",            cursorNumTemplateArguments);
 
     for (int32_t index{ 0 }; index < cursorNumTemplateArguments; ++index)
     {
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_Cursor_getTemplateArgumentKind : ",          templateArgumentKindStrings[index])
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_Cursor_getTemplateArgumentType : ",          templateArgumentTypeStrings[index])
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_Cursor_getTemplateArgumentValue : ",         templateArgumentValueStrings[index])
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_Cursor_getTemplateArgumentUnsignedValue : ", templateArgumentUnsignedValueStrings[index])
+        astExtOutputTree.addString(curLevel + 3, "clang_Cursor_getTemplateArgumentKind : ",          templateArgumentKindStrings[index]);
+        astExtOutputTree.addString(curLevel + 3, "clang_Cursor_getTemplateArgumentType : ",          templateArgumentTypeStrings[index]);
+        astExtOutputTree.addString(curLevel + 3, "clang_Cursor_getTemplateArgumentValue : ",         templateArgumentValueStrings[index]);
+        astExtOutputTree.addString(curLevel + 3, "clang_Cursor_getTemplateArgumentUnsignedValue : ", templateArgumentUnsignedValueStrings[index]);
     }
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCanonicalType : ",                            CXType2String(canonicalType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isConstQualifiedType : ",                        to_string(isConstQualifiedType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isMacroFunctionLike : ",                  to_string(isMacroFunctionLike))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isMacroBuiltin : ",                       to_string(isMacroBuiltin))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isFunctionInlined : ",                    to_string(isFunctionInlined))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isVolatileQualifiedType : ",                     to_string(isVolatileQualifiedType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isRestrictQualifiedType : ",                     to_string(isRestrictQualifiedType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getAddressSpace : ",                             to_string(getAddressSpace))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getTypedefName : ",                              CXString2String(getTypedefName))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getPointeeType : ",                              CXType2String(getPointeeType))
-    ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getTypeDeclaration : lib/cursors.cur -> ",    to_string(saveBaseCXCursorInfo(&translationUnit, &getTypeDeclaration)))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getTypeKindSpelling : ",                         CXString2String(typeKindSpelling))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getFunctionTypeCallingConv : ",                  CXCallingConv2String(functionTypeCallingConv))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getResultType : ",                               CXType2String(resultType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getExceptionSpecificationType : ",               to_string(exceptionSpecificationType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getNumArgTypes : ",                              to_string(numArgTypes))
+    astExtOutputTree.addString(curLevel + 2, "clang_getCanonicalType : ",                            canonicalType);
+    astExtOutputTree.addString(curLevel + 2, "clang_isConstQualifiedType : ",                        isConstQualifiedType);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isMacroFunctionLike : ",                  isMacroFunctionLike);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isMacroBuiltin : ",                       isMacroBuiltin);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isFunctionInlined : ",                    isFunctionInlined);
+    astExtOutputTree.addString(curLevel + 2, "clang_isVolatileQualifiedType : ",                     isVolatileQualifiedType);
+    astExtOutputTree.addString(curLevel + 2, "clang_isRestrictQualifiedType : ",                     isRestrictQualifiedType);
+    astExtOutputTree.addString(curLevel + 2, "clang_getAddressSpace : ",                             getAddressSpace);
+    astExtOutputTree.addString(curLevel + 2, "clang_getTypedefName : ",                              getTypedefName);
+    astExtOutputTree.addString(curLevel + 2, "clang_getPointeeType : ",                              getPointeeType);
+
+    if(print)
+        astExtOutputTree.addString(curLevel + 2, "clang_getTypeDeclaration : lib/cursors.cur -> ",    saveBaseCXCursorInfo(&translationUnit, &getTypeDeclaration));
+
+    astExtOutputTree.addString(curLevel + 2, "clang_getTypeKindSpelling : ",                         typeKindSpelling);
+    astExtOutputTree.addString(curLevel + 2, "clang_getFunctionTypeCallingConv : ",                  functionTypeCallingConv);
+    astExtOutputTree.addString(curLevel + 2, "clang_getResultType : ",                               resultType);
+    astExtOutputTree.addString(curLevel + 2, "clang_getExceptionSpecificationType : ",               exceptionSpecificationType);
+    astExtOutputTree.addString(curLevel + 2, "clang_getNumArgTypes : ",                              numArgTypes);
 
     for (int32_t index{ 0 }; index < numArgTypes; ++index)
     {
         CXType argType = clang_getArgType(cursorType, index);                                                                                               // 34.
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_getArgType : ", CXType2String(argType))
+        astExtOutputTree.addString(curLevel + 3, "clang_getArgType : ", argType);
     }
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isFunctionTypeVariadic : ",                      to_string(isFunctionTypeVariadic))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorResultType : ",                         CXType2String(cursorResultType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCursorExceptionSpecificationType : ",         to_string(cursorExceptionSpecificationType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isPODType : ",                                   to_string(isPODType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getElementType : ",                              CXType2String(elementType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getNumElements : ",                              to_string(numElements))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getArrayElementType : ",                         CXType2String(arrayElementType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getArraySize : ",                                to_string(arraySize))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Type_getNamedType : ",                           CXType2String(namedType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Type_isTransparentTagTypedef : ",                to_string(isTransparentTagTypedef))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Type_getNullability : ",                         CXTypeNullabilityKind2String(getNullability))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Type_getAlignOf : ",                             to_string(alignOf))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Type_getClassType : ",                           CXType2String(classType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Type_getSizeOf : ",                              to_string(sizeOf))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Type_getModifiedType : ",                        CXType2String(modifiedType))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getOffsetOfField : ",                     to_string(offsetOfField))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isAnonymous : ",                          to_string(isAnonymous))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isAnonymousRecordDecl : ",                to_string(isAnonymousRecordDecl))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isInlineNamespace : ",                    to_string(isInlineNamespace))
+    astExtOutputTree.addString(curLevel + 2, "clang_isFunctionTypeVariadic : ",                      isFunctionTypeVariadic);
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorResultType : ",                         cursorResultType);
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorExceptionSpecificationType : ",         cursorExceptionSpecificationType);
+    astExtOutputTree.addString(curLevel + 2, "clang_isPODType : ",                                   isPODType);
+    astExtOutputTree.addString(curLevel + 2, "clang_getElementType : ",                              elementType);
+    astExtOutputTree.addString(curLevel + 2, "clang_getNumElements : ",                              numElements);
+    astExtOutputTree.addString(curLevel + 2, "clang_getArrayElementType : ",                         arrayElementType);
+    astExtOutputTree.addString(curLevel + 2, "clang_getArraySize : ",                                arraySize);
+    astExtOutputTree.addString(curLevel + 2, "clang_Type_getNamedType : ",                           namedType);
+    astExtOutputTree.addString(curLevel + 2, "clang_Type_isTransparentTagTypedef : ",                isTransparentTagTypedef);
+    astExtOutputTree.addString(curLevel + 2, "clang_Type_getNullability : ",                         getNullability);
+    astExtOutputTree.addString(curLevel + 2, "clang_Type_getAlignOf : ",                             alignOf);
+    astExtOutputTree.addString(curLevel + 2, "clang_Type_getClassType : ",                           classType);
+    astExtOutputTree.addString(curLevel + 2, "clang_Type_getSizeOf : ",                              sizeOf);
+    astExtOutputTree.addString(curLevel + 2, "clang_Type_getModifiedType : ",                        modifiedType);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getOffsetOfField : ",                     offsetOfField);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isAnonymous : ",                          isAnonymous);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isAnonymousRecordDecl : ",                isAnonymousRecordDecl);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isInlineNamespace : ",                    isInlineNamespace);
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Type_getNumTemplateArguments : ",                to_string(typeNumTemplateArguments))
+    astExtOutputTree.addString(curLevel + 2, "clang_Type_getNumTemplateArguments : ",                typeNumTemplateArguments);
     for (int32_t index{ 0 }; index < typeNumTemplateArguments; ++index)
     {
         CXType templateArgumentAsType = clang_Type_getTemplateArgumentAsType(cursorType, index);                                                            // 61.
-        ADD_STRING_OUT_NL(curLevel + 3, "clang_Type_getTemplateArgumentAsType : ", CXType2String(templateArgumentAsType))
+        astExtOutputTree.addString(curLevel + 3, "clang_Type_getTemplateArgumentAsType : ", templateArgumentAsType);
     }
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Type_getCXXRefQualifier : ",                     CXRefQualifierKind2String(refQualifier))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isBitField : ",                           to_string(isBitField))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_isVirtualBase : ",                               to_string(isVirtualBase))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getCXXAccessSpecifier : ",                       CX_CXXAccessSpecifier2String(accessSpecifier))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getStorageClass : ",                      CX_StorageClass2String(storageClass))
+    astExtOutputTree.addString(curLevel + 2, "clang_Type_getCXXRefQualifier : ",                     refQualifier);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isBitField : ",                           isBitField);
+    astExtOutputTree.addString(curLevel + 2, "clang_isVirtualBase : ",                               isVirtualBase);
+    astExtOutputTree.addString(curLevel + 2, "clang_getCXXAccessSpecifier : ",                       accessSpecifier);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getStorageClass : ",                      storageClass);
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getNumOverloadedDecls : ",                       to_string(numOverloadedDecls))
+    astExtOutputTree.addString(curLevel + 2, "clang_getNumOverloadedDecls : ",                       numOverloadedDecls);
     for (uint32_t index{ 0 }; index < numOverloadedDecls; ++index)
     {
         CXCursor overloadedDecl = clang_getOverloadedDecl(cursor, index);                                                                                   // 68.
-        ADD_STRING_OUT_IF_NL(curLevel + 3, "clang_getOverloadedDecl : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(&translationUnit, &overloadedDecl)))
+        if(print)
+            astExtOutputTree.addString(curLevel + 3, "clang_getOverloadedDecl : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &overloadedDecl));
     }
 }
 

@@ -1,72 +1,76 @@
 #include "9_Cross-referencing_in_the_AST.h"
 
-void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
+void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
 {
-    CXString         cursorUSR               = clang_getCursorUSR(cursor);                                                                                     // 1.
-    CXString         cursorSpelling          = clang_getCursorSpelling(cursor);                                                                                // 8.
-    CXSourceRange    spellingNameRange       = clang_Cursor_getSpellingNameRange(cursor, 0, 0);                                                                // 9.    CHECK LAST 2 PARAMETERS
-    CXPrintingPolicy cursorPrintingPolicy    = clang_getCursorPrintingPolicy(cursor);                                                                          // 12.
-    CXString         cursorPrettyPrinted     = clang_getCursorPrettyPrinted(cursor, cursorPrintingPolicy);                                                     // 14.   dodac wiecej przypadkow cursorPrintingPolicy
+    CXString         cursorUSR               = clang_getCursorUSR(cursor);                                                                                      // 1.
+    CXString         cursorSpelling          = clang_getCursorSpelling(cursor);                                                                                 // 8.
+    CXSourceRange    spellingNameRange       = clang_Cursor_getSpellingNameRange(cursor, 0, 0);                                                                 // 9.    check last 2 parameters
+    CXPrintingPolicy cursorPrintingPolicy    = clang_getCursorPrintingPolicy(cursor);                                                                           // 12.
+    CXString         cursorPrettyPrinted     = clang_getCursorPrettyPrinted(cursor, cursorPrintingPolicy);                                                      // 14.   add more cases with cursorPrintingPolicy
 
-    CXString         cursorDisplayName       = clang_getCursorDisplayName(cursor);                                                                             // 15.
-    CXCursor         cursorReferenced        = clang_getCursorReferenced(cursor);                                                                              // 16.
-    CXCursor         cursorDefinition        = clang_getCursorDefinition(cursor);                                                                              // 17.
-    uint32_t         isCursorDefinition      = clang_isCursorDefinition(cursor);                                                                               // 18.
-    CXCursor         canonicalCursor         = clang_getCanonicalCursor(cursor);                                                                               // 19.
-    int32_t          isDynamicCall           = clang_Cursor_isDynamicCall(cursor);                                                                             // 21.
-    uint32_t         isVariadic              = clang_Cursor_isVariadic(cursor);                                                                                // 28.
+    CXString         cursorDisplayName       = clang_getCursorDisplayName(cursor);                                                                              // 15.
+    CXCursor         cursorReferenced        = clang_getCursorReferenced(cursor);                                                                               // 16.
+    CXCursor         cursorDefinition        = clang_getCursorDefinition(cursor);                                                                               // 17.
+    uint32_t         isCursorDefinition      = clang_isCursorDefinition(cursor);                                                                                // 18.
+    CXCursor         canonicalCursor         = clang_getCanonicalCursor(cursor);                                                                                // 19.
+    int32_t          isDynamicCall           = clang_Cursor_isDynamicCall(cursor);                                                                              // 21.
+    uint32_t         isVariadic              = clang_Cursor_isVariadic(cursor);                                                                                 // 28.
 
     CXString         language, definedIn;
     uint32_t         isGenerated;
-    uint32_t         isExternalSymbol        = clang_Cursor_isExternalSymbol(cursor, &language, &definedIn, &isGenerated);                                     // 29.
+    uint32_t         isExternalSymbol        = clang_Cursor_isExternalSymbol(cursor, &language, &definedIn, &isGenerated);                                      // 29.
 
-    CXSourceRange    commentRange            = clang_Cursor_getCommentRange(cursor);                                                                           // 30.
-    CXString         rawCommentText          = clang_Cursor_getRawCommentText(cursor);                                                                         // 31.
-    CXString         briefCommentText        = clang_Cursor_getBriefCommentText(cursor);                                                                       // 32.
+    CXSourceRange    commentRange            = clang_Cursor_getCommentRange(cursor);                                                                            // 30.
+    CXString         rawCommentText          = clang_Cursor_getRawCommentText(cursor);                                                                          // 31.
+    CXString         briefCommentText        = clang_Cursor_getBriefCommentText(cursor);                                                                        // 32.
 
-    ADD_STRING_OUT_TEXT  (curLevel + 1, "9. Cross-referencing in the AST : ")
+    astExtOutputTree.addString(curLevel + 1, "9. Cross-referencing in the AST : ");
 
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorUSR : ",                           CXString2String(cursorUSR))
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorSpelling : ",                      CXString2String(cursorSpelling))
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorUSR : ",                               cursorUSR);
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorSpelling : ",                          cursorSpelling);
 
     if (spellingNameRange.ptr_data[0] != nullptr && spellingNameRange.ptr_data[1] != nullptr)
-        ADD_STRING_OUT   (curLevel + 2, "clang_Cursor_getSpellingNameRange : \n",          CXSourceRange2String(spellingNameRange, curLevel + 3))
+        astExtOutputTree.addCXSourceRange(curLevel + 2, "clang_Cursor_getSpellingNameRange : ",     spellingNameRange);
     else
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getSpellingNameRange : ",            "Null")
+        astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getSpellingNameRange : ",            "Null");
 
-    ADD_STRING_OUT       (curLevel + 2, "clang_getCursorPrintingPolicy : \n",              CXPrintingPolicy2String(cursorPrintingPolicy, curLevel + 3))
+    astExtOutputTree.addCXPrintingPolicy(curLevel + 2, "clang_getCursorPrintingPolicy : ",          cursorPrintingPolicy);
 
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorPrettyPrinted : \n",               CXString2String(cursorPrettyPrinted))
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_getCursorDisplayName : ",                   CXString2String(cursorDisplayName))
+    //astExtOutputTree.addString(curLevel + 2, "clang_getCursorPrettyPrinted : ",                   cursorPrettyPrinted);
+    astExtOutputTree.addString(curLevel + 2, "clang_getCursorDisplayName : ",                       cursorDisplayName);
 
-    ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(&translationUnit, &cursorReferenced)))
-    ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(&translationUnit, &cursorDefinition)))
+    if(print)
+    {
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorReferenced));
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorDefinition));
+    }
 
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_isCursorDefinition : ",                     to_string(isCursorDefinition))
+    astExtOutputTree.addString(curLevel + 2, "clang_isCursorDefinition : ",                         isCursorDefinition);
 
-    ADD_STRING_OUT_IF_NL (curLevel + 2, "clang_getCanonicalCursor : lib/cursors.cur -> ",  to_string(saveBaseCXCursorInfo(&translationUnit, &canonicalCursor)))
+    if(print)
+        astExtOutputTree.addString(curLevel + 2, "clang_getCanonicalCursor : lib/cursors.cur -> ",  saveBaseCXCursorInfo(&translationUnit, &canonicalCursor));
 
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_isDynamicCall : ",                   to_string(isDynamicCall))
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isDynamicCall : ",                       isDynamicCall);
 
     if(_19_isExpression(cursor.kind))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getReceiverType : ",                 CXType2String(clang_Cursor_getReceiverType(cursor)))                // 22.
+        astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getReceiverType : ",                 clang_Cursor_getReceiverType(cursor));                      // 22.
     else
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_getReceiverType : ",                  "Null")
+        astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getReceiverType : ",                 "Null");
 
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_isVariadic : ",                      to_string(isVariadic))
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isVariadic : ",                          isVariadic);
 
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_isExternalSymbol [ret] : ",          to_string(isExternalSymbol))
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isExternalSymbol [ret] : ",              isExternalSymbol);
 
     if(isExternalSymbol)
     {
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isExternalSymbol [language] : ",     CXString2String(language))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isExternalSymbol [definedIn] : ",    CXString2String(definedIn))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Cursor_isExternalSymbol [isGenerated] : ",  to_string(isGenerated))
+        astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isExternalSymbol [language] : ",     language);
+        astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isExternalSymbol [definedIn] : ",    definedIn);
+        astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isExternalSymbol [isGenerated] : ",  isGenerated);
     }
 
-    ADD_STRING_OUT       (curLevel + 2, "clang_Cursor_getCommentRange : \n",               CXSourceRange2String(commentRange, (curLevel + 3)))
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_getRawCommentText : ",               CXString2String(rawCommentText))
-    ADD_STRING_OUT_NL    (curLevel + 2, "clang_Cursor_getBriefCommentText : ",             CXString2String(briefCommentText))
+    astExtOutputTree.addCXSourceRange(curLevel + 2, "clang_Cursor_getCommentRange : ",              commentRange);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getRawCommentText : ",                   rawCommentText);
+    astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getBriefCommentText : ",                 briefCommentText);
 
     clang_PrintingPolicy_dispose(cursorPrintingPolicy);                                                                                                        // 13.
 }

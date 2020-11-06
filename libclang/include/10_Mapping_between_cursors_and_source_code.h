@@ -21,7 +21,7 @@
 
 // Print Function
 
-void _10_printMappingBetweenCursorsAndSourceCode(string& strData, const CXCursor& cursor, uint32_t curLevel);
+void _10_printMappingBetweenCursorsAndSourceCode(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel);
 
 // Clang Functions
 

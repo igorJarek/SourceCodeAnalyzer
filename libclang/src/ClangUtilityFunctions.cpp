@@ -1,29 +1,27 @@
 #include "ClangUtilityFunctions.h"
+#include <libclangstruct2str/LibClangStruct2Str.h>
 
 CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
 {
     ClientData* clientDataPtr = reinterpret_cast<ClientData*>(client_data);
+
     CXTranslationUnit translationUnit = clientDataPtr->translationUnit;
-    string& astStringData = clientDataPtr->astStringData;
-    string& astExtStringData = clientDataPtr->astExtStringData;
+    OutputTree& astOutputTree = clientDataPtr->astOutputTree;
+    OutputTree& astExtOutputTree = clientDataPtr->astExtOutputTree;
     uint32_t curLevel = clientDataPtr->treeLevel;
 
-    astStringData    += tabOffset(curLevel);
-    astExtStringData += tabOffset(curLevel);
+    dumpAST(astOutputTree, cursor, curLevel);
+    printCursor(translationUnit, astExtOutputTree, cursor, curLevel);
 
-    dumpAST(astStringData, cursor);
-    printCursor(translationUnit, astExtStringData, cursor, curLevel);
+    ClientData nextClientData(clientDataPtr);
+    nextClientData.treeLevel++;
 
-    ClientData nextClientData(translationUnit, curLevel + 1);
     clang_visitChildren(cursor, visitor, &nextClientData);
-
-    astStringData    += nextClientData.astStringData;
-    astExtStringData += nextClientData.astExtStringData;
 
     return CXChildVisit_Continue;
 }
 
-void dumpAST(string& strData, const CXCursor& cursor)
+void dumpAST(OutputTree& astOutputTree, const CXCursor& cursor, uint32_t curLevel)
 {
     CXFile cursorFile,   startFile,    endFile;
     uint32_t cursorLine, cursorColumn, cursorOffset;
@@ -51,34 +49,36 @@ void dumpAST(string& strData, const CXCursor& cursor)
     CXType              cursorType          = _15_getCursorType(cursor);
     CXString            cursorTypeSpelling  = _15_getTypeSpelling(cursorType);
 
-    strData += CXString2String(kindSpelling) + " ";
-    strData += "<" + CXString2String(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", col:" + to_string(endColumn) + ">" + " col:" + to_string(cursorColumn);
-    strData += " used " + CXString2String(cursorSpelling) + " '" + CXString2String(cursorTypeSpelling) + "'\n";
+    string output;
+
+    output += to_string(kindSpelling) + " ";
+    output += "<" + to_string(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", col:" + to_string(endColumn) + ">" + " col:" + to_string(cursorColumn);
+    output += " used " + to_string(cursorSpelling) + " '" + to_string(cursorTypeSpelling);
+
+    astOutputTree.addString(curLevel, output);
 }
 
-void printCursor(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel)
+void printCursor(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel)
 {
-    CXCursorKind cursorKind   = _19_getCursorKind(cursor);
-    CXString     kindSpelling = _17_getCursorKindSpelling(cursorKind);
+    CXCursorKind cursorKind      = _19_getCursorKind(cursor);
+    CXString     kindSpelling    = _17_getCursorKindSpelling(cursorKind);
 
-    ADD_STRING_OUT_CURSOR_KIND(CXString2String(kindSpelling))
+    astExtOutputTree.addString(curLevel, "Cursor : ", kindSpelling);
 
-    _0_1_printCommentIntrospection              (strData, cursor, curLevel);
-    _1_printMangling                            (strData, cursor, curLevel);
-    _3_printASTIntrospection                    (translationUnit, strData, cursor, curLevel);
-    _7_printInformationForAttributes            (strData, cursor, curLevel);
-    _9_printCrossReferencingInTheAST            (translationUnit, strData, cursor, curLevel);
-    _10_printMappingBetweenCursorsAndSourceCode (strData, cursor, curLevel);
-    _15_printTypeInformationForCXCursors        (translationUnit, strData, cursor, curLevel);
-    _18_printMiscellaneousUtilityFunctions      (strData, cursor, curLevel);
-    _19_printCursorManipulations                (translationUnit, strData, cursor, curLevel);
-
-    ADD_STRING_OUT_NEWLINE()
+    _0_1_printCommentIntrospection              (astExtOutputTree, cursor, curLevel);
+    _1_printMangling                            (astExtOutputTree, cursor, curLevel);
+    _3_printASTIntrospection                    (translationUnit, astExtOutputTree, cursor, curLevel);
+    _7_printInformationForAttributes            (astExtOutputTree, cursor, curLevel);
+    _9_printCrossReferencingInTheAST            (translationUnit, astExtOutputTree, cursor, curLevel);
+    _10_printMappingBetweenCursorsAndSourceCode (astExtOutputTree, cursor, curLevel);
+    _15_printTypeInformationForCXCursors        (translationUnit, astExtOutputTree, cursor, curLevel);
+    _18_printMiscellaneousUtilityFunctions      (astExtOutputTree, cursor, curLevel);
+    _19_printCursorManipulations                (translationUnit, astExtOutputTree, cursor, curLevel);
 }
 
 uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CXCursor* cursor, SaveCursorAction action /* = SaveCursorAction::ADD_CXCURSOR_BASE_INFO */)
 {
-    static string       strStaticCursorData;
+    static OutputTree   treeStaticCursorData;
     static stringstream sstreamStaticCursorInfoData;
 
     static int64_t      staticCurFileLinesCounter { 1 };
@@ -88,30 +88,28 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
         if(!translationUnit && !cursor)
             return 0;
 
-        string strData;
+        uint64_t startOutLinesCount = treeStaticCursorData.getSize();
 
-        ADD_STRING_OUT_TEXT(0, "-------------------- " + CXString2String(_17_getCursorKindSpelling(cursor->kind)) + " --------------------")
+        treeStaticCursorData.addString(0, "-------------------- " + to_string(_17_getCursorKindSpelling(cursor->kind)) + " --------------------");
 
         if(cursor->kind == CXCursor_NoDeclFound)
-            ADD_STRING_OUT_TEXT(0, "Cursor == CXCursor_NoDeclFound")
+            treeStaticCursorData.addString(0, "Cursor == CXCursor_NoDeclFound");
         else
         {
-            _0_1_printCommentIntrospection              (strData, *cursor, 0);
-            _1_printMangling                            (strData, *cursor, 0);
-            _3_printASTIntrospection                    (*translationUnit, strData, *cursor, 0, false);
-            _7_printInformationForAttributes            (strData, *cursor, 0);
-            _9_printCrossReferencingInTheAST            (*translationUnit, strData, *cursor, 0, false);
-            _10_printMappingBetweenCursorsAndSourceCode (strData, *cursor, 0);
-            _15_printTypeInformationForCXCursors        (*translationUnit, strData, *cursor, 0, false);
-            _18_printMiscellaneousUtilityFunctions      (strData, *cursor, 0);
-            _19_printCursorManipulations                (*translationUnit, strData, *cursor, 0, false);
+            _0_1_printCommentIntrospection              (treeStaticCursorData, *cursor, 0);
+            _1_printMangling                            (treeStaticCursorData, *cursor, 0);
+            _3_printASTIntrospection                    (*translationUnit, treeStaticCursorData, *cursor, 0, false);
+            _7_printInformationForAttributes            (treeStaticCursorData, *cursor, 0);
+            _9_printCrossReferencingInTheAST            (*translationUnit, treeStaticCursorData, *cursor, 0, false);
+            _10_printMappingBetweenCursorsAndSourceCode (treeStaticCursorData, *cursor, 0);
+            _15_printTypeInformationForCXCursors        (*translationUnit, treeStaticCursorData, *cursor, 0, false);
+            _18_printMiscellaneousUtilityFunctions      (treeStaticCursorData, *cursor, 0);
+            _19_printCursorManipulations                (*translationUnit, treeStaticCursorData, *cursor, 0, false);
         }
 
-        ADD_STRING_OUT_TEXT(0, "------------------------------------------------------------")
+        treeStaticCursorData.addString(0, "------------------------------------------------------------");
 
-        strStaticCursorData += strData;
-
-        int64_t outLinesCount = countStringLines(strData);
+        uint64_t outLinesCount = treeStaticCursorData.getSize() - startOutLinesCount;
         staticCurFileLinesCounter += outLinesCount;
 
         return staticCurFileLinesCounter - outLinesCount;
@@ -124,7 +122,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
         CXString sourceCodeFileName = _6_getTranslationUnitSpelling(*translationUnit);
 
         sstreamStaticCursorInfoData.width(31);
-        sstreamStaticCursorInfoData << std::left << CXString2String(sourceCodeFileName);
+        sstreamStaticCursorInfoData << std::left << to_string(sourceCodeFileName);
 
         sstreamStaticCursorInfoData.width(0);
         sstreamStaticCursorInfoData << " : " << to_string(staticCurFileLinesCounter) << endl;
@@ -133,7 +131,8 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
     }
     else if(action == SaveCursorAction::SAVE_CURSOR_CUR_FILE)
     {   
-        if (!saveToFile(CURSORS_REF_PATH, strStaticCursorData))
+        
+        if (!treeStaticCursorData.saveToFile(CURSORS_REF_PATH))
             cout << "Couldn't save file : " << CURSORS_REF_PATH << endl;
 
         return 0;
@@ -149,31 +148,3 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
     return 0;
 }
 
-string getBaseCXFileInfo(const CXTranslationUnit& translationUnit, const CXFile& file, uint32_t curLevel)
-{
-    string strData;
-
-    char            timeBuff[255] = { 0 };
-    CXFileUniqueID  fileUniqueIDStruct;
-    size_t          size;
-
-    time_t          fileTime                = _8_getFileTime(file);
-    int32_t         fileUniqueID            = _8_getFileUniqueID(file, &fileUniqueIDStruct);
-    uint32_t        multipleIncludeGuarded  = _8_isFileMultipleIncludeGuarded(translationUnit, file);
-    const char*     fileContents            = _8_getFileContents(translationUnit, file, &size);
-
-    ctime_s(timeBuff, sizeof(timeBuff), &fileTime);
-
-    ADD_STRING_OUT_NL(curLevel, "_8_getFileName : ",                    CXString2String(_8_getFileName(file)))
-    ADD_STRING_OUT_NL(curLevel, "_8_getFileTime : ",                    timeBuff)
-    ADD_STRING_OUT_NL(curLevel, "_8_getFileUniqueID [return value] : ", to_string(fileUniqueID))
-    ADD_STRING_OUT_NL(curLevel, "_8_getFileUniqueID [outID] : ",        to_string(fileUniqueIDStruct.data[0]) + ", " +
-                                                                        to_string(fileUniqueIDStruct.data[1]) + ", " +
-                                                                        to_string(fileUniqueIDStruct.data[2]))
-    ADD_STRING_OUT_NL(curLevel, "_8_isFileMultipleIncludeGuarded : ",   to_string(multipleIncludeGuarded))
-    ADD_STRING_OUT_NL(curLevel, "_8_getFileContents [size] : ",         to_string(size))
-    ADD_STRING_OUT_NL(curLevel, "_8_getFileContents [return] : ",       fileContents)
-    ADD_STRING_OUT_NL(curLevel, "_8_File_tryGetRealPathName : ",        CXString2String(_8_File_tryGetRealPathName(file)))
-
-    return strData;
-}

@@ -3,7 +3,7 @@
 CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string& filePath)
 {
     const string tUnitSavePath{ filePath + TUNIT_BIN_FILE_EXT };
-    string strData;
+    OutputTree outputTree;
 
     CXTranslationUnit*    translationUnit                      = new CXTranslationUnit;
     CXErrorCode           errorCode                            = clang_parseTranslationUnit2(index, 
@@ -30,31 +30,31 @@ CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string
         CXString          targetInfo_getTriple                 = clang_TargetInfo_getTriple(translationUnitTargetInfo);                                             // 20.
         int32_t           targetInfo_getPointerWidth           = clang_TargetInfo_getPointerWidth(translationUnitTargetInfo);                                       // 21.
 
-        ADD_STRING_OUT_TEXT(0, "6. Translation Unit Manipulation : ")
+        outputTree.addString(0, "6. Translation Unit Manipulation : ");
 
-        ADD_STRING_OUT_NL(1, "clang_parseTranslationUnit2 : ",                CXErrorCode2String(errorCode))
-        ADD_STRING_OUT_NL(1, "clang_getTranslationUnitSpelling : ",           CXString2String(translationUnitSpelling))
-        ADD_STRING_OUT_NL(1, "clang_defaultEditingTranslationUnitOptions : ", to_string(defaultEditingTranslationUnitOptions))
-        ADD_STRING_OUT_NL(1, "clang_defaultSaveOptions : ",                   to_string(defaultSaveOptions))
-        ADD_STRING_OUT_NL(1, "clang_saveTranslationUnit : ",                  CXSaveError2String(saveTranslationUnit))
-        ADD_STRING_OUT_NL(1, "clang_defaultReparseOptions : ",                to_string(defaultReparseOptions))
-        ADD_STRING_OUT_NL(1, "clang_getCXTUResourceUsage : \n",               CXTUResourceUsage2String(getCXTUResourceUsage, 2))
-        ADD_STRING_OUT_NL(1, "clang_TargetInfo_getTriple : ",                 CXString2String(targetInfo_getTriple))
-        ADD_STRING_OUT_NL(1, "clang_TargetInfo_getPointerWidth : ",           to_string(targetInfo_getPointerWidth))
+        outputTree.addString(1, "clang_parseTranslationUnit2 : ",                errorCode);
+        outputTree.addString(1, "clang_getTranslationUnitSpelling : ",           translationUnitSpelling);
+        outputTree.addString(1, "clang_defaultEditingTranslationUnitOptions : ", defaultEditingTranslationUnitOptions);
+        outputTree.addString(1, "clang_defaultSaveOptions : ",                   defaultSaveOptions);
+        outputTree.addString(1, "clang_saveTranslationUnit : ",                  saveTranslationUnit);
+        outputTree.addString(1, "clang_defaultReparseOptions : ",                defaultReparseOptions);
+        outputTree.addCXTUResourceUsage(1, "clang_getCXTUResourceUsage : ",      getCXTUResourceUsage);
+        outputTree.addString(1, "clang_TargetInfo_getTriple : ",                 targetInfo_getTriple);
+        outputTree.addString(1, "clang_TargetInfo_getPointerWidth : ",           targetInfo_getPointerWidth);
 
         clang_disposeCXTUResourceUsage(getCXTUResourceUsage);                                                                                                       // 17.
         clang_TargetInfo_dispose(translationUnitTargetInfo);                                                                                                        // 19.
     }
     else
     {
-        ADD_STRING_OUT_NL(1, "clang_parseTranslationUnit2 : " , CXErrorCode2String(errorCode))
+        outputTree.addString(1, "clang_parseTranslationUnit2 : " , errorCode);
 
         delete translationUnit;
         translationUnit = nullptr;
     }
 
     string saveFilePath{ filePath + TUNIT_FILE_EXT };
-    if (!saveToFile(saveFilePath, strData))
+    if (!outputTree.saveToFile(saveFilePath))
         cout << "Couldn't create file : " << saveFilePath << endl;
 
     return translationUnit;

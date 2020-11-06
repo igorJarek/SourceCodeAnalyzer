@@ -81,9 +81,6 @@
     <ClCompile Include="src\9_Cross-referencing_in_the_AST.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\StructsEnums2String.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\UtilityFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -159,9 +156,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\9_Cross-referencing_in_the_AST.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\StructsEnums2String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\UtilityFunctions.h">

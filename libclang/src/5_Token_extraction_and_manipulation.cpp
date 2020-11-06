@@ -2,20 +2,20 @@
 
 void _5_token_extraction(const CXTranslationUnit& translationUnit, const string& filePath)
 {
-    string strData;
+    OutputTree outputTree;
 
-    ADD_STRING_OUT_TEXT(0, "5. Token extraction and manipulation : ")
+    outputTree.addString(0, "5. Token extraction and manipulation : ");
 
     CXFile file = _8_getFile(translationUnit, filePath.c_str());
 
     const int64_t lineCount = countFileLines(filePath);
     if (lineCount == -1)
-        ADD_STRING_OUT_TEXT(1, "File is empty.")
+        outputTree.addString(1, "File is empty.");
     else
     {
         const int64_t lastLineColumns = countFileLineColumns(filePath, lineCount);
         if(lastLineColumns == -1)
-            ADD_STRING_OUT_TEXT(1, "Something is wrong with last line or file.")
+            outputTree.addString(1, "Something is wrong with last line or file.");
         else
         {
             //  For first char '#' CXSourceLocation is <1, 1>
@@ -44,11 +44,11 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
 
             clang_tokenize(translationUnit, tokenizerRange, &tokensOut, &tokensNum);                                                                               // 6.
 
-            ADD_STRING_OUT_NL(1, "clang_tokenize [NumTokens] : ", to_string(tokensNum))
+            outputTree.addString(1, "clang_tokenize [NumTokens] : ", tokensNum);
 
             if (tokensNum > 0)
             {
-                ADD_STRING_OUT_TEXT(1, "Tokens : ")
+                outputTree.addString(1, "Tokens : ");
 
                 for (uint32_t index{ 0 }; index < tokensNum; ++index)
                 {
@@ -61,10 +61,10 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
 
                     CXCursor         cursor        = _10_getCursor(translationUnit, tokenLocation);
 
-                    ADD_STRING_OUT_NL(2, to_string(index + 1) + ")\tclang_getTokenSpelling : ",         CXString2String(tokenSpelling))
-                    ADD_STRING_OUT_NL(3, "clang_getTokenKind : ",                                       CXTokenKind2String(tokenKind))
-                    ADD_STRING_OUT_NL(3, "_10_getCursor(clang_getTokenLocation) : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(&translationUnit, &cursor)))
-                    ADD_STRING_OUT_NL(3, "clang_getTokenExtent : \n",                                   CXSourceRange2String(tokenRange, 4))
+                    outputTree.addString(2, to_string(index + 1) + ")\tclang_getTokenSpelling : ", tokenSpelling);
+                    outputTree.addString(3, "clang_getTokenKind : ", tokenKind);
+                    outputTree.addString(3, "_10_getCursor(clang_getTokenLocation) : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursor));
+                    outputTree.addCXSourceRange(3, "clang_getTokenExtent : ", tokenRange);
                 }
             }
 
@@ -74,7 +74,7 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
     }
 
     string saveFilePath{ filePath + TOKENS_FILE_EXT };
-    if (!saveToFile(saveFilePath, strData))
+    if (!outputTree.saveToFile(saveFilePath))
         cout << "Couldn't create file : " << saveFilePath << endl;
 }
 

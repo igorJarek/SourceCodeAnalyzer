@@ -1,6 +1,6 @@
 #include "3_C++_AST_introspection.h"
 
-void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
+void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
 {
     uint32_t isConvertingConstructor = clang_CXXConstructor_isConvertingConstructor(cursor);               // 1.
     uint32_t isCopyConstructor       = clang_CXXConstructor_isCopyConstructor(cursor);                     // 2.
@@ -23,27 +23,29 @@ void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, string& 
     CXSourceRange cursorReferenceNameRange_CXNameRange_WantTemplateArgs = clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0);       // 15.
     CXSourceRange cursorReferenceNameRange_CXNameRange_WantSinglePiece  = clang_getCursorReferenceNameRange(cursor, CXNameRange_WantSinglePiece,  0);       // 15.
 
-    ADD_STRING_OUT_TEXT(curLevel + 1, "3. ASTIntrospection : ")
+    astExtOutputTree.addString(curLevel + 1, "3. ASTIntrospection : ");
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXConstructor_isConvertingConstructor : ",             to_string(isConvertingConstructor))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXConstructor_isCopyConstructor : ",                   to_string(isCopyConstructor))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXConstructor_isDefaultConstructor : ",                to_string(isDefaultConstructor))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXConstructor_isMoveConstructor : ",                   to_string(isMoveConstructor))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXField_isMutable : ",                                 to_string(isMutable))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXMethod_isDefaulted : ",                              to_string(isDefaulted))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXMethod_isPureVirtual : ",                            to_string(isPureVirtual))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXMethod_isStatic : ",                                 to_string(isStatic))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXMethod_isVirtual : ",                                to_string(isVirtual))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXRecord_isAbstract : ",                               to_string(isAbstract))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_EnumDecl_isScoped : ",                                  to_string(isScoped))
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_CXXMethod_isConst : ",                                  to_string(isConst))
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXConstructor_isConvertingConstructor : ",             isConvertingConstructor);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXConstructor_isCopyConstructor : ",                   isCopyConstructor);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXConstructor_isDefaultConstructor : ",                isDefaultConstructor);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXConstructor_isMoveConstructor : ",                   isMoveConstructor);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXField_isMutable : ",                                 isMutable);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXMethod_isDefaulted : ",                              isDefaulted);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXMethod_isPureVirtual : ",                            isPureVirtual);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXMethod_isStatic : ",                                 isStatic);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXMethod_isVirtual : ",                                isVirtual);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXRecord_isAbstract : ",                               isAbstract);
+    astExtOutputTree.addString(curLevel + 2, "clang_EnumDecl_isScoped : ",                                  isScoped);
+    astExtOutputTree.addString(curLevel + 2, "clang_CXXMethod_isConst : ",                                  isConst);
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_getTemplateCursorKind : ",                              CXString2String(_17_getCursorKindSpelling(templateCursorKind)))
-    ADD_STRING_OUT_IF_NL(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ", to_string(saveBaseCXCursorInfo(&translationUnit, &specializedCursorTemplate)))
+    astExtOutputTree.addString(curLevel + 2, "clang_getTemplateCursorKind : ",                              _17_getCursorKindSpelling(templateCursorKind));
 
-    ADD_STRING_OUT   (curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantQualifier, 0) :\n",    CXSourceRange2String(cursorReferenceNameRange_CXNameRange_WantQualifier,    curLevel + 3))
-    ADD_STRING_OUT   (curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0) :\n", CXSourceRange2String(cursorReferenceNameRange_CXNameRange_WantTemplateArgs, curLevel + 3))
-    ADD_STRING_OUT   (curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantSinglePiece, 0) :\n",  CXSourceRange2String(cursorReferenceNameRange_CXNameRange_WantSinglePiece,  curLevel + 3))
+    if(print)
+        astExtOutputTree.addString(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ",    saveBaseCXCursorInfo(&translationUnit, &specializedCursorTemplate));
+
+    astExtOutputTree.addCXSourceRange(curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantQualifier, 0) : ",    cursorReferenceNameRange_CXNameRange_WantQualifier);
+    astExtOutputTree.addCXSourceRange(curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0) : ", cursorReferenceNameRange_CXNameRange_WantTemplateArgs);
+    astExtOutputTree.addCXSourceRange(curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantSinglePiece, 0) : ",  cursorReferenceNameRange_CXNameRange_WantSinglePiece);
 }
 
 unsigned            _3_CXXConstructor_isConvertingConstructor   (CXCursor C)

@@ -6,6 +6,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <outputtree/OutputTree.h>
+
 #include "UtilityFunctions.h"
 #include "Paths.h"
 
@@ -27,16 +29,26 @@ class ClientData
 {
 public:
 
-    ClientData(CXTranslationUnit tu, uint32_t level = 0)
+    ClientData(CXTranslationUnit tu) :
+        translationUnit(tu)
     {
-        translationUnit = tu;
-        treeLevel       = level;
+        
     }
 
-    CXTranslationUnit   translationUnit;
+    ClientData(const ClientData* clientData)
+    {
+        translationUnit = clientData->translationUnit;
+        treeLevel = clientData->treeLevel;
+
+        astOutputTree = clientData->astOutputTree;
+        astExtOutputTree = clientData->astExtOutputTree;
+    }
+
+    CXTranslationUnit   translationUnit = nullptr;
     uint32_t            treeLevel{ 0 };
-    string              astStringData{};
-    string              astExtStringData{};
+
+    OutputTree          astOutputTree;
+    OutputTree          astExtOutputTree;
 };
 
 enum class SaveCursorAction
@@ -50,8 +62,7 @@ enum class SaveCursorAction
 
 CXChildVisitResult visitor                  (CXCursor cursor, CXCursor parent, CXClientData client_data);
 
-void               dumpAST                  (string& strData, const CXCursor& cursor);
-void               printCursor              (const CXTranslationUnit& translationUnit, string& strData, const CXCursor& cursor, uint32_t curLevel);
+void               dumpAST                  (OutputTree& astOutputTree, const CXCursor& cursor, uint32_t curLevel);
+void               printCursor              (const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel);
 
 uint64_t           saveBaseCXCursorInfo     (const CXTranslationUnit* translationUnit, const CXCursor* cursor, SaveCursorAction action = SaveCursorAction::ADD_CXCURSOR_BASE_INFO);
-string             getBaseCXFileInfo        (const CXTranslationUnit& translationUnit, const CXFile& file, uint32_t curLevel);

@@ -15,7 +15,7 @@
 
 // Print Function
 
-void _7_printInformationForAttributes(string& strData, const CXCursor& cursor, uint32_t curLevel);
+void _7_printInformationForAttributes(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel);
 
 // Clang Functions
 

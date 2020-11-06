@@ -1,6 +1,6 @@
 #include "0_1_Comment_introspection.h"
 
-void _0_1_printCommentIntrospection(string& strData, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
+void _0_1_printCommentIntrospection(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool /* print */ /* = true */)
 {
     CXComment                           parsedComment       = clang_Cursor_getParsedComment(cursor);                                                    // 1.
 
@@ -33,72 +33,74 @@ void _0_1_printCommentIntrospection(string& strData, const CXCursor& cursor, uin
     CXString                            asHTML               = clang_FullComment_getAsHTML(parsedComment);                                              // 33.
     CXString                            asXML                = clang_FullComment_getAsXML(parsedComment);                                               // 34.
 
-    ADD_STRING_OUT_TEXT(curLevel + 1, "0-1. Comment introspection : ")
+    astExtOutputTree.addString(curLevel + 1, "0-1. Comment introspection : ");
 
-    ADD_STRING_OUT_NL(curLevel + 2, "clang_Comment_getKind : ",                                 CXCommentKind2String(commentKind))
+    astExtOutputTree.addString(curLevel + 2, "clang_Comment_getKind : ",                                commentKind);
 
     if(commentKind != CXCommentKind::CXComment_Null)
     {
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Comment_getNumChildren : ",                      to_string(numChildren))
+        astExtOutputTree.addString(curLevel + 2, "clang_Comment_getNumChildren : ",                     numChildren);
+
         for(uint32_t index { 0 }; index < numChildren; ++index)
         {
             CXComment     comment = clang_Comment_getChild(parsedComment, index);                                                                       // 4.
             CXCommentKind kind    = clang_Comment_getKind(comment);                                                                                     // 2.
-            ADD_STRING_OUT_NL(curLevel + 3, "clang_Comment_getChild [" + to_string(index) + "] : ", CXCommentKind2String(kind))
+
+            astExtOutputTree.addString(curLevel + 3, "clang_Comment_getChild [" + to_string(index) + "] : ", kind);
         }
 
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_Comment_isWhitespace : ",                        to_string(isWhitespace))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_InlineContentComment_hasTrailingNewline : ",     to_string(trailingNewline))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_TextComment_getText : ",                         CXString2String(textComment_getText))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_InlineCommandComment_getCommandName : ",         CXString2String(getInlineCommandName))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_InlineCommandComment_getRenderKind : ",          CXCommentInlineCommandRenderKind2String(getRenderKind))
+        astExtOutputTree.addString(curLevel + 2, "clang_Comment_isWhitespace : ",                        isWhitespace);
+        astExtOutputTree.addString(curLevel + 2, "clang_InlineContentComment_hasTrailingNewline : ",     trailingNewline);
+        astExtOutputTree.addString(curLevel + 2, "clang_TextComment_getText : ",                         textComment_getText);
+        astExtOutputTree.addString(curLevel + 2, "clang_InlineCommandComment_getCommandName : ",         getInlineCommandName);
+        astExtOutputTree.addString(curLevel + 2, "clang_InlineCommandComment_getRenderKind : ",          getRenderKind);
 
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_InlineCommandComment_getNumArgs : ",             to_string(getNumArgs))
+        astExtOutputTree.addString(curLevel + 2, "clang_InlineCommandComment_getNumArgs : ",             getNumArgs);
         for(uint32_t index { 0 }; index < getNumArgs; ++index)
         {
             CXString getArgText = clang_InlineCommandComment_getArgText(parsedComment, index);                                                          // 11.
-            ADD_STRING_OUT_NL(curLevel + 3, "clang_InlineCommandComment_getArgText [" + to_string(index) + "] : ", CXString2String(getArgText))
+            astExtOutputTree.addString(curLevel + 3, "clang_InlineCommandComment_getArgText [" + to_string(index) + "] : ", getArgText);
         }
 
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_HTMLTagComment_getTagName : ",                   CXString2String(getTagName))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_HTMLStartTagComment_isSelfClosing : ",           to_string(isSelfClosing))
+        astExtOutputTree.addString(curLevel + 2, "clang_HTMLTagComment_getTagName : ",                   getTagName);
+        astExtOutputTree.addString(curLevel + 2, "clang_HTMLStartTagComment_isSelfClosing : ",           isSelfClosing);
 
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_HTMLStartTag_getNumAttrs : ",                    to_string(getNumAttrs))
+        astExtOutputTree.addString(curLevel + 2, "clang_HTMLStartTag_getNumAttrs : ",                    getNumAttrs);
         for(uint32_t index { 0 }; index < getNumAttrs; ++index)
         {
             CXString getAttrName  = clang_HTMLStartTag_getAttrName(parsedComment, index);                                                               // 15.
             CXString getAttrValue = clang_HTMLStartTag_getAttrValue(parsedComment, index);                                                              // 16.
 
-            ADD_STRING_OUT_NL(curLevel + 3, "clang_HTMLStartTag_getAttrName [" + to_string(index) + "] : ", CXString2String(getAttrName))
-            ADD_STRING_OUT_NL(curLevel + 3, "clang_HTMLStartTag_getAttrValue [" + to_string(index) + "] : ", CXString2String(getAttrValue))
+            astExtOutputTree.addString(curLevel + 3, "clang_HTMLStartTag_getAttrName [" + to_string(index) + "] : ", getAttrName);
+            astExtOutputTree.addString(curLevel + 3, "clang_HTMLStartTag_getAttrValue [" + to_string(index) + "] : ", getAttrValue);
         }
 
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_BlockCommandComment_getCommandName : ",          CXString2String(getBlockCommandName))
+        astExtOutputTree.addString(curLevel + 2, "clang_BlockCommandComment_getCommandName : ",          getBlockCommandName);
 
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_BlockCommandComment_getNumArgs : ",              to_string(getBlockNumArgs))
+        astExtOutputTree.addString(curLevel + 2, "clang_BlockCommandComment_getNumArgs : ",              getBlockNumArgs);
         for(uint32_t index { 0 }; index < getBlockNumArgs; ++index)
         {
             CXString getArgText = clang_BlockCommandComment_getArgText(parsedComment, index);                                                           // 19.
 
-            ADD_STRING_OUT_NL(curLevel + 3, "clang_BlockCommandComment_getArgText [" + to_string(index) + "] : ", CXString2String(getArgText))
+            astExtOutputTree.addString(curLevel + 3, "clang_BlockCommandComment_getArgText [" + to_string(index) + "] : ", getArgText);
         }
 
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_BlockCommandComment_getParagraph : ",            CXCommentKind2String(clang_Comment_getKind(getParagraph)))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_ParamCommandComment_getParamName : ",            CXString2String(getParamCParamName))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_ParamCommandComment_isParamIndexValid : ",       to_string(isParamIndexValid))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_ParamCommandComment_getParamIndex : ",           to_string(getParamIndex))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_ParamCommandComment_isDirectionExplicit : ",     to_string(isDirectionExplicit))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_ParamCommandComment_getDirection : ",            CXCommentParamPassDirection2String(getDirection))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_TParamCommandComment_getParamName : ",           CXString2String(getTParamParamName))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_TParamCommandComment_isParamPositionValid : ",   to_string(isParamPositionValid))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_TParamCommandComment_getDepth : ",               to_string(getDepth))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_TParamCommandComment_getIndex : ",               to_string(getTParamIndex))
+        astExtOutputTree.addString(curLevel + 2, "clang_BlockCommandComment_getParagraph : ",            clang_Comment_getKind(getParagraph));
+        astExtOutputTree.addString(curLevel + 2, "clang_ParamCommandComment_getParamName : ",            getParamCParamName);
+        astExtOutputTree.addString(curLevel + 2, "clang_ParamCommandComment_isParamIndexValid : ",       isParamIndexValid);
+        astExtOutputTree.addString(curLevel + 2, "clang_ParamCommandComment_getParamIndex : ",           getParamIndex);
+        astExtOutputTree.addString(curLevel + 2, "clang_ParamCommandComment_isDirectionExplicit : ",     isDirectionExplicit);
+        astExtOutputTree.addString(curLevel + 2, "clang_ParamCommandComment_getDirection : ",            getDirection);
+        astExtOutputTree.addString(curLevel + 2, "clang_TParamCommandComment_getParamName : ",           getTParamParamName);
+        astExtOutputTree.addString(curLevel + 2, "clang_TParamCommandComment_isParamPositionValid : ",   isParamPositionValid);
+        astExtOutputTree.addString(curLevel + 2, "clang_TParamCommandComment_getDepth : ",               getDepth);
+        astExtOutputTree.addString(curLevel + 2, "clang_TParamCommandComment_getIndex : ",               getTParamIndex);
 
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_VerbatimBlockLineComment_getText : ",            CXString2String(verbatimBlockText))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_VerbatimLineComment_getText : ",                 CXString2String(verbatomLineText))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_HTMLTagComment_getAsString : ",                  CXString2String(asString))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_FullComment_getAsHTML : ",                       CXString2String(asHTML))
-        ADD_STRING_OUT_NL(curLevel + 2, "clang_FullComment_getAsXML : ",                        CXString2String(asXML))
+        astExtOutputTree.addString(curLevel + 2, "clang_VerbatimBlockLineComment_getText : ",            verbatimBlockText);
+        astExtOutputTree.addString(curLevel + 2, "clang_VerbatimLineComment_getText : ",                 verbatomLineText);
+        astExtOutputTree.addString(curLevel + 2, "clang_HTMLTagComment_getAsString : ",                  asString);
+        astExtOutputTree.addString(curLevel + 2, "clang_FullComment_getAsHTML : ",                       asHTML);
+        astExtOutputTree.addString(curLevel + 2, "clang_FullComment_getAsXML : ",                        asXML);
     }
 }
 

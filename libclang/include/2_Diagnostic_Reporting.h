@@ -2,7 +2,6 @@
 
 #include "UtilityFunctions.h"
 #include "11_String_manipulation_routines.h"
-#include "StructsEnums2String.h"
 #include <clang-c/Index.h>
 #include <fstream>
 #include <string>
@@ -43,7 +42,7 @@ using std::to_string;
 // Print Function
 
 void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& filePath);
-void _2_printDiagnostic(string& stream, const CXDiagnostic& diagnostic);
+void _2_printDiagnostic(OutputTree& outputTree, const CXDiagnostic& diagnostic);
 
 // Clang Functions
 

@@ -19,4 +19,5 @@ Fix :
 4. Change_15_CXCursor2String and _15_CXType2String func
 5. In saveBaseCXCursorInfo() function fix math formula that calculate current line -> "return functionRunCounter * countStringLines(out);"
 6. Check CX structs (maybe CXABC* oraz CXABC& can be replaced by CXABC [CXABC is pointer itself])
-7. CXABC abc; if(abc) {} else "-NULL-" when CXABC is pointer (typedef void* CXABC). Add 'if' statement in functions 
+7. CXABC abc; if(abc) {} else "-NULL-" when CXABC is pointer (typedef void* CXABC). Add 'if' statement in functions
+8. change clang_ function to _x_functions

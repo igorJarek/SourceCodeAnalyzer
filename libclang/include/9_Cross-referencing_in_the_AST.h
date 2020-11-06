@@ -99,7 +99,7 @@ struct PrintingPolicy
 
 // Print Function
 
-void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, string & strData, const CXCursor & cursor, uint32_t curLevel, bool print = true);
+void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor & cursor, uint32_t curLevel, bool print = true);
 
 // Clang Functions
 

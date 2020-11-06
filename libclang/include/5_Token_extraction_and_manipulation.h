@@ -2,7 +2,6 @@
 
 #include <clang-c/Index.h>
 #include "UtilityFunctions.h"
-#include "StructsEnums2String.h"
 #include "8_File_manipulation_routines.h"
 #include "21_Physical_source_locations.h"
 #include <fstream>
