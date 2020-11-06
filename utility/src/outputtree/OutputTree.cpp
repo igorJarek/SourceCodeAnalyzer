@@ -15,6 +15,13 @@ OutputTree::~OutputTree()
     
 }
 
+OutputTree& OutputTree::operator=(const OutputTree& other)
+{
+    m_rootPtr = other.m_rootPtr;
+
+    return *this;
+}
+
 void OutputTree::addString(uint32_t level, const string& str)
 {
     shared_ptr<OutputTreeNode> node = allocateNode(level);
@@ -29,16 +36,23 @@ void OutputTree::addString(uint32_t level, const string&& str)
     node->m_string = str;
 }
 
+void OutputTree::addNewLine(uint32_t level)
+{
+    shared_ptr<OutputTreeNode> node = allocateNode(level);
+
+    node->m_string = '\n';
+}
+
 void OutputTree::addCXStringSet(uint32_t level, const string&& str, CXStringSet* stringSet)
 {
     addString(level, str);
 
-    if (stringSet)
+    if(stringSet)
     {
         for (uint32_t index{ 0 }; index < stringSet->Count; ++index)
         {
             CXString cxString = stringSet->Strings[index];
-            addValue(level + 1, cxString);
+            addValue(level + 1, clang_getCString(cxString));
         }
 
         clang_disposeStringSet(stringSet);
@@ -123,8 +137,6 @@ void OutputTree::addCXVersion(uint32_t level, const string&& str, const CXVersio
 
 void OutputTree::addCXPlatformAvailability(uint32_t level, const string&& str, const CXPlatformAvailability& platformAvailability)
 {
-    string strData;
-
     CXString  platform    = platformAvailability.Platform;
     CXVersion introduced  = platformAvailability.Introduced;
     CXVersion deprecated  = platformAvailability.Deprecated;
@@ -174,32 +186,58 @@ void OutputTree::addCXPrintingPolicy(uint32_t level, const string&& str, const C
     addString(level + 0, str);
     addString(level + 1, "CXPrintingPolicy");
 
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Indentation)",                           indentation);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressSpecifiers)",                    suppressSpecifiers);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressTagKeyword)",                    suppressTagKeyword);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_IncludeTagDefinition)",                  includeTagDefinition);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressScope)",                         suppressScope);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressUnwrittenScope)",                suppressUnwrittenScope);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressInitializers)",                  suppressInitializers);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_ConstantArraySizeAsWritten)",            constantArraySizeAsWritten);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_AnonymousTagLocations)",                 anonymousTagLocations);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressStrongLifetime)",                suppressStrongLifetime);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressLifetimeQualifiers)",            suppressLifetimeQualifiers);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors)", suppressTemplateArgsInCXXConstructors);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Bool)",                                  boolean);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Restrict)",                              restrict);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Alignof)",                               alignOf);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_UnderscoreAlignof)",                     underscoreAlignof);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_UseVoidForZeroParams)",                  useVoidForZeroParams);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_TerseOutput)",                           terseOutput);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_PolishForDeclaration)",                  polishForDeclaration);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Half)",                                  half);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_MSWChar)",                               mswChar);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_IncludeNewlines)",                       includeNewlines);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_MSVCFormatting)",                        mSVCFormatting);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_ConstantsAsWritten)",                    constantsAsWritten);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressImplicitBase)",                  suppressImplicitBase);
-    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_FullyQualifiedName)",                    fullyQualifiedName);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Indentation) : ",                           indentation);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressSpecifiers) : ",                    suppressSpecifiers);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressTagKeyword) : ",                    suppressTagKeyword);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_IncludeTagDefinition) : ",                  includeTagDefinition);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressScope) : ",                         suppressScope);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressUnwrittenScope) : ",                suppressUnwrittenScope);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressInitializers) : ",                  suppressInitializers);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_ConstantArraySizeAsWritten) : ",            constantArraySizeAsWritten);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_AnonymousTagLocations) : ",                 anonymousTagLocations);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressStrongLifetime) : ",                suppressStrongLifetime);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressLifetimeQualifiers) : ",            suppressLifetimeQualifiers);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressTemplateArgsInCXXConstructors) : ", suppressTemplateArgsInCXXConstructors);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Bool) : ",                                  boolean);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Restrict) : ",                              restrict);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Alignof) : ",                               alignOf);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_UnderscoreAlignof) : ",                     underscoreAlignof);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_UseVoidForZeroParams) : ",                  useVoidForZeroParams);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_TerseOutput) : ",                           terseOutput);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_PolishForDeclaration) : ",                  polishForDeclaration);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_Half) : ",                                  half);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_MSWChar) : ",                               mswChar);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_IncludeNewlines) : ",                       includeNewlines);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_MSVCFormatting) : ",                        mSVCFormatting);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_ConstantsAsWritten) : ",                    constantsAsWritten);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_SuppressImplicitBase) : ",                  suppressImplicitBase);
+    addString(level + 2, "clang_PrintingPolicy_getProperty(CXPrintingPolicy_FullyQualifiedName) : ",                    fullyQualifiedName);
+}
+
+void OutputTree::addCXFileInfo(uint32_t level, const string&& str, const CXFile& file, const CXTranslationUnit& translationUnit)
+{
+    char            timeBuff[255]          = { 0 };
+    CXFileUniqueID  fileUniqueIDStruct;
+    size_t          size                   = 0;
+
+    time_t          fileTime               = clang_getFileTime(file);
+    int32_t         fileUniqueID           = clang_getFileUniqueID(file, &fileUniqueIDStruct);
+    uint32_t        multipleIncludeGuarded = clang_isFileMultipleIncludeGuarded(translationUnit, file);
+    const char*     fileContents           = clang_getFileContents(translationUnit, file, &size);
+
+    ctime_s(timeBuff, sizeof(timeBuff), &fileTime);
+
+    addString(level + 0, str);
+
+    addString(level + 1, "_8_getFileName : ",                    clang_getFileName(file));
+    addString(level + 1, "_8_getFileTime : ",                    timeBuff);
+    addString(level + 1, "_8_getFileUniqueID [return value] : ", fileUniqueID);
+    addString(level + 1, "_8_getFileUniqueID [outID] : ",        std::to_string(fileUniqueIDStruct.data[0]) + ", " +
+                                                                 std::to_string(fileUniqueIDStruct.data[1]) + ", " +
+                                                                 std::to_string(fileUniqueIDStruct.data[2])        );
+    addString(level + 1, "_8_isFileMultipleIncludeGuarded : ",   multipleIncludeGuarded);
+    addString(level + 1, "_8_getFileContents [return] : ",       fileContents);
+    addString(level + 1, "_8_File_tryGetRealPathName : ",        clang_File_tryGetRealPathName(file));
 }
 
 bool OutputTree::saveToFile(const string& path)
@@ -208,7 +246,8 @@ bool OutputTree::saveToFile(const string& path)
     stream.open(path, std::fstream::out | std::fstream::trunc);
     if (stream.is_open())
     {
-        for(list<shared_ptr<OutputTreeNode>>::iterator iter = m_rootPtr->m_children.begin(); iter != m_rootPtr->m_children.end(); ++iter)
+        auto& rootChildren = m_rootPtr->m_children;
+        for(list<shared_ptr<OutputTreeNode>>::iterator iter = rootChildren.begin(); iter != rootChildren.end(); ++iter)
             saveNode(stream, "", *iter);
 
         stream.close();
@@ -242,6 +281,8 @@ shared_ptr<OutputTreeNode> OutputTree::allocateNode(uint32_t level)
     shared_ptr<OutputTreeNode> newNode = std::make_shared<OutputTreeNode>();
 
     currentNode->m_children.push_back(newNode);
+
+    ++m_size;
 
     return newNode;
 }

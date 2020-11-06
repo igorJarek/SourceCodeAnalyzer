@@ -7,6 +7,11 @@ namespace std
         return string;
     }
 
+    string to_string(const char* cstring)
+    {
+        return string(cstring);
+    }
+
     string to_string(const CXString& string)
     {
         std::string str{ "-NULL-" };

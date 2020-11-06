@@ -26,8 +26,8 @@ public:
 
     OutputTree(const OutputTree&)               = delete;
     OutputTree(OutputTree&&) noexcept           = delete;
-    OutputTree& operator=(const OutputTree&)    = delete;
     OutputTree& operator=(OutputTree&)          = delete;
+    OutputTree& operator=(const OutputTree& other);
 
 public:
     void                        addString(uint32_t level, const string&  str);
@@ -49,6 +49,8 @@ public:
         node->m_string = std::to_string(value);
     }
 
+    void                        addNewLine               (uint32_t level);
+
     void                        addCXStringSet           (uint32_t level, const string&& str, CXStringSet*                  stringSet);
     void                        addCXSourceLocation      (uint32_t level, const string&& str, const CXSourceLocation&       sourceLocation);
     void                        addCXSourceRange         (uint32_t level, const string&& str, const CXSourceRange&          sourceRange);
@@ -56,6 +58,9 @@ public:
     void                        addCXVersion             (uint32_t level, const string&& str, const CXVersion&              version);
     void                        addCXPlatformAvailability(uint32_t level, const string&& str, const CXPlatformAvailability& platformAvailability);
     void                        addCXPrintingPolicy      (uint32_t level, const string&& str, const CXPrintingPolicy&       printingPolicy);
+    void                        addCXFileInfo            (uint32_t level, const string&& str, const CXFile&                 file, const CXTranslationUnit& translationUnit);
+
+    uint64_t                    getSize() const { return m_size; }
 
     bool                        saveToFile(const string& path);
 
@@ -65,4 +70,5 @@ private:
 
 private:
     shared_ptr<OutputTreeNode>  m_rootPtr;
+    uint64_t                    m_size = 0;
 };
