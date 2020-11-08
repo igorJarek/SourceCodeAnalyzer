@@ -49,6 +49,8 @@ int64_t     countFileLineColumns    (const string& filePath, int64_t line);
 
 void        recursiveFolderSearch   (const string& folderPath);
 
+string      extractFileName         (const string& absoluteFilePath);
+
 void        processBeforeAll        (void);
 void        processAfterAll         (void);
 

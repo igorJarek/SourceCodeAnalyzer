@@ -1,4 +1,5 @@
 #include "6_Translation_unit_manipulation.h"
+#include <html/Html.h>
 
 CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string& filePath)
 {
@@ -56,6 +57,18 @@ CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string
     string saveFilePath{ filePath + TUNIT_FILE_EXT };
     if (!outputTree.saveToFile(saveFilePath))
         cout << "Couldn't create file : " << saveFilePath << endl;
+
+    HTMLBuilder htmlBuilder;
+    string tableID{ "TBL" };
+
+    htmlBuilder.setIndexTitle(filePath + TUNIT_FILE_EXT + ".html");
+    htmlBuilder.setFileNameHeader(filePath);
+    htmlBuilder.setFilePathHeader(filePath + TUNIT_FILE_EXT + ".html");
+
+    htmlBuilder.addTable("Abc", tableID, {"Category", "Function", "Resource Usage"});
+    htmlBuilder.addTableRows(tableID, outputTree);
+
+    htmlBuilder.saveFile(filePath + TUNIT_FILE_EXT + ".html");
 
     return translationUnit;
 }

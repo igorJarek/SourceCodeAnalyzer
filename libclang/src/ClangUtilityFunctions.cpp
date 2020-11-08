@@ -18,6 +18,9 @@ CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData 
 
     clang_visitChildren(cursor, visitor, &nextClientData);
 
+    astOutputTree += nextClientData.astOutputTree;
+    astExtOutputTree += nextClientData.astExtOutputTree;
+
     return CXChildVisit_Continue;
 }
 
@@ -88,7 +91,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
         if(!translationUnit && !cursor)
             return 0;
 
-        uint64_t startOutLinesCount = treeStaticCursorData.getSize();
+        uint64_t startOutLinesCount = treeStaticCursorData.getNodesCount();
 
         treeStaticCursorData.addString(0, "-------------------- " + to_string(_17_getCursorKindSpelling(cursor->kind)) + " --------------------");
 
@@ -109,7 +112,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
 
         treeStaticCursorData.addString(0, "------------------------------------------------------------");
 
-        uint64_t outLinesCount = treeStaticCursorData.getSize() - startOutLinesCount;
+        uint64_t outLinesCount = treeStaticCursorData.getNodesCount() - startOutLinesCount;
         staticCurFileLinesCounter += outLinesCount;
 
         return staticCurFileLinesCounter - outLinesCount;
@@ -130,8 +133,7 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
         return 0;
     }
     else if(action == SaveCursorAction::SAVE_CURSOR_CUR_FILE)
-    {   
-        
+    {
         if (!treeStaticCursorData.saveToFile(CURSORS_REF_PATH))
             cout << "Couldn't save file : " << CURSORS_REF_PATH << endl;
 

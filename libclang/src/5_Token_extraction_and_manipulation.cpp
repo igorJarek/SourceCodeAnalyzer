@@ -1,4 +1,5 @@
 #include "5_Token_extraction_and_manipulation.h"
+#include <html/Html.h>
 
 void _5_token_extraction(const CXTranslationUnit& translationUnit, const string& filePath)
 {
@@ -75,7 +76,20 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
 
     string saveFilePath{ filePath + TOKENS_FILE_EXT };
     if (!outputTree.saveToFile(saveFilePath))
-        cout << "Couldn't create file : " << saveFilePath << endl;
+        cout << "Couldn't save file : " << saveFilePath << endl;
+
+    HTMLBuilder htmlBuilder;
+    string tableID{ "TBL" };
+
+    htmlBuilder.setIndexTitle(filePath + TOKENS_FILE_EXT + ".html");
+    htmlBuilder.setFileNameHeader(filePath);
+    htmlBuilder.setFilePathHeader(filePath + TOKENS_FILE_EXT + ".html");
+
+    htmlBuilder.addTable("Token Informations", tableID, {"Category", "Token Count", "Token Spelling", "Additions Info", "Ranges", "Locations"});
+    htmlBuilder.addTableRows(tableID, outputTree);
+
+    if(!htmlBuilder.saveFile(filePath + TOKENS_FILE_EXT + ".html"))
+        cout << "Couldn't save HTML file : " << saveFilePath + ".html" << endl;
 }
 
 CXToken*            _5_getToken             (CXTranslationUnit TU, CXSourceLocation Location)

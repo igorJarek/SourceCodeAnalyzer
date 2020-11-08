@@ -1,4 +1,5 @@
 #include "8_File_manipulation_routines.h"
+#include <html/Html.h>
 
 void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string& filePath)
 {
@@ -42,6 +43,19 @@ void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string
     string saveFilePath{ filePath + FILE_FILE_EXT };
     if(!outputTree.saveToFile(saveFilePath))
         cout << "Couldn't save file : " << saveFilePath << endl;
+
+    HTMLBuilder htmlBuilder;
+    string tableID{ "TBL" };
+
+    htmlBuilder.setIndexTitle(saveFilePath + ".html");
+    htmlBuilder.setFileNameHeader(filePath);
+    htmlBuilder.setFilePathHeader(saveFilePath + ".html");
+
+    htmlBuilder.addTable("File Informations", tableID, {"Category", "Functions", "File Content"});
+    htmlBuilder.addTableRows(tableID, outputTree);
+
+    if(!htmlBuilder.saveFile(saveFilePath + ".html"))
+        cout << "Couldn't save HTML file : " << saveFilePath + ".html" << endl;
 }
 
 CXString        _8_getFileName                      (CXFile SFile)

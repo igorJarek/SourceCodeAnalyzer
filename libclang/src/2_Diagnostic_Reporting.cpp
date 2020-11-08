@@ -1,4 +1,5 @@
 #include "2_Diagnostic_Reporting.h"
+#include <html/Html.h>
 
 void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& filePath)
 {
@@ -33,8 +34,21 @@ void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& f
     if(errorNumberInSet)
         clang_disposeDiagnosticSet(diagnosticSet);                                                                                                                                 // 4.
 
-    if(!outputTree.saveToFile(filePath + DIAGN_FILE_EXT))
-        cout << "Couldn't create file : " << filePath << endl;
+    string saveFilePath{ filePath + DIAGN_FILE_EXT };
+    if(!outputTree.saveToFile(saveFilePath))
+        cout << "Couldn't save file : " << saveFilePath << endl;
+
+    HTMLBuilder htmlBuilder;
+    string tableID{ "TBL" };
+
+    htmlBuilder.setIndexTitle(saveFilePath + ".html");
+    htmlBuilder.setFileNameHeader(saveFilePath);
+    htmlBuilder.setFilePathHeader(saveFilePath + ".html");
+
+    htmlBuilder.addTable("Diagnostic", tableID, outputTree);
+
+    if(!htmlBuilder.saveFile(saveFilePath + ".html"))
+        cout << "Couldn't save HTML file : " << saveFilePath + ".html" << endl;
 }
 
 void _2_printDiagnostic(OutputTree& outputTree, const CXDiagnostic& currentDiagnostic)

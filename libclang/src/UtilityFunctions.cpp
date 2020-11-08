@@ -1,4 +1,5 @@
 #include <folderbrowser/FolderBrowser.h>
+#include <html/Html.h>
 
 #include "UtilityFunctions.h"
 
@@ -83,6 +84,13 @@ void recursiveFolderSearch(const string& folderPath)
         processFile(absoluteFilePath);
 }
 
+string extractFileName(const string& absoluteFilePath)
+{
+    size_t backSlashPos = absoluteFilePath.find_last_of('\\');
+
+    return absoluteFilePath.substr(backSlashPos + 1);
+}
+
 void processBeforeAll()
 {
     string clangVersion = to_string(_18_getClangVersion());
@@ -123,6 +131,27 @@ void processFile(const string& absoluteFilePath)
         bool ret;
         ret = clientData.astOutputTree.saveToFile(absoluteFilePath + AST_FILE_EXT);
         ret = clientData.astExtOutputTree.saveToFile(absoluteFilePath + AST_EXT_FILE_EXT);
+
+        HTMLBuilder htmlBuilder;
+        string tableID{ "TBL" };
+
+        htmlBuilder.setIndexTitle(absoluteFilePath + AST_FILE_EXT);
+        htmlBuilder.setFileNameHeader(extractFileName(absoluteFilePath));
+        htmlBuilder.setFilePathHeader(absoluteFilePath);
+
+        htmlBuilder.addTable("Abstract Syntax Tree", tableID, clientData.astOutputTree);
+
+        ret = htmlBuilder.saveFile(absoluteFilePath + AST_FILE_EXT + ".html");
+
+        htmlBuilder.clear();
+
+        htmlBuilder.setIndexTitle(absoluteFilePath + AST_EXT_FILE_EXT);
+        htmlBuilder.setFileNameHeader(extractFileName(absoluteFilePath));
+        htmlBuilder.setFilePathHeader(absoluteFilePath);
+
+        htmlBuilder.addTable("Extended Abstract Syntax Tree", tableID, clientData.astExtOutputTree);
+
+        ret = htmlBuilder.saveFile(absoluteFilePath + AST_EXT_FILE_EXT + ".html");
     }
 
     clang_disposeIndex(index);
