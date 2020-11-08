@@ -152,7 +152,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>libclang.lib</AdditionalDependencies>
+      <AdditionalDependencies>libclang.lib;sqlite3.lib</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>..\extlib\lib</AdditionalLibraryDirectories>
