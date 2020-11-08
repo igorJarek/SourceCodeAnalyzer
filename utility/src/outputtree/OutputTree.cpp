@@ -17,7 +17,23 @@ OutputTree::~OutputTree()
 
 OutputTree& OutputTree::operator=(const OutputTree& other)
 {
-    m_rootPtr = other.m_rootPtr;
+    if( this != &other)
+    {
+        m_rootPtr = other.m_rootPtr;
+        m_nodesCount = other.m_nodesCount;
+        m_treeHeight = other.m_treeHeight;
+    }
+
+    return *this;
+}
+
+OutputTree& OutputTree::operator+=(const OutputTree& other)
+{
+    if( this != &other)
+    {
+        m_nodesCount = other.m_nodesCount;
+        m_treeHeight = other.m_treeHeight;
+    }
 
     return *this;
 }
@@ -116,7 +132,7 @@ void OutputTree::addCXTUResourceUsage(uint32_t level, const string&& str, const 
             uint64_t               amount             = resourceUsageEntry.amount;
 
             addValue(level + 1, kind);
-            addString(level + 1, "Amount", amount);
+            addString(level + 1, "Amount : ", amount);
         }
     }
     else
@@ -270,6 +286,9 @@ void OutputTree::saveNode(std::fstream& stream, const std::string& prefix, share
 
 shared_ptr<OutputTreeNode> OutputTree::allocateNode(uint32_t level)
 {
+    if(level + 1 > m_treeHeight)
+        m_treeHeight = level + 1;
+
     shared_ptr<OutputTreeNode> currentNode = m_rootPtr;
 
     for(uint32_t indexLevel = 0; indexLevel < level; ++indexLevel)
@@ -282,7 +301,7 @@ shared_ptr<OutputTreeNode> OutputTree::allocateNode(uint32_t level)
 
     currentNode->m_children.push_back(newNode);
 
-    ++m_size;
+    ++m_nodesCount;
 
     return newNode;
 }

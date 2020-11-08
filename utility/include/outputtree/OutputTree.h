@@ -28,13 +28,17 @@ public:
     OutputTree(OutputTree&&) noexcept           = delete;
     OutputTree& operator=(OutputTree&)          = delete;
     OutputTree& operator=(const OutputTree& other);
+    OutputTree& operator+=(const OutputTree& other);
 
 public:
-    void                        addString(uint32_t level, const string&  str);
-    void                        addString(uint32_t level, const string&& str);
+    const shared_ptr<OutputTreeNode>& getRoot() const { return m_rootPtr; }
+
+public:
+    void                              addString(uint32_t level, const string&  str);
+    void                              addString(uint32_t level, const string&& str);
 
     template<typename T>
-    void                        addString(uint32_t level, const string&& str, const T& value)
+    void                              addString(uint32_t level, const string&& str, const T& value)
     {
         shared_ptr<OutputTreeNode> node = allocateNode(level);
 
@@ -42,33 +46,35 @@ public:
     }
 
     template<typename T>
-    void                        addValue(uint32_t level, const T& value)
+    void                              addValue(uint32_t level, const T& value)
     {
         shared_ptr<OutputTreeNode> node = allocateNode(level);
 
         node->m_string = std::to_string(value);
     }
 
-    void                        addNewLine               (uint32_t level);
+    void                              addNewLine               (uint32_t level);
 
-    void                        addCXStringSet           (uint32_t level, const string&& str, CXStringSet*                  stringSet);
-    void                        addCXSourceLocation      (uint32_t level, const string&& str, const CXSourceLocation&       sourceLocation);
-    void                        addCXSourceRange         (uint32_t level, const string&& str, const CXSourceRange&          sourceRange);
-    void                        addCXTUResourceUsage     (uint32_t level, const string&& str, const CXTUResourceUsage&      TUResourceUsage);
-    void                        addCXVersion             (uint32_t level, const string&& str, const CXVersion&              version);
-    void                        addCXPlatformAvailability(uint32_t level, const string&& str, const CXPlatformAvailability& platformAvailability);
-    void                        addCXPrintingPolicy      (uint32_t level, const string&& str, const CXPrintingPolicy&       printingPolicy);
-    void                        addCXFileInfo            (uint32_t level, const string&& str, const CXFile&                 file, const CXTranslationUnit& translationUnit);
+    void                              addCXStringSet           (uint32_t level, const string&& str, CXStringSet*                  stringSet);
+    void                              addCXSourceLocation      (uint32_t level, const string&& str, const CXSourceLocation&       sourceLocation);
+    void                              addCXSourceRange         (uint32_t level, const string&& str, const CXSourceRange&          sourceRange);
+    void                              addCXTUResourceUsage     (uint32_t level, const string&& str, const CXTUResourceUsage&      TUResourceUsage);
+    void                              addCXVersion             (uint32_t level, const string&& str, const CXVersion&              version);
+    void                              addCXPlatformAvailability(uint32_t level, const string&& str, const CXPlatformAvailability& platformAvailability);
+    void                              addCXPrintingPolicy      (uint32_t level, const string&& str, const CXPrintingPolicy&       printingPolicy);
+    void                              addCXFileInfo            (uint32_t level, const string&& str, const CXFile&                 file, const CXTranslationUnit& translationUnit);
 
-    uint64_t                    getSize() const { return m_size; }
+    uint64_t                          getNodesCount() const { return m_nodesCount; }
+    uint32_t                          getHeight() const { return m_treeHeight; }
 
-    bool                        saveToFile(const string& path);
-
-private:
-    void                        saveNode(std::fstream& stream, const std::string& prefix, shared_ptr<OutputTreeNode> node);
-    shared_ptr<OutputTreeNode>  allocateNode(uint32_t level);
+    bool                              saveToFile(const string& path);
 
 private:
-    shared_ptr<OutputTreeNode>  m_rootPtr;
-    uint64_t                    m_size = 0;
+    void                              saveNode(std::fstream& stream, const std::string& prefix, shared_ptr<OutputTreeNode> node);
+    shared_ptr<OutputTreeNode>        allocateNode(uint32_t level);
+
+private:
+    shared_ptr<OutputTreeNode>        m_rootPtr;
+    uint64_t                          m_nodesCount = 0;
+    uint32_t                          m_treeHeight = 0;
 };
