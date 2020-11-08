@@ -1,4 +1,4 @@
-#include <libclangstruct2str/LibClangStruct2Str.h>
+#include <LibClangStruct2Str/LibClangStruct2Str.h>
 
 namespace std
 {

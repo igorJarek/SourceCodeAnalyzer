@@ -4,13 +4,13 @@
 
 #include <clang-c/Index.h>
 
-#include <folderbrowser/FolderBrowser.h>
+#include <FolderBrowser/FolderBrowser.h>
 
 #include <ExecutionTimeMeasurement/ExecutionTimeMeasurement.h>
 
-#include <database/Database.h>
-#include <database/DatabaseColumnDict.h>
-#include <database/ColumnDefinition.h>
+#include <Database/Database.h>
+#include <Database/DatabaseColumnDict.h>
+#include <Database/ColumnDefinition.h>
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #include <ExecutionTimeMeasurement/ExecutionTimeMeasurement.h>
-#include <folderbrowser/FolderBrowser.h>
-#include <html/Html.h>
+#include <FolderBrowser/FolderBrowser.h>
+#include <Html/Html.h>
 
 #include "UtilityFunctions.h"
 

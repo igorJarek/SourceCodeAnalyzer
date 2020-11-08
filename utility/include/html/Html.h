@@ -1,7 +1,7 @@
 #pragma once
 
 #include "HtmlTemplates.h"
-#include "outputtree/OutputTree.h"
+#include "OutputTree/OutputTree.h"
 
 #include <iostream>
 

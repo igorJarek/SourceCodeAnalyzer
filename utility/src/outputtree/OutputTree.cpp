@@ -1,6 +1,6 @@
-﻿#include <outputtree/OutputTree.h>
-#include <libclangstruct2str/LibClangStruct2Str.h>
-#include <libclangstruct2str/PrintingPolicy.h>
+﻿#include <OutputTree/OutputTree.h>
+#include <LibClangStruct2Str/LibClangStruct2Str.h>
+#include <LibClangStruct2Str/PrintingPolicy.h>
 
 #include <fstream>
 

@@ -1,5 +1,5 @@
 #include "ClangUtilityFunctions.h"
-#include <libclangstruct2str/LibClangStruct2Str.h>
+#include <LibClangStruct2Str/LibClangStruct2Str.h>
 
 CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
 {

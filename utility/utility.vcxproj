@@ -19,24 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\database\ColumnDefinition.h" />
-    <ClInclude Include="include\database\Database.h" />
-    <ClInclude Include="include\database\DatabaseColumnDict.h" />
+    <ClInclude Include="include\Database\ColumnDefinition.h" />
+    <ClInclude Include="include\Database\Database.h" />
+    <ClInclude Include="include\Database\DatabaseColumnDict.h" />
     <ClInclude Include="include\ExecutionTimeMeasurement\ExecutionTimeMeasurement.h" />
-    <ClInclude Include="include\folderbrowser\FolderBrowser.h" />
-    <ClInclude Include="include\html\Html.h" />
-    <ClInclude Include="include\html\HtmlTemplates.h" />
-    <ClInclude Include="include\libclangstruct2str\LibClangStruct2Str.h" />
-    <ClInclude Include="include\libclangstruct2str\PrintingPolicy.h" />
-    <ClInclude Include="include\outputtree\OutputTree.h" />
+    <ClInclude Include="include\FolderBrowser\FolderBrowser.h" />
+    <ClInclude Include="include\Html\Html.h" />
+    <ClInclude Include="include\Html\HtmlTemplates.h" />
+    <ClInclude Include="include\LibClangStruct2Str\LibClangStruct2Str.h" />
+    <ClInclude Include="include\LibClangStruct2Str\PrintingPolicy.h" />
+    <ClInclude Include="include\OutputTree\OutputTree.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\database\Database.cpp" />
-    <ClCompile Include="src\database\DatabaseColumnDict.cpp" />
-    <ClCompile Include="src\folderbrowser\FolderBrowser.cpp" />
-    <ClCompile Include="src\html\Html.cpp" />
-    <ClCompile Include="src\libclangstruct2str\LibClangStruct2Str.cpp" />
-    <ClCompile Include="src\outputtree\OutputTree.cpp" />
+    <ClCompile Include="src\Database\Database.cpp" />
+    <ClCompile Include="src\Database\DatabaseColumnDict.cpp" />
+    <ClCompile Include="src\FolderBrowser\FolderBrowser.cpp" />
+    <ClCompile Include="src\Html\Html.cpp" />
+    <ClCompile Include="src\LibClangStruct2Str\LibClangStruct2Str.cpp" />
+    <ClCompile Include="src\OutputTree\OutputTree.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

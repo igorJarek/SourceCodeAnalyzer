@@ -6,7 +6,7 @@
 #include <iostream>
 #include <sstream>
 
-#include <outputtree/OutputTree.h>
+#include <OutputTree/OutputTree.h>
 
 #include "UtilityFunctions.h"
 #include "Paths.h"
