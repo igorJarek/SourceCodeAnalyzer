@@ -2,7 +2,7 @@
 
 #include <string>
 
-using namespace std;
+using std::string;
 
 // ------- INDEX ------- //
 
@@ -37,10 +37,9 @@ const string INDEX_TEMPLATE
 	"		}\n\n"
 
 	"		#site {\n"
-	"			width: 80%;\n"
+	"			width: 99%;\n"
 	"			margin-left: auto;\n"
 	"			margin-right: auto;\n"
-	"			min-width: 1000px;\n"
 	"		}\n\n"
 
 	"		#site-logo {\n"
@@ -88,9 +87,17 @@ const string INDEX_TEMPLATE
 	"			padding: 10px 0;\n"
 	"		}\n\n"
 
-	"		table, th, td {\n"
+	"		table, th {\n"
 	"			border: 1px solid black;\n"
 	"			border-collapse: collapse;\n"
+	"		}\n\n"
+
+	"		td {\n"
+	"			text-align: center;\n"
+	"			border-style: dotted solid;\n"
+	"			border-collapse: collapse;\n"
+	"			border-width: 1px;\n"
+	"			font-size: 13px;\n"
 	"		}\n\n"
 
 	"		#footer {\n"
@@ -169,7 +176,7 @@ const string TABLE_ROW_TR_TEMPLATE
 
 const string TABLE_ROW_TD_TEMPLATE
 {
-	"<td style =\"text-align:center;\"><?tableRowTd?></td>\n"
+	"<td><?tableRowTd?></td>\n"
 };
 
 // ------- TREE ------- //
