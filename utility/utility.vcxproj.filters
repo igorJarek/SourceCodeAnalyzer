@@ -43,6 +43,9 @@
     <Filter Include="Source Files\libclangstruct2str">
       <UniqueIdentifier>{1a89b28d-fa4b-44d7-8c0a-46446cd1d8ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ExecutionTimeMeasurement">
+      <UniqueIdentifier>{29c1bb5c-ca63-4170-adb0-b1bbe3ee4074}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\database\DatabaseColumnDict.h">
@@ -71,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="include\libclangstruct2str\PrintingPolicy.h">
       <Filter>Header Files\libclangstruct2str</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ExecutionTimeMeasurement\ExecutionTimeMeasurement.h">
+      <Filter>Header Files\ExecutionTimeMeasurement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

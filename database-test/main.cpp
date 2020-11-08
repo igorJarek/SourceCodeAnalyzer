@@ -6,6 +6,8 @@
 
 #include <folderbrowser/FolderBrowser.h>
 
+#include <ExecutionTimeMeasurement/ExecutionTimeMeasurement.h>
+
 #include <database/Database.h>
 #include <database/DatabaseColumnDict.h>
 #include <database/ColumnDefinition.h>
@@ -54,7 +56,7 @@ int main()
     {
         for(const string& filePath : fileList)
         {
-            CXIndex index = clang_createIndex(0, 0);
+            CXIndex           index     = clang_createIndex(0, 0);
 
             CXTranslationUnit translationUnit;
             CXErrorCode       errorCode = clang_parseTranslationUnit2(index, 
@@ -68,17 +70,14 @@ int main()
 
             if (errorCode == CXError_Success)
             {
-                cout << "Parsing " << filePath << " file ... ";
-
                 if(database.isOK())
                 {
+                    ExecutionTimeMeasurement timeMeasurement("Parsing " + filePath + " file in");
+
                     createDatabaseTables(database, filePath, translationUnit);
-                    cout << "Done";
                 }
                 else
                     break;
-
-                cout << endl;
 
                 clang_disposeTranslationUnit(translationUnit);
             }

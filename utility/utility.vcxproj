@@ -22,6 +22,7 @@
     <ClInclude Include="include\database\ColumnDefinition.h" />
     <ClInclude Include="include\database\Database.h" />
     <ClInclude Include="include\database\DatabaseColumnDict.h" />
+    <ClInclude Include="include\ExecutionTimeMeasurement\ExecutionTimeMeasurement.h" />
     <ClInclude Include="include\folderbrowser\FolderBrowser.h" />
     <ClInclude Include="include\html\Html.h" />
     <ClInclude Include="include\html\HtmlTemplates.h" />
