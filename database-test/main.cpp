@@ -155,25 +155,22 @@ void createInsertTokensTableData(Database& database, const string& filePath, uin
     CXSourceLocation rangeStart = clang_getRangeStart(tokenRange);
     CXSourceLocation rangeEnd   = clang_getRangeEnd(tokenRange);
 
-    int64_t tokenStartPos, tokenEndPos;
-
     uint32_t startExpansionLine, startExpansioColumn;
     uint32_t endExpansionLine, endExpansioColumn;
 
     clang_getExpansionLocation(rangeStart, nullptr, &startExpansionLine, &startExpansioColumn, nullptr);
     clang_getExpansionLocation(rangeEnd,   nullptr, &endExpansionLine,   &endExpansioColumn,   nullptr);
 
-    tokenStartPos = startExpansionLine << 31 | startExpansioColumn;
-    tokenEndPos   = endExpansionLine   << 31 | endExpansioColumn;
-
     DatabaseInsertQuery insertQueryBuilder;
     insertQueryBuilder.newQuery(filePath + "\\tokens", g_tokenColumnDict);
 
-    insertQueryBuilder.addColumnValue(TokenID,                        tokenID);
-    insertQueryBuilder.addColumnValue(TokenKind,                      (uint32_t)tokenKind);
-    insertQueryBuilder.addCXStringColumnValue(TokenSpelling,          tokenSpelling);
-    insertQueryBuilder.addColumnValue(TokenStartPos,                  tokenStartPos);
-    insertQueryBuilder.addColumnValue(TokenEndPos,                    tokenEndPos);
+    insertQueryBuilder.addColumnValue(TokenID,                  tokenID);
+    insertQueryBuilder.addColumnValue(TokenKind,                (uint32_t)tokenKind);
+    insertQueryBuilder.addCXStringColumnValue(TokenSpelling,    tokenSpelling);
+    insertQueryBuilder.addColumnValue(TokenStartPos_Line,       startExpansionLine);
+    insertQueryBuilder.addColumnValue(TokenStartPos_Col,        startExpansioColumn);
+    insertQueryBuilder.addColumnValue(TokenEndPos_Line,         endExpansionLine);
+    insertQueryBuilder.addColumnValue(TokenEndPos_Col,          endExpansioColumn);
 
     DatabaseQueryErrMsg tokenQueryErrMsg = database.sendQuery(insertQueryBuilder.buildQuery());
     if(database.isNotOK())

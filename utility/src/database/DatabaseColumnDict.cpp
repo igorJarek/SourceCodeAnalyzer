@@ -18,8 +18,10 @@ TokenColumnDict::TokenColumnDict()
     emplace(TokenTableColName::TokenID,                             "TokenID");
     emplace(TokenTableColName::TokenKind,                           "TokenKind");
     emplace(TokenTableColName::TokenSpelling,                       "TokenSpelling");
-    emplace(TokenTableColName::TokenStartPos,                       "TokenStartPos");
-    emplace(TokenTableColName::TokenEndPos,                         "TokenEndPos");
+    emplace(TokenTableColName::TokenStartPos_Line,                  "TokenStartPos_Line");
+    emplace(TokenTableColName::TokenStartPos_Col,                   "TokenStartPos_Col");
+    emplace(TokenTableColName::TokenEndPos_Line,                    "TokenEndPos_Line");
+    emplace(TokenTableColName::TokenEndPos_Col,                     "TokenEndPos_Col");
 }
 
 SourceCodeColumnDict::SourceCodeColumnDict()

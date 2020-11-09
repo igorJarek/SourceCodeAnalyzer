@@ -14,9 +14,10 @@ enum TokenTableColName : uint32_t
     TokenID,
     TokenKind,
     TokenSpelling,
-    TokenStartPos,
-    TokenEndPos,
-
+    TokenStartPos_Line,
+    TokenStartPos_Col,
+    TokenEndPos_Line,
+    TokenEndPos_Col,
     TokenTableLast
 };
 

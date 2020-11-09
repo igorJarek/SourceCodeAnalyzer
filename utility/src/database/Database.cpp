@@ -200,8 +200,10 @@ void Database::createTokenTableTemplateQuery()
             "TokenID INT PRIMARY KEY,"
             "TokenKind TINYINT NOT NULL,"
             "TokenSpelling VARCHAR(255) NOT NULL,"
-            "TokenStartPos BIGINT NOT NULL,"
-            "TokenEndPos BIGINT NOT NULL"
+            "TokenStartPos_Line BIGINT NOT NULL,"
+            "TokenStartPos_Col BIGINT NOT NULL,"
+            "TokenEndPos_Line BIGINT NOT NULL,"
+            "TokenEndPos_Col BIGINT NOT NULL"
         ");"
     };
 }
