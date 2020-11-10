@@ -126,7 +126,6 @@ Database::Database(const std::string& databasePath) :
     createGlobalTableTemplateQuery();
     createTokenTableTemplateQuery();
     createCursorTableTemplateQuery();
-    createTypeTableTemplateQuery();
     createLinkingTableTemplateQuery();
 }
 
@@ -223,7 +222,6 @@ void Database::createCursorTableTemplateQuery()
             "CursorUSR VARCHAR(255),"
             "CursorDisplayName VARCHAR(255),"
             "CursorTable_CursorReferenced INT,"
-            "TypeTable_CursorType INT,"
             "CursorEnumConstantDeclValue BIGINT,"
             "CursorEnumConstantDeclUValue BIGINT,"
             "CursorFieldDeclBitWidth INT,"
@@ -241,29 +239,6 @@ void Database::createCursorTableTemplateQuery()
             "CursorAvailabilityKind TINYINT,"
             "CursorLanguageKind TINYINT,"
             "CursorTLSKind TINYINT"
-        ");"
-    };
-}
-
-void Database::createTypeTableTemplateQuery()
-{
-    m_typeTableTemplateQuery =
-    {
-        "CREATE TABLE \"<?filePath?>\\types\""
-        "("
-            "TypeID INT PRIMARY KEY,"
-            "TypeSpelling VARCHAR(255),"
-            "TypeIsBits INT,"
-            "TypeAddressSpace INT,"
-            "TypeTypedefName VARCHAR(255),"
-            "TypeKindSpelling VARCHAR(255),"
-            "TypeFuncCallingConv TINYINT,"
-            "TypeExceptionSpecification INT,"
-            "TypeArraySize BIGINT,"
-            "TypeNullabilityKind TINYINT,"
-            "TypeAlignOf BIGINT,"
-            "TypeSizeOf BIGINT,"
-            "TypeRefQualifierKind TINYINT"
         ");"
     };
 }
@@ -335,7 +310,6 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
     DatabaseQueryErrMsg queryErrMsg;
     std::string tokenTableQuery  = m_tokenTableTemplateQuery;
     std::string cursorTableQuery = m_cursorTableTemplateQuery;
-    std::string typeTableQuery   = m_typeTableTemplateQuery;
 
     if(isOK())
     {
@@ -360,17 +334,6 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
         }
 
         queryErrMsg = sendQuery(cursorTableQuery);
-        if(isNotOK())
-            return queryErrMsg.getString();
-
-        pos = typeTableQuery.find(keyword);
-        if (pos != std::string::npos)
-        {
-            typeTableQuery.erase(pos, keyword.size());
-            typeTableQuery.insert(pos, tableName);
-        }
-
-        queryErrMsg = sendQuery(typeTableQuery);
         if(isNotOK())
             return queryErrMsg.getString();
     }

@@ -17,8 +17,7 @@ using namespace std;
 void createDatabaseTables(Database& database, const string& filePath, const CXTranslationUnit& translationUnit);
 
 void createInsertTokensTableData(Database& database, const string& filePath, uint32_t tokenID, const CXTokenKind& tokenKind, const CXString& tokenSpelling, const CXSourceRange& tokenRange);
-void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t cursorRefID, uint32_t tokenID, uint32_t typeID, const CXCursor& cursor);
-void createInsertTypesTableData(Database& database, const string& filePath, uint32_t typeID, const CXType& cursorType);
+void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t cursorRefID, uint32_t tokenID, const CXCursor& cursor);
 
 int64_t countFileLines(const string& filePath);
 int64_t countFileLineColumns(const string& filePath, int64_t line);
@@ -143,16 +142,10 @@ void createDatabaseTables(Database& database, const string& filePath, const CXTr
             uint32_t         cursorID         = database.allocCursorID();
             uint32_t         cursorRefID      = database.allocCursorID();
 
-            uint32_t         typeID           = database.allocTypeID();
-            uint32_t         typeRefID        = database.allocTypeID();
-
             createInsertTokensTableData (database, filePath, tokenID, tokenKind, tokenSpelling, tokenRange);
 
-            createInsertCursorsTableData(database, filePath, cursorID,    cursorRefID, tokenID, typeID,    cursor);
-            createInsertCursorsTableData(database, filePath, cursorRefID, 0          , 0,       typeRefID, cursorReferenced);
-
-            createInsertTypesTableData  (database, filePath, typeID,    cursorType);
-            createInsertTypesTableData  (database, filePath, typeRefID, cursorRefType);
+            createInsertCursorsTableData(database, filePath, cursorID,    cursorRefID, tokenID,    cursor);
+            createInsertCursorsTableData(database, filePath, cursorRefID, 0          , 0      , cursorReferenced);
         }
     }
 
@@ -187,7 +180,7 @@ void createInsertTokensTableData(Database& database, const string& filePath, uin
         cout << "sendQuery() error : " << tokenQueryErrMsg << endl;
 }
 
-void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t cursorRefID, uint32_t tokenID, uint32_t typeID, const CXCursor& cursor)
+void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t cursorRefID, uint32_t tokenID, const CXCursor& cursor)
 {
     CXString              mangling                            = clang_Cursor_getMangling(cursor);
     CXCursorKind          templateCursorKind                  = clang_getTemplateCursorKind(cursor);
@@ -222,7 +215,6 @@ void createInsertCursorsTableData(Database& database, const string& filePath, ui
     insertQueryBuilder.addCXStringColumnValue(CursorUSR,              cursorUSR);
     insertQueryBuilder.addCXStringColumnValue(CursorDisplayName,      cursorDisplayName);
     insertQueryBuilder.addColumnValue(CursorTable_CursorReferenced,   cursorRefID);
-    insertQueryBuilder.addColumnValue(TypeTable_CursorType,           typeID);
     insertQueryBuilder.addColumnValue(CursorEnumConstantDeclValue,    cursorEnumConstantDeclValue);
     insertQueryBuilder.addColumnValue(CursorEnumConstantDeclUValue,   cursorEnumConstantDeclUnsignedValue);
     insertQueryBuilder.addColumnValue(CursorFieldDeclBitWidth,        cursorFieldDeclBitWidth);
@@ -244,62 +236,6 @@ void createInsertCursorsTableData(Database& database, const string& filePath, ui
     DatabaseQueryErrMsg cursorQueryErrMsg = database.sendQuery(insertQueryBuilder.buildQuery());
     if(database.isNotOK())
         cout << "sendQuery() error : " << cursorQueryErrMsg << endl;
-}
-
-void createInsertTypesTableData(Database& database, const string& filePath, uint32_t typeID, const CXType& cursorType)
-{
-    CXString              typeSpelling = clang_getTypeSpelling(cursorType);
-    uint32_t              typeAddressSpace  = 0;
-    CXString              typeTypedefName;
-    CXString              typeKindSpelling;
-    CXCallingConv         typeFunctionTypeCallingConv = CXCallingConv_Invalid;
-    int32_t               typeExceptionSpecification = 0;
-    int64_t               typeArraySize = 0;
-    CXTypeNullabilityKind typeNullability = CXTypeNullability_Invalid;
-    int64_t               typeAlignOf = 0;
-    int64_t               typeSizeOf = 0;
-    CXRefQualifierKind    typeRefQualifier = CXRefQualifier_None;
-            
-    if( cursorType.kind != CXType_Invalid)
-    if( cursorType.kind != CXType_Unexposed)
-    {
-        typeAddressSpace            = clang_getAddressSpace(cursorType);
-        typeTypedefName             = clang_getTypedefName(cursorType);
-        typeKindSpelling            = clang_getTypeKindSpelling(cursorType.kind);
-        typeFunctionTypeCallingConv = clang_getFunctionTypeCallingConv(cursorType);
-        typeExceptionSpecification  = clang_getExceptionSpecificationType(cursorType);
-        typeArraySize               = clang_getArraySize(cursorType);
-        typeNullability             = clang_Type_getNullability(cursorType);
-        typeAlignOf                 = clang_Type_getAlignOf(cursorType);
-        typeSizeOf                  = clang_Type_getSizeOf(cursorType);
-        typeRefQualifier            = clang_Type_getCXXRefQualifier(cursorType);
-    }
-
-    DatabaseInsertQuery insertQueryBuilder;
-    insertQueryBuilder.newQuery(filePath + "\\types", g_typeColumnDict);
-
-    insertQueryBuilder.addColumnValue(TypeID,                         typeID);
-    insertQueryBuilder.addCXStringColumnValue(TypeSpelling,           typeSpelling);
-
-    if( cursorType.kind != CXType_Invalid)
-    if( cursorType.kind != CXType_Unexposed)
-    {
-        insertQueryBuilder.addColumnValue(TypeIsBits,                     0);
-        insertQueryBuilder.addColumnValue(TypeAddressSpace,               typeAddressSpace);
-        insertQueryBuilder.addCXStringColumnValue(TypeTypedefName,        typeTypedefName);
-        insertQueryBuilder.addCXStringColumnValue(TypeKindSpelling,       typeKindSpelling);
-        insertQueryBuilder.addColumnValue(TypeFuncCallingConv,            (uint32_t)typeFunctionTypeCallingConv);
-        insertQueryBuilder.addColumnValue(TypeExceptionSpecification,     typeExceptionSpecification);
-        insertQueryBuilder.addColumnValue(TypeArraySize,                  typeArraySize);
-        insertQueryBuilder.addColumnValue(TypeNullabilityKind,            (uint32_t)typeNullability);
-        insertQueryBuilder.addColumnValue(TypeAlignOf,                    typeAlignOf);
-        insertQueryBuilder.addColumnValue(TypeSizeOf,                     typeSizeOf);
-        insertQueryBuilder.addColumnValue(TypeRefQualifierKind,           (uint32_t)typeRefQualifier);
-    }
-
-    DatabaseQueryErrMsg typeQueryErrMsg = database.sendQuery(insertQueryBuilder.buildQuery());
-    if(database.isNotOK())
-        cout << "sendQuery() error : " << typeQueryErrMsg << endl;
 }
 
 int64_t countFileLines(const string& filePath)

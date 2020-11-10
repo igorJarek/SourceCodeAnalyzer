@@ -124,12 +124,10 @@ public:
 
     uint32_t                        getTokenID()   const { return m_tokenTableIdAllocator; }
     uint32_t                        getCursorID()  const { return m_cursorTableIdAllocator; }
-    uint32_t                        getTypeID()    const { return m_typeTableIdAllocator; }
     uint32_t                        getLinkingID() const { return m_linkingTableIdAllocator; }
 
     uint32_t                        allocTokenID()   { return ++m_tokenTableIdAllocator;  }
     uint32_t                        allocCursorID()  { return ++m_cursorTableIdAllocator; }
-    uint32_t                        allocTypeID()    { return ++m_typeTableIdAllocator;   }
     uint32_t                        allocLinkingID() { return ++m_linkingTableIdAllocator; }
 
 public:
@@ -142,7 +140,6 @@ private:
     void                            createGlobalTableTemplateQuery();
     void                            createTokenTableTemplateQuery();
     void                            createCursorTableTemplateQuery();
-    void                            createTypeTableTemplateQuery();
     void                            createLinkingTableTemplateQuery();
 
     void                            dumpQueryToFile(const std::string& query, const char* comment = nullptr);
@@ -159,11 +156,9 @@ private:
     std::string                     m_globalTableTemplateQuery;
     std::string                     m_tokenTableTemplateQuery;
     std::string                     m_cursorTableTemplateQuery;
-    std::string                     m_typeTableTemplateQuery;
     std::string                     m_linkingTableTemplateQuery;
 
     uint32_t                        m_tokenTableIdAllocator = 0;
     uint32_t                        m_cursorTableIdAllocator = 0;
-    uint32_t                        m_typeTableIdAllocator = 0;
     uint32_t                        m_linkingTableIdAllocator = 0;
 };

@@ -4,7 +4,6 @@
 GlobalColumnDict  g_globalColumnDict;
 TokenColumnDict   g_tokenColumnDict;
 CursorColumnDict  g_cursorColumnDict;
-TypeColumnDict    g_typeColumnDict;
 LinkingColumnDict g_linkingColumnDict;
 
 GlobalColumnDict::GlobalColumnDict()
@@ -35,7 +34,6 @@ CursorColumnDict::CursorColumnDict()
     emplace(CursorTableColName::CursorUSR,                      "CursorUSR");
     emplace(CursorTableColName::CursorDisplayName,              "CursorDisplayName");
     emplace(CursorTableColName::CursorTable_CursorReferenced,   "CursorTable_CursorReferenced");
-    emplace(CursorTableColName::TypeTable_CursorType,           "TypeTable_CursorType");
     emplace(CursorTableColName::CursorEnumConstantDeclValue,    "CursorEnumConstantDeclValue");
     emplace(CursorTableColName::CursorEnumConstantDeclUValue,   "CursorEnumConstantDeclUValue");
     emplace(CursorTableColName::CursorFieldDeclBitWidth,        "CursorFieldDeclBitWidth");
@@ -55,28 +53,11 @@ CursorColumnDict::CursorColumnDict()
     emplace(CursorTableColName::CursorTLSKind,                  "CursorTLSKind");
 }
 
-TypeColumnDict::TypeColumnDict()
-{
-    emplace(TypeTableColName::TypeID,                               "TypeID");
-    emplace(TypeTableColName::TypeSpelling,                         "TypeSpelling");
-    emplace(TypeTableColName::TypeIsBits,                           "TypeIsBits");
-    emplace(TypeTableColName::TypeAddressSpace,                     "TypeAddressSpace");
-    emplace(TypeTableColName::TypeTypedefName,                      "TypeTypedefName");
-    emplace(TypeTableColName::TypeKindSpelling,                     "TypeKindSpelling");
-    emplace(TypeTableColName::TypeFuncCallingConv,                  "TypeFuncCallingConv");
-    emplace(TypeTableColName::TypeExceptionSpecification,           "TypeExceptionSpecification");
-    emplace(TypeTableColName::TypeArraySize,                        "TypeArraySize");
-    emplace(TypeTableColName::TypeNullabilityKind,                  "TypeNullabilityKind");
-    emplace(TypeTableColName::TypeAlignOf,                          "TypeAlignOf");
-    emplace(TypeTableColName::TypeSizeOf,                           "TypeSizeOf");
-    emplace(TypeTableColName::TypeRefQualifierKind,                 "TypeRefQualifierKind");
-}
-
 LinkingColumnDict::LinkingColumnDict()
 {
-    emplace(LinkingTableColName::LinkingID,                         "LinkingID");
-    emplace(LinkingTableColName::LinkingMangling,                   "LinkingMangling");
-    emplace(LinkingTableColName::LinkingTableName,                  "LinkingTableName");
-    emplace(LinkingTableColName::LinkingCursorID,                   "LinkingCursorID");
+    emplace(LinkingTableColName::LinkingID,                     "LinkingID");
+    emplace(LinkingTableColName::LinkingMangling,               "LinkingMangling");
+    emplace(LinkingTableColName::LinkingTableName,              "LinkingTableName");
+    emplace(LinkingTableColName::LinkingCursorID,               "LinkingCursorID");
 
 }

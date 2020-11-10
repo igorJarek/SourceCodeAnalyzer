@@ -31,7 +31,6 @@ enum CursorTableColName : uint32_t
     CursorUSR,
     CursorDisplayName,
     CursorTable_CursorReferenced,
-    TypeTable_CursorType,
     CursorEnumConstantDeclValue,
     CursorEnumConstantDeclUValue,
     CursorFieldDeclBitWidth,
@@ -51,25 +50,6 @@ enum CursorTableColName : uint32_t
     CursorTLSKind,
 
     SourceCodeTableLast
-};
-
-enum TypeTableColName : uint32_t
-{
-    TypeID,
-    TypeSpelling,
-    TypeIsBits,
-    TypeAddressSpace,
-    TypeTypedefName,
-    TypeKindSpelling,
-    TypeFuncCallingConv,
-    TypeExceptionSpecification,
-    TypeArraySize,
-    TypeNullabilityKind,
-    TypeAlignOf,
-    TypeSizeOf,
-    TypeRefQualifierKind,
-
-    TypeTableLast
 };
 
 enum LinkingTableColName : uint32_t
