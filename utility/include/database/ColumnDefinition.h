@@ -42,6 +42,7 @@ enum SourceCodeTableColName : uint32_t
     CursorEvalResultKind,
     CursorHash,
     CursorKind,
+    CursorKindSpelling,
     CursorAttr,
     CursorLinkageKind,
     CursorVisibilityKind,
@@ -69,4 +70,14 @@ enum TypeTableColName : uint32_t
     TypeRefQualifierKind,
 
     TypeTableLast
+};
+
+enum LinkingTableColName : uint32_t
+{
+    LinkingID,
+    LinkingMangling,
+    LinkingTableName,
+    LinkingCursorID,
+
+    LinkingTableLast
 };

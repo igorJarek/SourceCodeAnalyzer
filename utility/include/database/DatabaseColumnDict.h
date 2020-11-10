@@ -49,3 +49,10 @@ public:
     TypeColumnDict();
     ~TypeColumnDict() {}
 };
+
+class LinkingColumnDict : public DatabaseColumnDict
+{
+public:
+    LinkingColumnDict();
+    ~LinkingColumnDict() {}
+};

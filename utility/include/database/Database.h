@@ -24,7 +24,7 @@ public:
             sqlite3_free(reinterpret_cast<void*>(m_errorMessagePtr));
     }
 
-    DatabaseQueryErrMsg& operator=(DatabaseQueryErrMsg&& queryErr)
+    DatabaseQueryErrMsg& operator=(DatabaseQueryErrMsg&& queryErr) noexcept
     {
         if(m_errorMessagePtr)
             sqlite3_free(reinterpret_cast<void*>(m_errorMessagePtr));
@@ -119,15 +119,18 @@ public:
     DatabaseQueryErrMsg             sendQuery(const std::string& query);
 
     std::string                     createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion);
+    std::string                     createLinkingTable();
     std::string                     createSourceCodeTables(const std::string& tableName);
 
     uint32_t                        getTokenID()  const { return m_tokenTableIdAllocator; }
     uint32_t                        getCursorID() const { return m_cursorTableIdAllocator; }
     uint32_t                        getTypeID()   const { return m_typeTableIdAllocator; }
+    uint32_t                        getLinkingID()   const { return m_linkingTableIdAllocator; }
 
-    uint32_t                        allocTokenID()  { return ++m_tokenTableIdAllocator;  }
-    uint32_t                        allocCursorID() { return ++m_cursorTableIdAllocator; }
-    uint32_t                        allocTypeID()   { return ++m_typeTableIdAllocator;   }
+    uint32_t                        allocTokenID()   { return ++m_tokenTableIdAllocator;  }
+    uint32_t                        allocCursorID()  { return ++m_cursorTableIdAllocator; }
+    uint32_t                        allocTypeID()    { return ++m_typeTableIdAllocator;   }
+    uint32_t                        allocLinkingID() { return ++m_linkingTableIdAllocator; }
 
 public:
     bool                            isOK()              const { return m_lastError == SQLITE_OK; }
@@ -140,6 +143,7 @@ private:
     void                            createTokenTableTemplateQuery();
     void                            createCursorTableTemplateQuery();
     void                            createTypeTableTemplateQuery();
+    void                            createLinkingTableTemplateQuery();
 
     void                            dumpQueryToFile(const std::string& query, const char* comment = nullptr);
 
@@ -156,8 +160,10 @@ private:
     std::string                     m_tokenTableTemplateQuery;
     std::string                     m_cursorTableTemplateQuery;
     std::string                     m_typeTableTemplateQuery;
+    std::string                     m_linkingTableTemplateQuery;
 
     uint32_t                        m_tokenTableIdAllocator = 0;
     uint32_t                        m_cursorTableIdAllocator = 0;
     uint32_t                        m_typeTableIdAllocator = 0;
+    uint32_t                        m_linkingTableIdAllocator = 0;
 };

@@ -127,6 +127,7 @@ Database::Database(const std::string& databasePath) :
     createTokenTableTemplateQuery();
     createCursorTableTemplateQuery();
     createTypeTableTemplateQuery();
+    createLinkingTableTemplateQuery();
 }
 
 Database::~Database()
@@ -233,6 +234,7 @@ void Database::createCursorTableTemplateQuery()
             "CursorEvalResultKind TINYINT,"
             "CursorHash INT,"
             "CursorKind SHORTINT,"
+            "CursorKindSpelling VARCHAR(255),"
             "CursorAttr INT,"
             "CursorLinkageKind TINYINT,"
             "CursorVisibilityKind TINYINT,"
@@ -266,6 +268,20 @@ void Database::createTypeTableTemplateQuery()
     };
 }
 
+void Database::createLinkingTableTemplateQuery()
+{
+    m_linkingTableTemplateQuery =
+    {
+        "CREATE TABLE \'..\\linking\'"
+        "("
+            "LinkingID INT PRIMARY KEY,"
+            "LinkingMangling VARCHAR (255),"
+            "LinkingTableName VARCHAR (255),"
+            "LinkingCursorID INT"
+        ");"
+    };
+}
+
 std::string Database::createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion)
 {
     DatabaseQueryErrMsg queryErrMsg;
@@ -290,6 +306,23 @@ std::string Database::createGlobalTable(const CXString& clangVersion, const std:
             if(isNotOK())
                 queryErrMsgStr += queryErrMsg;
         }
+    }
+    else
+        return lastErrorMsg();
+
+    return queryErrMsgStr;
+}
+
+std::string Database::createLinkingTable()
+{
+    DatabaseQueryErrMsg queryErrMsg;
+    std::string         queryErrMsgStr;
+
+    if(isOK())
+    {
+        queryErrMsg = sendQuery(m_linkingTableTemplateQuery);
+        if(isNotOK())
+            queryErrMsgStr += queryErrMsg;
     }
     else
         return lastErrorMsg();

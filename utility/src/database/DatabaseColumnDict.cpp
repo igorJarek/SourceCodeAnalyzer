@@ -45,6 +45,7 @@ SourceCodeColumnDict::SourceCodeColumnDict()
     emplace(SourceCodeTableColName::CursorEvalResultKind,           "CursorEvalResultKind");
     emplace(SourceCodeTableColName::CursorHash,                     "CursorHash");
     emplace(SourceCodeTableColName::CursorKind,                     "CursorKind");
+    emplace(SourceCodeTableColName::CursorKindSpelling,             "CursorKindSpelling");
     emplace(SourceCodeTableColName::CursorAttr,                     "CursorAttr");
     emplace(SourceCodeTableColName::CursorLinkageKind,              "CursorLinkageKind");
     emplace(SourceCodeTableColName::CursorVisibilityKind,           "CursorVisibilityKind");
@@ -68,4 +69,13 @@ TypeColumnDict::TypeColumnDict()
     emplace(TypeTableColName::TypeAlignOf,                          "TypeAlignOf");
     emplace(TypeTableColName::TypeSizeOf,                           "TypeSizeOf");
     emplace(TypeTableColName::TypeRefQualifierKind,                 "TypeRefQualifierKind");
+}
+
+LinkingColumnDict::LinkingColumnDict()
+{
+    emplace(LinkingTableColName::LinkingID,                         "LinkingID");
+    emplace(LinkingTableColName::LinkingMangling,                   "LinkingMangling");
+    emplace(LinkingTableColName::LinkingTableName,                  "LinkingTableName");
+    emplace(LinkingTableColName::LinkingCursorID,                   "LinkingCursorID");
+
 }
