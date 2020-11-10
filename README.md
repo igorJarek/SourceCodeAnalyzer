@@ -1,2 +1,2 @@
-# libclangAPITest
-Piece of code to testing libclang API
+# C++ Code Visualizer based on Clang
+In progress ...
