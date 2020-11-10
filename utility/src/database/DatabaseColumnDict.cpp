@@ -29,28 +29,12 @@ CursorColumnDict::CursorColumnDict()
     emplace(CursorTableColName::CursorID,                       "CursorID");
     emplace(CursorTableColName::TokenTable_TokenID,             "TokenTable_TokenID");
     emplace(CursorTableColName::CursorMangling,                 "CursorMangling");
-    emplace(CursorTableColName::CursorIsBits,                   "CursorIsBits");
-    emplace(CursorTableColName::CursorTemplateCursorKind,       "CursorTemplateCursorKind");
     emplace(CursorTableColName::CursorUSR,                      "CursorUSR");
     emplace(CursorTableColName::CursorDisplayName,              "CursorDisplayName");
     emplace(CursorTableColName::CursorTable_CursorReferenced,   "CursorTable_CursorReferenced");
-    emplace(CursorTableColName::CursorEnumConstantDeclValue,    "CursorEnumConstantDeclValue");
-    emplace(CursorTableColName::CursorEnumConstantDeclUValue,   "CursorEnumConstantDeclUValue");
-    emplace(CursorTableColName::CursorFieldDeclBitWidth,        "CursorFieldDeclBitWidth");
-    emplace(CursorTableColName::CursorExceptionSpecification,   "CursorExceptionSpecification");
-    emplace(CursorTableColName::CursorOffsetOfField,            "CursorOffsetOfField");
-    emplace(CursorTableColName::CursorAccessSpecifier,          "CursorAccessSpecifier");
-    emplace(CursorTableColName::CursorStorageClass,             "CursorStorageClass");
-    emplace(CursorTableColName::CursorEvalResultKind,           "CursorEvalResultKind");
     emplace(CursorTableColName::CursorHash,                     "CursorHash");
     emplace(CursorTableColName::CursorKind,                     "CursorKind");
     emplace(CursorTableColName::CursorKindSpelling,             "CursorKindSpelling");
-    emplace(CursorTableColName::CursorAttr,                     "CursorAttr");
-    emplace(CursorTableColName::CursorLinkageKind,              "CursorLinkageKind");
-    emplace(CursorTableColName::CursorVisibilityKind,           "CursorVisibilityKind");
-    emplace(CursorTableColName::CursorAvailabilityKind,         "CursorAvailabilityKind");
-    emplace(CursorTableColName::CursorLanguageKind,             "CursorLanguageKind");
-    emplace(CursorTableColName::CursorTLSKind,                  "CursorTLSKind");
 }
 
 LinkingColumnDict::LinkingColumnDict()

@@ -186,23 +186,9 @@ void createInsertCursorsTableData(Database& database, const string& filePath, ui
     CXCursorKind          templateCursorKind                  = clang_getTemplateCursorKind(cursor);
     CXString              cursorUSR                           = clang_getCursorUSR(cursor);
     CXString              cursorDisplayName                   = clang_getCursorDisplayName(cursor);
-    int64_t               cursorEnumConstantDeclValue         = clang_getEnumConstantDeclValue(cursor);
-    uint64_t              cursorEnumConstantDeclUnsignedValue = clang_getEnumConstantDeclUnsignedValue(cursor);
-    int32_t               cursorFieldDeclBitWidth             = clang_getFieldDeclBitWidth(cursor);
-    int32_t               cursorExceptionSpecificationType    = clang_getCursorExceptionSpecificationType(cursor);
-    int64_t               cursorOffsetOfField                 = clang_Cursor_getOffsetOfField(cursor);
-    CX_CXXAccessSpecifier cursorAccessSpecifier               = clang_getCXXAccessSpecifier(cursor);
-    CX_StorageClass       cursorStorageClass                  = clang_Cursor_getStorageClass(cursor);
-    CXEvalResultKind      cursorEvalResultKind                = clang_EvalResult_getKind(clang_Cursor_Evaluate(cursor));
     uint32_t              cursorHash                          = clang_hashCursor(cursor);
     CXCursorKind          cursorKind                          = clang_getCursorKind(cursor);
     CXString              cursorKindSpelling                  = clang_getCursorKindSpelling(cursorKind);
-    uint32_t              hasAttrs                            = clang_Cursor_hasAttrs(cursor);
-    CXLinkageKind         linkageKind                         = clang_getCursorLinkage(cursor);
-    CXVisibilityKind      visibilityKind                      = clang_getCursorVisibility(cursor);
-    CXAvailabilityKind    availabilityKind                    = clang_getCursorAvailability(cursor);
-    CXLanguageKind        cursorLanguageKind                  = clang_getCursorLanguage(cursor);
-    CXTLSKind             tlsKind                             = clang_getCursorTLSKind(cursor);
 
     DatabaseInsertQuery insertQueryBuilder;
     insertQueryBuilder.newQuery(filePath + "\\cursors", g_cursorColumnDict);
@@ -210,28 +196,12 @@ void createInsertCursorsTableData(Database& database, const string& filePath, ui
     insertQueryBuilder.addColumnValue(CursorID,                       cursorID);
     insertQueryBuilder.addColumnValue(TokenTable_TokenID,             tokenID);
     insertQueryBuilder.addCXStringColumnValue(CursorMangling,         mangling);
-    insertQueryBuilder.addColumnValue(CursorIsBits,                   0);
-    insertQueryBuilder.addColumnValue(CursorTemplateCursorKind,       (uint32_t)templateCursorKind);
     insertQueryBuilder.addCXStringColumnValue(CursorUSR,              cursorUSR);
     insertQueryBuilder.addCXStringColumnValue(CursorDisplayName,      cursorDisplayName);
     insertQueryBuilder.addColumnValue(CursorTable_CursorReferenced,   cursorRefID);
-    insertQueryBuilder.addColumnValue(CursorEnumConstantDeclValue,    cursorEnumConstantDeclValue);
-    insertQueryBuilder.addColumnValue(CursorEnumConstantDeclUValue,   cursorEnumConstantDeclUnsignedValue);
-    insertQueryBuilder.addColumnValue(CursorFieldDeclBitWidth,        cursorFieldDeclBitWidth);
-    insertQueryBuilder.addColumnValue(CursorExceptionSpecification,   cursorExceptionSpecificationType);
-    insertQueryBuilder.addColumnValue(CursorOffsetOfField,            cursorOffsetOfField);
-    insertQueryBuilder.addColumnValue(CursorAccessSpecifier,          (uint32_t)cursorAccessSpecifier);
-    insertQueryBuilder.addColumnValue(CursorStorageClass,             (uint32_t)cursorStorageClass);
-    insertQueryBuilder.addColumnValue(CursorEvalResultKind,           (uint32_t)cursorEvalResultKind);
     insertQueryBuilder.addColumnValue(CursorHash,                     cursorHash);
     insertQueryBuilder.addColumnValue(CursorKind,                     (uint32_t)cursorKind);
     insertQueryBuilder.addCXStringColumnValue(CursorKindSpelling,     cursorKindSpelling);
-    insertQueryBuilder.addColumnValue(CursorAttr,                     hasAttrs);
-    insertQueryBuilder.addColumnValue(CursorLinkageKind,              (uint32_t)linkageKind);
-    insertQueryBuilder.addColumnValue(CursorVisibilityKind,           (uint32_t)visibilityKind);
-    insertQueryBuilder.addColumnValue(CursorAvailabilityKind,         (uint32_t)availabilityKind);
-    insertQueryBuilder.addColumnValue(CursorLanguageKind,             (uint32_t)cursorLanguageKind);
-    insertQueryBuilder.addColumnValue(CursorTLSKind,                  (uint32_t)tlsKind);
 
     DatabaseQueryErrMsg cursorQueryErrMsg = database.sendQuery(insertQueryBuilder.buildQuery());
     if(database.isNotOK())
