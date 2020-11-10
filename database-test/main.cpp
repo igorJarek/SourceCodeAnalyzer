@@ -51,40 +51,50 @@ int main()
 
     string dbErrMsg = database.createGlobalTable(clang_getClangVersion(), APP_NAME, APP_VERSION);
     if(database.isNotOK())
-        cout << "Database error : " << dbErrMsg << endl;
-    else
     {
-        for(const string& filePath : fileList)
-        {
-            CXIndex           index     = clang_createIndex(0, 0);
-
-            CXTranslationUnit translationUnit;
-            CXErrorCode       errorCode = clang_parseTranslationUnit2(index, 
-                                                                      filePath.c_str(), 
-                                                                      COMPILATION_ARGS, 
-                                                                      sizeof(COMPILATION_ARGS) / sizeof(const char*),
-                                                                      nullptr,
-                                                                      0,
-                                                                      CXTranslationUnit_None,
-                                                                      &translationUnit);
-
-            if (errorCode == CXError_Success)
-            {
-                if(database.isOK())
-                {
-                    ExecutionTimeMeasurement timeMeasurement("Parsing " + filePath + " file in");
-
-                    createDatabaseTables(database, filePath, translationUnit);
-                }
-                else
-                    break;
-
-                clang_disposeTranslationUnit(translationUnit);
-            }
-
-            clang_disposeIndex(index);
-        }
+        cout << "createGlobalTable() Error : " << dbErrMsg << endl;
+        return EXIT_SUCCESS;
     }
+
+    dbErrMsg = database.createLinkingTable();
+    if(database.isNotOK())
+    {
+        cout << "createLinkingTable() Error : " << dbErrMsg << endl;
+        return EXIT_SUCCESS;
+    }
+
+    for(const string& filePath : fileList)
+    {
+        CXIndex           index     = clang_createIndex(0, 0);
+
+        CXTranslationUnit translationUnit;
+        CXErrorCode       errorCode = clang_parseTranslationUnit2(index, 
+                                                                    filePath.c_str(), 
+                                                                    COMPILATION_ARGS, 
+                                                                    sizeof(COMPILATION_ARGS) / sizeof(const char*),
+                                                                    nullptr,
+                                                                    0,
+                                                                    CXTranslationUnit_None,
+                                                                    &translationUnit);
+
+        if (errorCode == CXError_Success)
+        {
+            if(database.isOK())
+            {
+                ExecutionTimeMeasurement timeMeasurement("Parsing " + filePath + " file in");
+
+                createDatabaseTables(database, filePath, translationUnit);
+            }
+            else
+                break;
+
+            clang_disposeTranslationUnit(translationUnit);
+        }
+
+        clang_disposeIndex(index);
+    }
+
+    return EXIT_SUCCESS;
 }
 
 void createDatabaseTables(Database& database, const string& filePath, const CXTranslationUnit& translationUnit)
@@ -193,6 +203,7 @@ void createInsertCursorsTableData(Database& database, const string& filePath, ui
     CXEvalResultKind      cursorEvalResultKind                = clang_EvalResult_getKind(clang_Cursor_Evaluate(cursor));
     uint32_t              cursorHash                          = clang_hashCursor(cursor);
     CXCursorKind          cursorKind                          = clang_getCursorKind(cursor);
+    CXString              cursorKindSpelling                  = clang_getCursorKindSpelling(cursorKind);
     uint32_t              hasAttrs                            = clang_Cursor_hasAttrs(cursor);
     CXLinkageKind         linkageKind                         = clang_getCursorLinkage(cursor);
     CXVisibilityKind      visibilityKind                      = clang_getCursorVisibility(cursor);
@@ -222,6 +233,7 @@ void createInsertCursorsTableData(Database& database, const string& filePath, ui
     insertQueryBuilder.addColumnValue(CursorEvalResultKind,           (uint32_t)cursorEvalResultKind);
     insertQueryBuilder.addColumnValue(CursorHash,                     cursorHash);
     insertQueryBuilder.addColumnValue(CursorKind,                     (uint32_t)cursorKind);
+    insertQueryBuilder.addCXStringColumnValue(CursorKindSpelling,     cursorKindSpelling);
     insertQueryBuilder.addColumnValue(CursorAttr,                     hasAttrs);
     insertQueryBuilder.addColumnValue(CursorLinkageKind,              (uint32_t)linkageKind);
     insertQueryBuilder.addColumnValue(CursorVisibilityKind,           (uint32_t)visibilityKind);
