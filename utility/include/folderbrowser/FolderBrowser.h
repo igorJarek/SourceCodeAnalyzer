@@ -3,10 +3,12 @@
 #include <filesystem>
 #include <string>
 #include <list>
+#include <set>
 
 namespace fs = std::filesystem;
 using std::string;
 using std::list;
+using std::set;
 
 enum FileType : uint8_t
 {
@@ -24,6 +26,7 @@ public:
 public:
     void                clearFileList()                                     { m_filesList.clear(); }
     void                setFileTypeBrowser(uint8_t fileType);
+    void                addIgnoreFilePath(const string& filePath);
     void                startFolderBrowse(const string& folderPath);
 
     const list<string>& getFileList() const { return m_filesList; }
@@ -35,5 +38,7 @@ protected:
 
 protected:
     list<string>        m_filesList;
+    set<string>         m_ignoredFilesSet;
+
     uint8_t             m_fileTypeOptions = 0;
 };

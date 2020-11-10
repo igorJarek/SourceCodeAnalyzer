@@ -31,6 +31,11 @@ void FolderBrowser::setFileTypeBrowser(uint8_t fileType)
     m_fileTypeOptions = fileType;
 }
 
+void FolderBrowser::addIgnoreFilePath(const string& filePath)
+{
+    m_ignoredFilesSet.insert(filePath);
+}
+
 void FolderBrowser::startFolderBrowse(const string& folderPath)
 {
     fs::path path(folderPath);
@@ -52,12 +57,22 @@ void FolderBrowser::startFolderBrowse(const string& folderPath)
                 if(isSourceFile(fileExtension))
                 {
                     if(m_fileTypeOptions & SOURCE_FILE)
-                        m_filesList.push_back(path.string());
+                    {
+                        string filePath = path.string();
+
+                        if(m_ignoredFilesSet.find(filePath) == m_ignoredFilesSet.end())
+                            m_filesList.push_back(filePath);
+                    }
                 }
                 else if(isHeaderFile(fileExtension))
                 {
                     if(m_fileTypeOptions & HEADER_FILE)
-                        m_filesList.push_back(path.string());
+                    {
+                        string filePath = path.string();
+
+                        if(m_ignoredFilesSet.find(filePath) == m_ignoredFilesSet.end())
+                            m_filesList.push_back(filePath);
+                    }
                 }
             }
         }
