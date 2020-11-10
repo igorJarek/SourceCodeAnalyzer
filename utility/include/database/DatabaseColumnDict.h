@@ -7,13 +7,15 @@ using namespace std;
 
 class GlobalColumnDict;
 class TokenColumnDict;
-class SourceCodeColumnDict;
+class CursorColumnDict;
 class TypeColumnDict;
+class LinkingColumnDict;
 
-extern GlobalColumnDict     g_globalColumnDict;
-extern TokenColumnDict      g_tokenColumnDict;
-extern SourceCodeColumnDict g_sourceCodeColumnDict;
-extern TypeColumnDict       g_typeColumnDict;
+extern GlobalColumnDict  g_globalColumnDict;
+extern TokenColumnDict   g_tokenColumnDict;
+extern CursorColumnDict  g_cursorColumnDict;
+extern TypeColumnDict    g_typeColumnDict;
+extern LinkingColumnDict g_linkingColumnDict;
 
 class DatabaseColumnDict : public map<uint32_t, string>
 {
@@ -36,11 +38,11 @@ public:
     ~TokenColumnDict() {}
 };
 
-class SourceCodeColumnDict : public DatabaseColumnDict
+class CursorColumnDict : public DatabaseColumnDict
 {
 public:
-    SourceCodeColumnDict();
-    ~SourceCodeColumnDict() {}
+    CursorColumnDict();
+    ~CursorColumnDict() {}
 };
 
 class TypeColumnDict : public DatabaseColumnDict

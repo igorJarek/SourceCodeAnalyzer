@@ -212,7 +212,7 @@ void createInsertCursorsTableData(Database& database, const string& filePath, ui
     CXTLSKind             tlsKind                             = clang_getCursorTLSKind(cursor);
 
     DatabaseInsertQuery insertQueryBuilder;
-    insertQueryBuilder.newQuery(filePath + "\\cursors", g_sourceCodeColumnDict);
+    insertQueryBuilder.newQuery(filePath + "\\cursors", g_cursorColumnDict);
 
     insertQueryBuilder.addColumnValue(CursorID,                       cursorID);
     insertQueryBuilder.addColumnValue(TokenTable_TokenID,             tokenID);

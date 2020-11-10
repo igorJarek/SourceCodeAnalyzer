@@ -21,7 +21,7 @@ enum TokenTableColName : uint32_t
     TokenTableLast
 };
 
-enum SourceCodeTableColName : uint32_t
+enum CursorTableColName : uint32_t
 {
     CursorID,
     TokenTable_TokenID,

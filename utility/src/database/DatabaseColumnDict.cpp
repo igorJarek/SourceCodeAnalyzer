@@ -1,10 +1,11 @@
 #include <Database/DatabaseColumnDict.h>
 #include <Database/ColumnDefinition.h>
 
-GlobalColumnDict     g_globalColumnDict;
-TokenColumnDict      g_tokenColumnDict;
-SourceCodeColumnDict g_sourceCodeColumnDict;
-TypeColumnDict       g_typeColumnDict;
+GlobalColumnDict  g_globalColumnDict;
+TokenColumnDict   g_tokenColumnDict;
+CursorColumnDict  g_cursorColumnDict;
+TypeColumnDict    g_typeColumnDict;
+LinkingColumnDict g_linkingColumnDict;
 
 GlobalColumnDict::GlobalColumnDict()
 {
@@ -24,34 +25,34 @@ TokenColumnDict::TokenColumnDict()
     emplace(TokenTableColName::TokenEndPos_Col,                     "TokenEndPos_Col");
 }
 
-SourceCodeColumnDict::SourceCodeColumnDict()
+CursorColumnDict::CursorColumnDict()
 {
-    emplace(SourceCodeTableColName::CursorID,                       "CursorID");
-    emplace(SourceCodeTableColName::TokenTable_TokenID,             "TokenTable_TokenID");
-    emplace(SourceCodeTableColName::CursorMangling,                 "CursorMangling");
-    emplace(SourceCodeTableColName::CursorIsBits,                   "CursorIsBits");
-    emplace(SourceCodeTableColName::CursorTemplateCursorKind,       "CursorTemplateCursorKind");
-    emplace(SourceCodeTableColName::CursorUSR,                      "CursorUSR");
-    emplace(SourceCodeTableColName::CursorDisplayName,              "CursorDisplayName");
-    emplace(SourceCodeTableColName::CursorTable_CursorReferenced,   "CursorTable_CursorReferenced");
-    emplace(SourceCodeTableColName::TypeTable_CursorType,           "TypeTable_CursorType");
-    emplace(SourceCodeTableColName::CursorEnumConstantDeclValue,    "CursorEnumConstantDeclValue");
-    emplace(SourceCodeTableColName::CursorEnumConstantDeclUValue,   "CursorEnumConstantDeclUValue");
-    emplace(SourceCodeTableColName::CursorFieldDeclBitWidth,        "CursorFieldDeclBitWidth");
-    emplace(SourceCodeTableColName::CursorExceptionSpecification,   "CursorExceptionSpecification");
-    emplace(SourceCodeTableColName::CursorOffsetOfField,            "CursorOffsetOfField");
-    emplace(SourceCodeTableColName::CursorAccessSpecifier,          "CursorAccessSpecifier");
-    emplace(SourceCodeTableColName::CursorStorageClass,             "CursorStorageClass");
-    emplace(SourceCodeTableColName::CursorEvalResultKind,           "CursorEvalResultKind");
-    emplace(SourceCodeTableColName::CursorHash,                     "CursorHash");
-    emplace(SourceCodeTableColName::CursorKind,                     "CursorKind");
-    emplace(SourceCodeTableColName::CursorKindSpelling,             "CursorKindSpelling");
-    emplace(SourceCodeTableColName::CursorAttr,                     "CursorAttr");
-    emplace(SourceCodeTableColName::CursorLinkageKind,              "CursorLinkageKind");
-    emplace(SourceCodeTableColName::CursorVisibilityKind,           "CursorVisibilityKind");
-    emplace(SourceCodeTableColName::CursorAvailabilityKind,         "CursorAvailabilityKind");
-    emplace(SourceCodeTableColName::CursorLanguageKind,             "CursorLanguageKind");
-    emplace(SourceCodeTableColName::CursorTLSKind,                  "CursorTLSKind");
+    emplace(CursorTableColName::CursorID,                       "CursorID");
+    emplace(CursorTableColName::TokenTable_TokenID,             "TokenTable_TokenID");
+    emplace(CursorTableColName::CursorMangling,                 "CursorMangling");
+    emplace(CursorTableColName::CursorIsBits,                   "CursorIsBits");
+    emplace(CursorTableColName::CursorTemplateCursorKind,       "CursorTemplateCursorKind");
+    emplace(CursorTableColName::CursorUSR,                      "CursorUSR");
+    emplace(CursorTableColName::CursorDisplayName,              "CursorDisplayName");
+    emplace(CursorTableColName::CursorTable_CursorReferenced,   "CursorTable_CursorReferenced");
+    emplace(CursorTableColName::TypeTable_CursorType,           "TypeTable_CursorType");
+    emplace(CursorTableColName::CursorEnumConstantDeclValue,    "CursorEnumConstantDeclValue");
+    emplace(CursorTableColName::CursorEnumConstantDeclUValue,   "CursorEnumConstantDeclUValue");
+    emplace(CursorTableColName::CursorFieldDeclBitWidth,        "CursorFieldDeclBitWidth");
+    emplace(CursorTableColName::CursorExceptionSpecification,   "CursorExceptionSpecification");
+    emplace(CursorTableColName::CursorOffsetOfField,            "CursorOffsetOfField");
+    emplace(CursorTableColName::CursorAccessSpecifier,          "CursorAccessSpecifier");
+    emplace(CursorTableColName::CursorStorageClass,             "CursorStorageClass");
+    emplace(CursorTableColName::CursorEvalResultKind,           "CursorEvalResultKind");
+    emplace(CursorTableColName::CursorHash,                     "CursorHash");
+    emplace(CursorTableColName::CursorKind,                     "CursorKind");
+    emplace(CursorTableColName::CursorKindSpelling,             "CursorKindSpelling");
+    emplace(CursorTableColName::CursorAttr,                     "CursorAttr");
+    emplace(CursorTableColName::CursorLinkageKind,              "CursorLinkageKind");
+    emplace(CursorTableColName::CursorVisibilityKind,           "CursorVisibilityKind");
+    emplace(CursorTableColName::CursorAvailabilityKind,         "CursorAvailabilityKind");
+    emplace(CursorTableColName::CursorLanguageKind,             "CursorLanguageKind");
+    emplace(CursorTableColName::CursorTLSKind,                  "CursorTLSKind");
 }
 
 TypeColumnDict::TypeColumnDict()

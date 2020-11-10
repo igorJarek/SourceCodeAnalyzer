@@ -122,10 +122,10 @@ public:
     std::string                     createLinkingTable();
     std::string                     createSourceCodeTables(const std::string& tableName);
 
-    uint32_t                        getTokenID()  const { return m_tokenTableIdAllocator; }
-    uint32_t                        getCursorID() const { return m_cursorTableIdAllocator; }
-    uint32_t                        getTypeID()   const { return m_typeTableIdAllocator; }
-    uint32_t                        getLinkingID()   const { return m_linkingTableIdAllocator; }
+    uint32_t                        getTokenID()   const { return m_tokenTableIdAllocator; }
+    uint32_t                        getCursorID()  const { return m_cursorTableIdAllocator; }
+    uint32_t                        getTypeID()    const { return m_typeTableIdAllocator; }
+    uint32_t                        getLinkingID() const { return m_linkingTableIdAllocator; }
 
     uint32_t                        allocTokenID()   { return ++m_tokenTableIdAllocator;  }
     uint32_t                        allocCursorID()  { return ++m_cursorTableIdAllocator; }

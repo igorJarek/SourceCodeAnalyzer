@@ -333,9 +333,9 @@ std::string Database::createLinkingTable()
 std::string Database::createSourceCodeTables(const std::string& tableName)
 {
     DatabaseQueryErrMsg queryErrMsg;
-    std::string tokenTableQuery      = m_tokenTableTemplateQuery;
-    std::string sourceCodeTableQuery = m_cursorTableTemplateQuery;
-    std::string typeTableQuery       = m_typeTableTemplateQuery;
+    std::string tokenTableQuery  = m_tokenTableTemplateQuery;
+    std::string cursorTableQuery = m_cursorTableTemplateQuery;
+    std::string typeTableQuery   = m_typeTableTemplateQuery;
 
     if(isOK())
     {
@@ -352,14 +352,14 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
         if(isNotOK())
             return queryErrMsg.getString();
 
-        pos = sourceCodeTableQuery.find(keyword);
+        pos = cursorTableQuery.find(keyword);
         if (pos != std::string::npos)
         {
-            sourceCodeTableQuery.erase(pos, keyword.size());
-            sourceCodeTableQuery.insert(pos, tableName);
+            cursorTableQuery.erase(pos, keyword.size());
+            cursorTableQuery.insert(pos, tableName);
         }
 
-        queryErrMsg = sendQuery(sourceCodeTableQuery);
+        queryErrMsg = sendQuery(cursorTableQuery);
         if(isNotOK())
             return queryErrMsg.getString();
 
