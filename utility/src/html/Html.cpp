@@ -146,7 +146,7 @@ void HTMLBuilder::buildContent(string& divContent, const size_t tabsCount)
         }
 
         replaceKeyword(divContainer, containerBodyKeyword, divContainerContent, true, tabsCount);
-        
+
         divContent += divContainer;
     }
 }
@@ -160,6 +160,7 @@ void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescr
 
     string tableColumnTrKeyword { "<?tableColumnTr?>" };
     string tableColumnThKeyword { "<?tableColumnTh?>" };
+    string tableRowTrsKeyword   { "<?tableRowTrs?>" };
     string tableRowTrKeyword    { "<?tableRowTr?>" };
     string tableRowTdKeyword    { "<?tableRowTd?>" };
 
@@ -180,6 +181,9 @@ void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescr
     replaceKeyword(tableColumnsTr, tableColumnTrKeyword, tableColumnsThs, true, tableBodyTabsCount);
 
     // Rows
+    string tableRowTrs{ TABLE_ROW_TRS_TEMPLATE };
+    size_t tableRowTrsTabsCount{ countTabs(tableRowTrs, tableRowTrsKeyword) };
+
     string tableRowsTrs;
     for (const vector<string>& row : tableContentVecElem.m_rows)
     {
@@ -190,17 +194,19 @@ void HTMLBuilder::buildTable(string& divContainer, const DivDescriptor& divDescr
         for (const string& rowName : row)
         {
             string tableRowsTd{ TABLE_ROW_TD_TEMPLATE };
-            replaceKeyword(tableRowsTd, tableRowTdKeyword, rowName, true, tableBodyTabsCount + tableRowsTrTabsCount);
+            replaceKeyword(tableRowsTd, tableRowTdKeyword, rowName, true, tableBodyTabsCount + tableRowTrsTabsCount + tableRowsTrTabsCount);
 
             tableRowsTds += tableRowsTd;
         }
 
-        replaceKeyword(tableRowsTr, tableRowTrKeyword, tableRowsTds, true, tableBodyTabsCount);
+        replaceKeyword(tableRowsTr, tableRowTrKeyword, tableRowsTds, true, tableBodyTabsCount + tableRowTrsTabsCount);
 
         tableRowsTrs += tableRowsTr;
     }
 
-    replaceKeyword(tableContent, tableBodyKeyword, tableColumnsTr + tableRowsTrs, true, tabsCount);
+    replaceKeyword(tableRowTrs, tableRowTrsKeyword, tableRowsTrs, true, tableBodyTabsCount + tableRowTrsTabsCount);
+
+    replaceKeyword(tableContent, tableBodyKeyword, tableColumnsTr + tableRowTrs, true, tabsCount);
 
     divContainer += tableContent;
 }

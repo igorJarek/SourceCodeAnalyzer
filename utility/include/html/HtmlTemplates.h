@@ -85,6 +85,27 @@ const string INDEX_TEMPLATE
 
 	"		.site-content-container-containerBody {\n"
 	"			padding: 10px 0;\n"
+	"			overflow-y: auto;\n"
+	"		}\n\n"
+
+	"		.table-div {\n"
+	"			max-height: 1000px;\n"
+	"			overflow: scroll;\n"
+	"		}\n\n"
+
+	"		thead th {\n"
+	"			position: -webkit-sticky; /* for Safari */\n"
+	"			position: sticky;\n"
+	"			top: 0;\n"
+	"			background-color: rgb(248, 207, 125);\n"
+	"			color: black;\n"
+	"			z-index: 1;\n"
+	"		}\n\n"
+
+	"		tbody th {\n"
+	"			position: -webkit-sticky; /* for Safari */\n"
+	"			position: sticky;\n"
+	"			left: 0;\n"
 	"		}\n\n"
 
 	"		table, th {\n"
@@ -136,11 +157,11 @@ const string INDEX_TEMPLATE
 
 const string CONTAINER_TEMPLATE
 {
-	"<div class =\"site-content-container\">\n"
-	"	<div class =\"site-content-container-containerHeader\">\n"
+	"<div class=\"site-content-container\">\n"
+	"	<div class=\"site-content-container-containerHeader\">\n"
 	"		<?containerHeader?>\n"
 	"	</div>\n"
-	"	<div class =\"site-content-container-containerBody\">\n"
+	"	<div class=\"site-content-container-containerBody\">\n"
 	"		<?containerBody?>\n"
 	"	</div>\n"
 	"</div>\n"
@@ -150,21 +171,32 @@ const string CONTAINER_TEMPLATE
 
 const string TABLE_TEMPLATE
 {
-	"<table style = \"width:100%\">\n"
-	"	<?tableBody?>\n"
-	"</table>\n"
+	"<div class=\"table-div\">\n"
+	"	<table style=\"width:100%\">\n"
+	"		<?tableBody?>\n"
+	"	</table>\n"
+	"</div>\n"
 };
 
 const string TABLE_COLUMN_TR_TEMPLATE
 {
-	"<tr>\n"
-	"	<?tableColumnTr?>\n"
-	"</tr>\n"
+	"<thead>\n"
+	"	<tr>\n"
+	"		<?tableColumnTr?>\n"
+	"	</tr>\n"
+	"</thead>\n"
 };
 
 const string TABLE_COLUMN_TH_TEMPLATE
 {
 	"<th><?tableColumnTh?></th>\n"
+};
+
+const string TABLE_ROW_TRS_TEMPLATE
+{
+	"<tbody>\n"
+	"	<?tableRowTrs?>\n"
+	"</tbody>\n"
 };
 
 const string TABLE_ROW_TR_TEMPLATE
@@ -184,7 +216,7 @@ const string TABLE_ROW_TD_TEMPLATE
 const string TREE_ROOT_UL_TEMPLATE
 {
 	"<ul>\n"
-	"	<?rootBody?>\n"		
+	"	<?rootBody?>\n"
 	"</ul>\n"
 };
 
