@@ -32,7 +32,7 @@ const string INDEX_TEMPLATE
 	"		}\n\n"
 
 	"		body {\n"
-	"			background-color: rgb(255, 255, 220);\n"
+	"			background-color: rgb(30, 30, 30);\n"
 	"			font-family: 'JetBrainsMono-Regular';\n"
 	"		}\n\n"
 
@@ -44,32 +44,24 @@ const string INDEX_TEMPLATE
 
 	"		#site-logo {\n"
 	"			text-align: center;\n"
-	"			-webkit-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-	"			-moz-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-	"			box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-	"			background-color: rgb(255, 255, 150);\n"
 	"			padding: 10px;\n"
-	"			border-radius: 10px;\n"
-	"			margin: 10px 0 0 0;\n"
 	"			font-family: 'JetBrainsMono-Bold';\n"
 	"		}\n\n"
 
 	"		#site-logo-fileName {\n"
-	"			color: rgb(255, 50, 50);\n"
+	"			color: rgb(217, 197, 113);\n"
 	"			height: 60px;\n"
 	"			font-size: 40px;\n"
 	"		}\n\n"
 
 	"		#site-logo-filePath {\n"
+	"			color: rgb(86, 156, 214);\n"
 	"			height: 30px;\n"
 	"			font-size: 18px;\n"
 	"		}\n\n"
 
 	"		.site-content-container {\n"
-	"			-webkit-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-	"			-moz-box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-	"			box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, 0.75);\n"
-	"			background-color: rgb(255, 255, 200);\n"
+	"			background-color: rgb(50, 50, 50);\n"
 	"			padding: 10px;\n"
 	"			border-radius: 10px;\n"
 	"			margin: 10px 0 0 0;\n"
@@ -77,15 +69,18 @@ const string INDEX_TEMPLATE
 
 	"		.site-content-container-containerHeader {\n"
 	"			font-family: 'JetBrainsMono-Bold';\n"
-	"			background-color: rgb(248, 207, 125);\n"
+	"			background-color: rgb(30, 30, 30);\n"
+	"			color: rgb(78, 201, 176);\n"
 	"			font-size: 20px;\n"
 	"			text-align: center;\n"
 	"			padding: 7px 0;\n"
+	"			border-radius: 10px 10px 0px 0px;\n"
 	"		}\n\n"
 
 	"		.site-content-container-containerBody {\n"
 	"			padding: 10px 0;\n"
 	"			overflow-y: auto;\n"
+	"			color: rgb(200, 200, 200);\n"
 	"		}\n\n"
 
 	"		.table-div {\n"
@@ -94,11 +89,11 @@ const string INDEX_TEMPLATE
 	"		}\n\n"
 
 	"		thead th {\n"
+	"			background-color: rgb(17, 61, 111);\n"
+	"			color: rgb(217, 197, 113);\n"
 	"			position: -webkit-sticky; /* for Safari */\n"
 	"			position: sticky;\n"
 	"			top: 0;\n"
-	"			background-color: rgb(248, 207, 125);\n"
-	"			color: black;\n"
 	"			z-index: 1;\n"
 	"		}\n\n"
 
@@ -124,8 +119,8 @@ const string INDEX_TEMPLATE
 	"		#footer {\n"
 	"			margin: 10px 0 0 0;\n"
 	"			text-align: center;\n"
+	"			color: rgb(217, 197, 113);\n"
 	"		}\n\n"
-
 	"	</style>\n"
 	"</head>\n\n"
 
