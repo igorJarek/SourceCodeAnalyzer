@@ -90,7 +90,7 @@ private:
     void buildTable(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount);
     void buildTree(string& divContainer, const DivDescriptor& divDescriptor, const size_t tabsCount);
 
-    void addTableRowRecursive(uint32_t level, uint32_t treeLevel, TableContent& tableContent, shared_ptr<OutputTreeNode> node);
+    void addTableRowRecursive(uint32_t& nodeCount, uint32_t level, uint32_t treeLevel, TableContent& tableContent, shared_ptr<OutputTreeNode> node);
 
     void iterateTree(shared_ptr<TreeNode> node, string& rootContent, const size_t tabsCount);
 

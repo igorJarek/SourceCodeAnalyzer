@@ -20,6 +20,8 @@ void HTMLBuilder::addTable(const string& contentTitle, const string& id, vector<
     divDescriptor.m_id = id;
 
     TableContent tableContent;
+
+    columnNames.insert(columnNames.begin(), "No.");
     tableContent.m_columnNames = columnNames;
 
     m_divDescriptorVec.push_back(divDescriptor);
@@ -38,15 +40,18 @@ void HTMLBuilder::addTable(const string& contentTitle, const string& id, const O
     divDescriptor.m_containerHeader = contentTitle;
     divDescriptor.m_id = id;
 
-    vector<string> columnsVec(treeHeight);
+    vector<string> columnsVec(treeHeight + 1);
 
-    for(uint32_t index{0}; index < treeHeight; ++index)
-        columnsVec.at(index) = std::to_string(index + 1);
+    columnsVec.at(0) = std::string("No.");
+
+    for(uint32_t index{1}; index < treeHeight; ++index)
+        columnsVec.at(index) = std::to_string(index);
 
     tableContent.m_columnNames = columnsVec;
 
+    uint32_t nodeCount = 0;
     for(list<shared_ptr<OutputTreeNode>>::iterator iter = rootChildren.begin(); iter != rootChildren.end(); ++iter)
-        addTableRowRecursive(0, treeHeight, tableContent, *iter);
+        addTableRowRecursive(++nodeCount, 1, treeHeight, tableContent, *iter);
 
     m_divDescriptorVec.push_back(divDescriptor);
     m_tableContentMap.insert({ id, tableContent });
@@ -55,6 +60,8 @@ void HTMLBuilder::addTable(const string& contentTitle, const string& id, const O
 void HTMLBuilder::addTableRow(const string& id, vector<string> rowsContent)
 {
     TableContent& tableContent = m_tableContentMap.at(id);
+
+    rowsContent.insert(rowsContent.begin(), std::to_string(rowsContent.size() + 1));
     tableContent.m_rows.push_back(rowsContent);
 }
 
@@ -65,8 +72,9 @@ void HTMLBuilder::addTableRows(const string& id, const OutputTree& outputTree)
 
     TableContent& tableContent = m_tableContentMap.at(id);
 
+    uint32_t nodeCount = 0;
     for(list<shared_ptr<OutputTreeNode>>::iterator iter = rootChildren.begin(); iter != rootChildren.end(); ++iter)
-        addTableRowRecursive(0, treeHeight, tableContent, *iter);
+        addTableRowRecursive(++nodeCount, 1, treeHeight, tableContent, *iter);
 }
 
 void HTMLBuilder::addTree(const string& contentTitle, const string& id)
@@ -228,16 +236,17 @@ void HTMLBuilder::buildTree(string& divContainer, const DivDescriptor& divDescri
     divContainer += treeRoot;
 }
 
-void HTMLBuilder::addTableRowRecursive(uint32_t level, uint32_t treeLevel, TableContent& tableContent, shared_ptr<OutputTreeNode> node)
+void HTMLBuilder::addTableRowRecursive(uint32_t& nodeCount, uint32_t level, uint32_t treeLevel, TableContent& tableContent, shared_ptr<OutputTreeNode> node)
 {
-    vector<string> row(treeLevel, " ");
+    vector<string> row(treeLevel + 1, " ");
 
+    row[0] = std::to_string(nodeCount);
     row[level] = node->m_string;
 
     tableContent.m_rows.push_back(row);
 
     for(list<shared_ptr<OutputTreeNode>>::iterator iter = node->m_children.begin(); iter != node->m_children.end(); ++iter)
-        addTableRowRecursive(level + 1, treeLevel, tableContent, *iter);
+        addTableRowRecursive(++nodeCount, level + 1, treeLevel, tableContent, *iter);
 }
 
 void HTMLBuilder::iterateTree(shared_ptr<TreeNode> parent, string& rootContent, const size_t tabsCount)
