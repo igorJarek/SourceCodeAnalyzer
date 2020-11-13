@@ -9,7 +9,7 @@ void primitivesFunction()
 
     int     intVar1      = 1;
     int     intVar2      = 2;
-    int     intVar3      { 1.1 };               // compile error
+    //int     intVar3      { 1.1 };               // compile error
 
     int     intVar4     = intVar1 + intVar2;
     int     intVar5     = intVar1 - intVar2;

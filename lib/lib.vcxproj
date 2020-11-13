@@ -110,12 +110,20 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="src\TestClass.cpp" />
+    <ClCompile Include="src\TestClassDerivedOne.cpp" />
     <ClCompile Include="src\TestFunction.cpp" />
+    <ClCompile Include="src\TestFunctionOverloading.cpp" />
     <ClCompile Include="src\TestPrimitives.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\TestClass.hpp" />
+    <ClInclude Include="include\TestClassDerivedOne.hpp" />
     <ClInclude Include="include\TestFunction.hpp" />
+    <ClInclude Include="include\TestFunctionDefine.hpp" />
+    <ClInclude Include="include\TestFunctionOverloading.hpp" />
+    <ClInclude Include="include\TestFunctionOverloadingTemplate.hpp" />
+    <ClInclude Include="include\TestFunctionTemplate.hpp" />
+    <ClInclude Include="include\TestLambda.hpp" />
     <ClInclude Include="include\TestPrimitives.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
