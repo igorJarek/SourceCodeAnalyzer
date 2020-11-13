@@ -44,7 +44,7 @@ void HTMLBuilder::addTable(const string& contentTitle, const string& id, const O
 
     columnsVec.at(0) = std::string("No.");
 
-    for(uint32_t index{1}; index < treeHeight; ++index)
+    for(uint32_t index{1}; index < treeHeight + 1; ++index)
         columnsVec.at(index) = std::to_string(index);
 
     tableContent.m_columnNames = columnsVec;
