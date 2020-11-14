@@ -95,8 +95,8 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
 
         treeStaticCursorData.addString(0, "-------------------- " + to_string(_17_getCursorKindSpelling(cursor->kind)) + " --------------------");
 
-        if(cursor->kind == CXCursor_NoDeclFound)
-            treeStaticCursorData.addString(0, "Cursor == CXCursor_NoDeclFound");
+        if(_19_isInvalid(cursor->kind))
+            treeStaticCursorData.addString(0, "Cursor == Invalid");
         else
         {
             _0_1_printCommentIntrospection              (treeStaticCursorData, *cursor, 0);
