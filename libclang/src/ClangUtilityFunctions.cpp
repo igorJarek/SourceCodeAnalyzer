@@ -10,7 +10,7 @@ CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData 
     OutputTree& astExtOutputTree = clientDataPtr->astExtOutputTree;
     uint32_t curLevel = clientDataPtr->treeLevel;
 
-    dumpAST(astOutputTree, cursor, curLevel);
+    dumpAST(astExtOutputTree.getNodesCount(), astOutputTree, cursor, curLevel);
     printCursor(translationUnit, astExtOutputTree, cursor, curLevel);
 
     ClientData nextClientData(clientDataPtr);
@@ -24,7 +24,7 @@ CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData 
     return CXChildVisit_Continue;
 }
 
-void dumpAST(OutputTree& astOutputTree, const CXCursor& cursor, uint32_t curLevel)
+void dumpAST(uint64_t astExtNode, OutputTree& astOutputTree, const CXCursor& cursor, uint32_t curLevel)
 {
     CXFile cursorFile,   startFile,    endFile;
     uint32_t cursorLine, cursorColumn, cursorOffset;
@@ -54,7 +54,7 @@ void dumpAST(OutputTree& astOutputTree, const CXCursor& cursor, uint32_t curLeve
 
     string output;
 
-    output += to_string(kindSpelling) + " ";
+    output += "(" + to_string(astExtNode + 1) + ") " + to_string(kindSpelling) + " ";
     output += "<" + to_string(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", col:" + to_string(endColumn) + ">" + " col:" + to_string(cursorColumn);
     output += " used " + to_string(cursorSpelling) + " '" + to_string(cursorTypeSpelling);
 

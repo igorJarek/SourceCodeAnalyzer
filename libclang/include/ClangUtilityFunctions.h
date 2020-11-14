@@ -62,7 +62,7 @@ enum class SaveCursorAction
 
 CXChildVisitResult visitor                  (CXCursor cursor, CXCursor parent, CXClientData client_data);
 
-void               dumpAST                  (OutputTree& astOutputTree, const CXCursor& cursor, uint32_t curLevel);
+void               dumpAST                  (uint64_t astExtNode, OutputTree& astOutputTree, const CXCursor& cursor, uint32_t curLevel);
 void               printCursor              (const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel);
 
 uint64_t           saveBaseCXCursorInfo     (const CXTranslationUnit* translationUnit, const CXCursor* cursor, SaveCursorAction action = SaveCursorAction::ADD_CXCURSOR_BASE_INFO);
