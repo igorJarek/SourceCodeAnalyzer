@@ -10,6 +10,8 @@ extern const string APP_VERSION;
 extern const string LIB_PATH;
 extern const string CURSORS_REF_PATH;
 extern const string CURSORS_INFO_REF_PATH;
+extern const string TYPES_REF_PATH;
+extern const string TYPES_INFO_REF_PATH;
 
 extern const string AST_FILE_EXT;
 extern const string AST_EXT_FILE_EXT;

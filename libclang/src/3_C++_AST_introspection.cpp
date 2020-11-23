@@ -1,6 +1,6 @@
 #include "3_C++_AST_introspection.h"
 
-void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
+void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool cursorStopRecursion)
 {
     uint32_t isConvertingConstructor = clang_CXXConstructor_isConvertingConstructor(cursor);               // 1.
     uint32_t isCopyConstructor       = clang_CXXConstructor_isCopyConstructor(cursor);                     // 2.
@@ -40,8 +40,8 @@ void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, OutputTr
 
     astExtOutputTree.addString(curLevel + 2, "clang_getTemplateCursorKind : ",                              _17_getCursorKindSpelling(templateCursorKind));
 
-    if(print)
-        astExtOutputTree.addString(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ",    saveBaseCXCursorInfo(&translationUnit, &specializedCursorTemplate));
+    if(cursorStopRecursion)
+        astExtOutputTree.addString(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ",    saveBaseCXCursorInfo(&translationUnit, &specializedCursorTemplate, InfoAction::ADD_INFO));
 
     astExtOutputTree.addCXSourceRange(curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantQualifier, 0) : ",    cursorReferenceNameRange_CXNameRange_WantQualifier);
     astExtOutputTree.addCXSourceRange(curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0) : ", cursorReferenceNameRange_CXNameRange_WantTemplateArgs);

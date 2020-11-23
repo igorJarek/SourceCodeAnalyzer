@@ -54,7 +54,7 @@ void dumpAST(uint64_t astExtNode, OutputTree& astOutputTree, const CXCursor& cur
 
     string output;
 
-    output += "(" + to_string(astExtNode + 1) + ") " + to_string(kindSpelling) + " ";
+    output += to_string(kindSpelling) + " (" + to_string(astExtNode + 1) + ") " + " ";
     output += "<" + to_string(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", col:" + to_string(endColumn) + ">" + " col:" + to_string(cursorColumn);
     output += " used " + to_string(cursorSpelling) + " '" + to_string(cursorTypeSpelling);
 
@@ -70,23 +70,23 @@ void printCursor(const CXTranslationUnit& translationUnit, OutputTree& astExtOut
 
     _0_1_printCommentIntrospection              (astExtOutputTree, cursor, curLevel);
     _1_printMangling                            (astExtOutputTree, cursor, curLevel);
-    _3_printASTIntrospection                    (translationUnit, astExtOutputTree, cursor, curLevel);
+    _3_printASTIntrospection                    (translationUnit, astExtOutputTree, cursor, curLevel, true);
     _7_printInformationForAttributes            (astExtOutputTree, cursor, curLevel);
-    _9_printCrossReferencingInTheAST            (translationUnit, astExtOutputTree, cursor, curLevel);
+    _9_printCrossReferencingInTheAST            (translationUnit, astExtOutputTree, cursor, curLevel, true);
     _10_printMappingBetweenCursorsAndSourceCode (astExtOutputTree, cursor, curLevel);
-    _15_printTypeInformationForCXCursors        (translationUnit, astExtOutputTree, cursor, curLevel);
+    _15_printTypeInformationForCXCursors        (translationUnit, astExtOutputTree, cursor, curLevel, true);
     _18_printMiscellaneousUtilityFunctions      (astExtOutputTree, cursor, curLevel);
-    _19_printCursorManipulations                (translationUnit, astExtOutputTree, cursor, curLevel);
+    _19_printCursorManipulations                (translationUnit, astExtOutputTree, cursor, curLevel, true);
 }
 
-uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CXCursor* cursor, SaveCursorAction action /* = SaveCursorAction::ADD_CXCURSOR_BASE_INFO */)
+uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CXCursor* cursor, InfoAction action)
 {
     static OutputTree   treeStaticCursorData;
     static stringstream sstreamStaticCursorInfoData;
 
     static int64_t      staticCurFileLinesCounter { 1 };
 
-    if(action == SaveCursorAction::ADD_CXCURSOR_BASE_INFO)
+    if(action == InfoAction::ADD_INFO)
     {
         if(!translationUnit && !cursor)
             return 0;
@@ -117,14 +117,14 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
 
         return staticCurFileLinesCounter - outLinesCount;
     }
-    else if(action == SaveCursorAction::ADD_FILE_BASE_INFO)
+    else if(action == InfoAction::ADD_INFO_LINESTAMP)
     {
         if(!translationUnit)
             return 0;
 
         CXString sourceCodeFileName = _6_getTranslationUnitSpelling(*translationUnit);
 
-        sstreamStaticCursorInfoData.width(31);
+        sstreamStaticCursorInfoData.width(64);
         sstreamStaticCursorInfoData << std::left << to_string(sourceCodeFileName);
 
         sstreamStaticCursorInfoData.width(0);
@@ -132,14 +132,14 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
 
         return 0;
     }
-    else if(action == SaveCursorAction::SAVE_CURSOR_CUR_FILE)
+    else if(action == InfoAction::SAVE_FILE)
     {
         if (!treeStaticCursorData.saveToFile(CURSORS_REF_PATH))
             cout << "Couldn't save file : " << CURSORS_REF_PATH << endl;
 
         return 0;
     }
-    else if(action == SaveCursorAction::SAVE_CURSOR_CURINFO_FILE)
+    else if(action == InfoAction::SAVE_LINESTAMPS_FILE)
     {   
         if (!saveToFile(CURSORS_INFO_REF_PATH, sstreamStaticCursorInfoData))
             cout << "Couldn't save file : " << CURSORS_INFO_REF_PATH << endl;
@@ -150,3 +150,64 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
     return 0;
 }
 
+uint64_t saveBaseCXTypeInfo(const CXTranslationUnit* translationUnit, const CXType* type, InfoAction action)
+{
+    static OutputTree   treeStaticTypeData;
+    static stringstream sstreamStaticTypeInfoData;
+
+    static int64_t      staticTypeFileLinesCounter { 1 };
+
+    if(action == InfoAction::ADD_INFO)
+    {
+        if(!type)
+            return 0;
+
+        const CXType& typeRef = *type;
+        uint64_t startOutLinesCount = treeStaticTypeData.getNodesCount();
+
+        treeStaticTypeData.addString(0, "-------------------- " + to_string(_15_getTypeKindSpelling(typeRef.kind)) + " --------------------");
+
+        if(type->kind == CXType_Invalid)
+            treeStaticTypeData.addString(1, "TypeKind == CXType_Invalid");
+        else
+            _15_printTypeInformationForCXType(treeStaticTypeData, *type, 1);
+
+        treeStaticTypeData.addString(0, "------------------------------------------------------------");
+
+        uint64_t outLinesCount = treeStaticTypeData.getNodesCount() - startOutLinesCount;
+        staticTypeFileLinesCounter += outLinesCount;
+
+        return staticTypeFileLinesCounter - outLinesCount;
+    }
+    else if(action == InfoAction::ADD_INFO_LINESTAMP)
+    {
+        if(!translationUnit)
+            return 0;
+
+        CXString sourceCodeFileName = _6_getTranslationUnitSpelling(*translationUnit);
+
+        sstreamStaticTypeInfoData.width(64);
+        sstreamStaticTypeInfoData << std::left << to_string(sourceCodeFileName);
+
+        sstreamStaticTypeInfoData.width(0);
+        sstreamStaticTypeInfoData << " : " << to_string(staticTypeFileLinesCounter) << endl;
+
+        return 0;
+    }
+    else if(action == InfoAction::SAVE_FILE)
+    {
+        if (!treeStaticTypeData.saveToFile(TYPES_REF_PATH))
+            cout << "Couldn't save file : " << TYPES_REF_PATH << endl;
+
+        return 0;
+    }
+    else if(action == InfoAction::SAVE_LINESTAMPS_FILE)
+    {   
+        if (!saveToFile(TYPES_INFO_REF_PATH, sstreamStaticTypeInfoData))
+            cout << "Couldn't save file : " << TYPES_INFO_REF_PATH << endl;
+
+        return 0;
+    }
+
+    return 0;
+}

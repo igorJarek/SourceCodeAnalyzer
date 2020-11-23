@@ -51,13 +51,13 @@ public:
     OutputTree          astExtOutputTree;
 };
 
-enum class SaveCursorAction
+enum class InfoAction
 {
-    ADD_CXCURSOR_BASE_INFO,
-    ADD_FILE_BASE_INFO,
+    ADD_INFO,
+    ADD_INFO_LINESTAMP,
 
-    SAVE_CURSOR_CUR_FILE,
-    SAVE_CURSOR_CURINFO_FILE,
+    SAVE_FILE,
+    SAVE_LINESTAMPS_FILE,
 };
 
 CXChildVisitResult visitor                  (CXCursor cursor, CXCursor parent, CXClientData client_data);
@@ -65,4 +65,5 @@ CXChildVisitResult visitor                  (CXCursor cursor, CXCursor parent, C
 void               dumpAST                  (uint64_t astExtNode, OutputTree& astOutputTree, const CXCursor& cursor, uint32_t curLevel);
 void               printCursor              (const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel);
 
-uint64_t           saveBaseCXCursorInfo     (const CXTranslationUnit* translationUnit, const CXCursor* cursor, SaveCursorAction action = SaveCursorAction::ADD_CXCURSOR_BASE_INFO);
+uint64_t           saveBaseCXCursorInfo     (const CXTranslationUnit* translationUnit, const CXCursor* cursor, InfoAction action);
+uint64_t           saveBaseCXTypeInfo       (const CXTranslationUnit* translationUnit, const CXType*   type,   InfoAction action);

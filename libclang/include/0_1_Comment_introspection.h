@@ -57,7 +57,7 @@ using std::to_string;
 
 // Print Function
 
-void _0_1_printCommentIntrospection(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print = true);
+void _0_1_printCommentIntrospection(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel);
 
 // Clang Functions
 

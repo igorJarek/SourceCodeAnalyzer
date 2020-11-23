@@ -36,6 +36,8 @@
 *.tokens
 *.cur
 *.curInfo
+*.type
+*.typeInfo
 
 *.html
 

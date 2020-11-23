@@ -100,7 +100,11 @@ using std::to_string;
 
 // Print Function
 
-void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print = true);
+void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool cursorStopRecursion);
+
+// Utility Function
+
+void _15_printTypeInformationForCXType   (OutputTree& outputTree, const CXType& type, uint32_t curLevel);
 
 // Clang Functions
 

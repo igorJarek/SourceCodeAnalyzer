@@ -1,6 +1,6 @@
 #include "0_1_Comment_introspection.h"
 
-void _0_1_printCommentIntrospection(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool /* print */ /* = true */)
+void _0_1_printCommentIntrospection(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel)
 {
     CXComment                           parsedComment       = clang_Cursor_getParsedComment(cursor);                                                    // 1.
 

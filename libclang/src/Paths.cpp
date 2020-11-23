@@ -15,6 +15,8 @@ const string TUNIT_BIN_FILE_EXT { ".tunitBin" };
     const string LIB_PATH               { "..\\lib\\" };
     const string CURSORS_REF_PATH       { "..\\lib\\cursors.cur" };
     const string CURSORS_INFO_REF_PATH  { "..\\lib\\cursors.curInfo" };
+    const string TYPES_REF_PATH         { "..\\lib\\types.type" };
+    const string TYPES_INFO_REF_PATH    { "..\\lib\\types.typeInfo" };
 
     const char* argsIncludePrefix       = "-I";
     const char* argsIncludePath         = "..\\lib\\include\\";
@@ -23,6 +25,8 @@ const string TUNIT_BIN_FILE_EXT { ".tunitBin" };
     const string LIB_PATH               { "..\\..\\lib\\" };
     const string CURSORS_REF_PATH       { "..\\..\\lib\\cursors.cur" };
     const string CURSORS_INFO_REF_PATH  { "..\\..\\lib\\cursors.curInfo" };
+    const string TYPES_REF_PATH         { "..\\..\\lib\\types.type" };
+    const string TYPES_INFO_REF_PATH    { "..\\..\\lib\\types.typeInfo" };
 
     const char* argsIncludePrefix       = "-I";
     const char* argsIncludePath         = "..\\..\\lib\\include\\";

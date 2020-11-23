@@ -1,6 +1,6 @@
 #include "9_Cross-referencing_in_the_AST.h"
 
-void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print /* = true */)
+void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool cursorStopRecursion)
 {
     CXString         cursorUSR               = clang_getCursorUSR(cursor);                                                                                      // 1.
     CXString         cursorSpelling          = clang_getCursorSpelling(cursor);                                                                                 // 8.
@@ -14,6 +14,11 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
     uint32_t         isCursorDefinition      = clang_isCursorDefinition(cursor);                                                                                // 18.
     CXCursor         canonicalCursor         = clang_getCanonicalCursor(cursor);                                                                                // 19.
     int32_t          isDynamicCall           = clang_Cursor_isDynamicCall(cursor);                                                                              // 21.
+
+    CXType           receiverType;
+    if (clang_isExpression(cursor.kind)) // without this check -> libclang.lib throws error
+        receiverType = clang_Cursor_getReceiverType(cursor);                                                                                                    // 22.
+
     uint32_t         isVariadic              = clang_Cursor_isVariadic(cursor);                                                                                 // 28.
 
     CXString         language, definedIn;
@@ -36,24 +41,24 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
 
     astExtOutputTree.addCXPrintingPolicy(curLevel + 2, "clang_getCursorPrintingPolicy : ",          cursorPrintingPolicy);
 
-    //astExtOutputTree.addString(curLevel + 2, "clang_getCursorPrettyPrinted : ",                   cursorPrettyPrinted);
+    //astExtOutputTree.addString(curLevel + 2, "clang_getCursorPrettyPrinted : ",                   cursorPrettyPrinted); // multilines source code destroy line counting
     astExtOutputTree.addString(curLevel + 2, "clang_getCursorDisplayName : ",                       cursorDisplayName);
 
-    if(print)
+    if(cursorStopRecursion)
     {
-        astExtOutputTree.addString(curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorReferenced));
-        astExtOutputTree.addString(curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorDefinition));
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorReferenced, InfoAction::ADD_INFO));
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorDefinition, InfoAction::ADD_INFO));
     }
 
     astExtOutputTree.addString(curLevel + 2, "clang_isCursorDefinition : ",                         isCursorDefinition);
 
-    if(print)
-        astExtOutputTree.addString(curLevel + 2, "clang_getCanonicalCursor : lib/cursors.cur -> ",  saveBaseCXCursorInfo(&translationUnit, &canonicalCursor));
+    if(cursorStopRecursion)
+        astExtOutputTree.addString(curLevel + 2, "clang_getCanonicalCursor : lib/cursors.cur -> ",  saveBaseCXCursorInfo(&translationUnit, &canonicalCursor, InfoAction::ADD_INFO));
 
     astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isDynamicCall : ",                       isDynamicCall);
 
-    if(_19_isExpression(cursor.kind))
-        astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getReceiverType : ",                 clang_Cursor_getReceiverType(cursor));                      // 22.
+    if(_19_isExpression(cursor.kind)) // without this check -> libclang.lib throws error
+        astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getReceiverType : lib/types.type -> ", saveBaseCXTypeInfo(nullptr, &receiverType, InfoAction::ADD_INFO));
     else
         astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getReceiverType : ",                 "Null");
 

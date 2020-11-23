@@ -78,7 +78,7 @@ void recursiveFolderSearch(const string& folderPath)
     folderBrowser.clearFileList();
     folderBrowser.setFileTypeBrowser(FileType::SOURCE_FILE);
 
-    folderBrowser.addIgnoreFilePath("..\\lib\\src\\TestPrimitives.cpp");
+    //folderBrowser.addIgnoreFilePath("..\\lib\\src\\TestPrimitives.cpp");
 
     folderBrowser.startFolderBrowse(folderPath);
 
@@ -105,8 +105,13 @@ void processBeforeAll()
 
 void processAfterAll()
 {
-    saveBaseCXCursorInfo(nullptr, nullptr, SaveCursorAction::SAVE_CURSOR_CUR_FILE);
-    saveBaseCXCursorInfo(nullptr, nullptr, SaveCursorAction::SAVE_CURSOR_CURINFO_FILE);
+    saveBaseCXCursorInfo(nullptr, nullptr, InfoAction::SAVE_FILE);
+    saveBaseCXCursorInfo(nullptr, nullptr, InfoAction::SAVE_LINESTAMPS_FILE);
+
+    saveBaseCXTypeInfo(nullptr, nullptr, InfoAction::SAVE_FILE);
+    saveBaseCXTypeInfo(nullptr, nullptr, InfoAction::SAVE_LINESTAMPS_FILE);
+
+    cout << endl;
 }
 
 void processFile(const string& absoluteFilePath)
@@ -120,7 +125,8 @@ void processFile(const string& absoluteFilePath)
         ClientData clientData(*translationUnit);
         CXCursor cursor = clang_getTranslationUnitCursor(*translationUnit);
 
-        saveBaseCXCursorInfo(translationUnit, nullptr, SaveCursorAction::ADD_FILE_BASE_INFO);
+        saveBaseCXCursorInfo(translationUnit, nullptr, InfoAction::ADD_INFO_LINESTAMP);
+        saveBaseCXTypeInfo(translationUnit, nullptr, InfoAction::ADD_INFO_LINESTAMP);
 
         _5_token_extraction(*translationUnit, absoluteFilePath);
         _8_file_manipulation(*translationUnit, absoluteFilePath);

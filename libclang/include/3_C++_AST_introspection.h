@@ -34,7 +34,7 @@ using std::to_string;
 
 // Print Function
 
-void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool print = true);
+void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool cursorStopRecursion);
 
 // Clang Functions
 
