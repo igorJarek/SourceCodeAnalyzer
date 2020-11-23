@@ -56,7 +56,7 @@ void OutputTree::addNewLine(uint32_t level)
 {
     shared_ptr<OutputTreeNode> node = allocateNode(level);
 
-    node->m_string = '\n';
+    //node->m_string = '\n';
 }
 
 void OutputTree::addCXStringSet(uint32_t level, const string&& str, CXStringSet* stringSet)
@@ -263,8 +263,8 @@ bool OutputTree::saveToFile(const string& path)
     if (stream.is_open())
     {
         auto& rootChildren = m_rootPtr->m_children;
-        for(list<shared_ptr<OutputTreeNode>>::iterator iter = rootChildren.begin(); iter != rootChildren.end(); ++iter)
-            saveNode(stream, "", *iter);
+        for(auto& elem : rootChildren)
+            saveNode(stream, "", elem);
 
         stream.close();
 
@@ -274,14 +274,15 @@ bool OutputTree::saveToFile(const string& path)
         return false;
 }
 
-void OutputTree::saveNode(std::fstream& stream, const std::string& prefix, shared_ptr<OutputTreeNode> node)
+void OutputTree::saveNode(std::fstream& stream, const std::string& prefix, shared_ptr<OutputTreeNode>& node)
 {
     stream << prefix;
 
     stream << node->m_string << std::endl;
 
-    for(list<shared_ptr<OutputTreeNode>>::iterator iter = node->m_children.begin(); iter != node->m_children.end(); ++iter)
-        saveNode(stream, prefix + "    ", *iter);
+    auto& children = node->m_children;
+    for(auto& elem : children)
+        saveNode(stream, prefix + "    ", elem);
 }
 
 shared_ptr<OutputTreeNode> OutputTree::allocateNode(uint32_t level)
