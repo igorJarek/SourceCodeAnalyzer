@@ -76,15 +76,31 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, Outp
     astExtOutputTree.addString(curLevel + 2, "clang_getCursorTLSKind : ",  TLSKind);
 
     if(!clang_Cursor_isNull(cursorSemanticParent))
-    if(cursorStopRecursion)
-        astExtOutputTree.addString(curLevel + 2, "clang_getCursorSemanticParent : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorSemanticParent, InfoAction::ADD_INFO));
+    {
+        if(cursorStopRecursion)
+        {
+            uint64_t baseInfoLine = saveBaseCXCursorInfo(&translationUnit, &cursorSemanticParent, InfoAction::ADD_INFO);
+            string   isEqualStr   = clang_equalCursors(cursorSemanticParent, cursor) ? " (Equal)" : " (Unequal)";
+            astExtOutputTree.addString(curLevel + 2, "clang_getCursorSemanticParent : lib/cursors.cur -> ", to_string(baseInfoLine) + isEqualStr);
+        }
+        else
+            astExtOutputTree.addString(curLevel + 2,  "clang_getCursorSemanticParent : -Not Printed-");
+    }
     else
         astExtOutputTree.addString(curLevel + 2,  "clang_getCursorSemanticParent : -NULL-");
 
     if(!clang_Cursor_isNull(cursorLexicalParent))
-    if(cursorStopRecursion)
-        astExtOutputTree.addString(curLevel + 2, "clang_getCursorLexicalParent : lib/cursors.cur -> ",  saveBaseCXCursorInfo(&translationUnit, &cursorLexicalParent, InfoAction::ADD_INFO));
-    else 
+    {
+        if(cursorStopRecursion)
+        {
+            uint64_t baseInfoLine = saveBaseCXCursorInfo(&translationUnit, &cursorLexicalParent, InfoAction::ADD_INFO);
+            string   isEqualStr   = clang_equalCursors(cursorLexicalParent, cursor) ? " (Equal)" : " (Unequal)";
+            astExtOutputTree.addString(curLevel + 2, "clang_getCursorLexicalParent : lib/cursors.cur -> ", to_string(baseInfoLine) + isEqualStr);
+        }
+        else
+            astExtOutputTree.addString(curLevel + 2,  "clang_getCursorLexicalParent : -Not Printed-");
+    }
+    else
         astExtOutputTree.addString(curLevel + 2,  "clang_getCursorLexicalParent : -NULL-");
 
     astExtOutputTree.addString(curLevel + 2, "clang_getOverriddenCursors [num_overridden] : ", num_overridden);
@@ -94,8 +110,14 @@ void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, Outp
         {
             const CXCursor& overridden = overriddens[index];
             if(!clang_Cursor_isNull(overridden))
-            if(cursorStopRecursion)
-                astExtOutputTree.addString(curLevel + 3, "clang_getOverriddenCursors [" + to_string(index + 1) + "] : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &overridden, InfoAction::ADD_INFO));
+            {
+                if(cursorStopRecursion)
+                    astExtOutputTree.addString(curLevel + 3, "clang_getOverriddenCursors [" + to_string(index + 1) + "] : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &overridden, InfoAction::ADD_INFO));
+                else
+                    astExtOutputTree.addString(curLevel + 3,  "clang_getOverriddenCursors [" + to_string(index + 1) + "] : lib/cursors.cur -> -NULL-");
+            }
+            else
+                astExtOutputTree.addString(curLevel + 3,  "clang_getOverriddenCursors [" + to_string(index + 1) + "] : lib/cursors.cur -> -Not Printed-");
         }
 
         clang_disposeOverriddenCursors(overriddens);                                                                                                                // 33.

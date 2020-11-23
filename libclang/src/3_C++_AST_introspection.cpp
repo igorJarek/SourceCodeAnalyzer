@@ -41,7 +41,13 @@ void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, OutputTr
     astExtOutputTree.addString(curLevel + 2, "clang_getTemplateCursorKind : ",                              _17_getCursorKindSpelling(templateCursorKind));
 
     if(cursorStopRecursion)
-        astExtOutputTree.addString(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ",    saveBaseCXCursorInfo(&translationUnit, &specializedCursorTemplate, InfoAction::ADD_INFO));
+    {
+        uint64_t baseInfoLine = saveBaseCXCursorInfo(&translationUnit, &specializedCursorTemplate, InfoAction::ADD_INFO);
+        string   isEqualStr   = clang_equalCursors(specializedCursorTemplate, cursor) ? " (Equal)" : " (Unequal)";
+        astExtOutputTree.addString(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> ", to_string(baseInfoLine) + isEqualStr);
+    }
+    else
+        astExtOutputTree.addString(curLevel + 2, "clang_getSpecializedCursorTemplate : lib/cursors.cur -> -Not Printed-");
 
     astExtOutputTree.addCXSourceRange(curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantQualifier, 0) : ",    cursorReferenceNameRange_CXNameRange_WantQualifier);
     astExtOutputTree.addCXSourceRange(curLevel + 2, "clang_getCursorReferenceNameRange(cursor, CXNameRange_WantTemplateArgs, 0) : ", cursorReferenceNameRange_CXNameRange_WantTemplateArgs);

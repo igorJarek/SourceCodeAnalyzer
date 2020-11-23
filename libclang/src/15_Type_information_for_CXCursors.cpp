@@ -61,7 +61,7 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
 
     astExtOutputTree.addString(curLevel + 1, "15. Type information for CXCursors : ");
 
-    astExtOutputTree.addString(curLevel + 2, "clang_getTypeKindSpelling : ",                         typeKindSpelling);
+    astExtOutputTree.addString(curLevel + 2, "clang_getTypeKindSpelling : ",                            typeKindSpelling);
     astExtOutputTree.addString(curLevel + 2, "clang_getTypeSpelling : ",                                typeSpelling);
     astExtOutputTree.addString(curLevel + 2, "clang_getTypedefDeclUnderlyingType : lib/types.type -> ", saveBaseCXTypeInfo(nullptr, &typedefDeclUnderlyingType, InfoAction::ADD_INFO));
     astExtOutputTree.addString(curLevel + 2, "clang_getEnumDeclIntegerType : lib/types.type -> ",       saveBaseCXTypeInfo(nullptr, &enumDeclIntegerType, InfoAction::ADD_INFO));
@@ -76,6 +76,8 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
 
         if(cursorStopRecursion)
             astExtOutputTree.addString(curLevel + 3, "clang_Cursor_getArgument : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursor_getArgument, InfoAction::ADD_INFO));
+        else
+            astExtOutputTree.addString(curLevel + 3, "clang_Cursor_getArgument : lib/cursors.cur -> -Not Printed-");
     }
 
     astExtOutputTree.addString(curLevel + 2, "clang_Cursor_getNumTemplateArguments : ",            cursorNumTemplateArguments);
@@ -93,7 +95,13 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
     astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isFunctionInlined : ",                    isFunctionInlined);
 
     if(cursorStopRecursion)
-        astExtOutputTree.addString(curLevel + 2, "clang_getTypeDeclaration : lib/cursors.cur -> ",   saveBaseCXCursorInfo(&translationUnit, &getTypeDeclaration, InfoAction::ADD_INFO));
+    {
+        uint64_t baseInfoLine = saveBaseCXCursorInfo(&translationUnit, &getTypeDeclaration, InfoAction::ADD_INFO);
+        string   isEqualStr   = _19_equalCursors(getTypeDeclaration, cursor) ? " (Equal)" : " (Unequal)";
+        astExtOutputTree.addString(curLevel + 2, "clang_getTypeDeclaration : lib/cursors.cur -> ", to_string(baseInfoLine) + isEqualStr);
+    }
+    else
+        astExtOutputTree.addString(curLevel + 2, "clang_getTypeDeclaration : lib/cursors.cur -> -Not Printed-");
 
     astExtOutputTree.addString(curLevel + 2, "clang_getCursorResultType : lib/types.type -> ",      saveBaseCXTypeInfo(nullptr, &cursorResultType, InfoAction::ADD_INFO));
     astExtOutputTree.addString(curLevel + 2, "clang_getCursorExceptionSpecificationType : ",         cursorExceptionSpecificationType);
@@ -112,6 +120,8 @@ void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUn
         CXCursor overloadedDecl = clang_getOverloadedDecl(cursor, index);                                                                                   // 68.
         if(cursorStopRecursion)
             astExtOutputTree.addString(curLevel + 3, "clang_getOverloadedDecl : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &overloadedDecl, InfoAction::ADD_INFO));
+        else
+            astExtOutputTree.addString(curLevel + 3, "clang_getOverloadedDecl : lib/cursors.cur -> -Not Printed-");
     }
 
     astExtOutputTree.addNewLine(curLevel + 2);

@@ -46,14 +46,30 @@ void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, 
 
     if(cursorStopRecursion)
     {
-        astExtOutputTree.addString(curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorReferenced, InfoAction::ADD_INFO));
-        astExtOutputTree.addString(curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorDefinition, InfoAction::ADD_INFO));
+        uint64_t baseInfoLine = saveBaseCXCursorInfo(&translationUnit, &cursorReferenced, InfoAction::ADD_INFO);
+        string   isEqualStr   = clang_equalCursors(cursorReferenced, cursor) ? " (Equal)" : " (Unequal)";
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> ", to_string(baseInfoLine) + isEqualStr);
+
+        baseInfoLine = saveBaseCXCursorInfo(&translationUnit, &cursorDefinition, InfoAction::ADD_INFO);
+        isEqualStr   = clang_equalCursors(cursorDefinition, cursor) ? " (Equal)" : " (Unequal)";
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> ", to_string(baseInfoLine) + isEqualStr);
+    }
+    else
+    {
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorReferenced : lib/cursors.cur -> -Not Printed-");
+        astExtOutputTree.addString(curLevel + 2, "clang_getCursorDefinition : lib/cursors.cur -> -Not Printed-");
     }
 
     astExtOutputTree.addString(curLevel + 2, "clang_isCursorDefinition : ",                         isCursorDefinition);
 
     if(cursorStopRecursion)
-        astExtOutputTree.addString(curLevel + 2, "clang_getCanonicalCursor : lib/cursors.cur -> ",  saveBaseCXCursorInfo(&translationUnit, &canonicalCursor, InfoAction::ADD_INFO));
+    {
+        uint64_t baseInfoLine = saveBaseCXCursorInfo(&translationUnit, &canonicalCursor, InfoAction::ADD_INFO);
+        string   isEqualStr   = clang_equalCursors(canonicalCursor, cursor) ? " (Equal)" : " (Unequal)";
+        astExtOutputTree.addString(curLevel + 2, "clang_getCanonicalCursor : lib/cursors.cur -> ", to_string(baseInfoLine) + isEqualStr);
+    }
+    else
+        astExtOutputTree.addString(curLevel + 2, "clang_getCanonicalCursor : lib/cursors.cur -> -Not Printed-");
 
     astExtOutputTree.addString(curLevel + 2, "clang_Cursor_isDynamicCall : ",                       isDynamicCall);
 
