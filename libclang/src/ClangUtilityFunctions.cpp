@@ -1,5 +1,6 @@
 #include "ClangUtilityFunctions.h"
 #include <LibClangStruct2Str/LibClangStruct2Str.h>
+#include <ExecutionTimeMeasurement/ExecutionTimeMeasurement.h>
 
 CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
 {
@@ -134,6 +135,8 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
     }
     else if(action == InfoAction::SAVE_FILE)
     {
+        ExecutionTimeMeasurement timeMeasurement("File " + CURSORS_REF_PATH + " has saved in");
+
         if (!treeStaticCursorData.saveToFile(CURSORS_REF_PATH))
             cout << "Couldn't save file : " << CURSORS_REF_PATH << endl;
 
@@ -196,6 +199,8 @@ uint64_t saveBaseCXTypeInfo(const CXTranslationUnit* translationUnit, const CXTy
     }
     else if(action == InfoAction::SAVE_FILE)
     {
+        ExecutionTimeMeasurement timeMeasurement("File " + TYPES_REF_PATH + " has saved in");
+
         if (!treeStaticTypeData.saveToFile(TYPES_REF_PATH))
             cout << "Couldn't save file : " << TYPES_REF_PATH << endl;
 

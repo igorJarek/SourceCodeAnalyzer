@@ -78,7 +78,7 @@ void recursiveFolderSearch(const string& folderPath)
     folderBrowser.clearFileList();
     folderBrowser.setFileTypeBrowser(FileType::SOURCE_FILE);
 
-    //folderBrowser.addIgnoreFilePath("..\\lib\\src\\TestPrimitives.cpp");
+    folderBrowser.addIgnoreFilePath("..\\lib\\src\\TestPrimitives.cpp");
 
     folderBrowser.startFolderBrowse(folderPath);
 
