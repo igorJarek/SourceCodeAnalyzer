@@ -61,10 +61,12 @@ void _5_token_extraction(const CXTranslationUnit& translationUnit, const string&
                     CXSourceRange    tokenRange    = clang_getTokenExtent(translationUnit, token);                                                                 // 5.
 
                     CXCursor         cursor        = _10_getCursor(translationUnit, tokenLocation);
+                    CXCursor         cursorRef     = _9_getCursorReferenced(cursor);
 
                     outputTree.addString(2, to_string(index + 1) + ")\tclang_getTokenSpelling : ", tokenSpelling);
                     outputTree.addString(3, "clang_getTokenKind : ", tokenKind);
                     outputTree.addString(3, "_10_getCursor(clang_getTokenLocation) : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursor, InfoAction::ADD_INFO));
+                    outputTree.addString(3, "_9_getCursorReferenced : lib/cursors.cur -> ", saveBaseCXCursorInfo(&translationUnit, &cursorRef, InfoAction::ADD_INFO));
                     outputTree.addCXSourceLocation(3, "clang_getTokenLocation : ", tokenLocation);
                     outputTree.addCXSourceRange(3, "clang_getTokenExtent : ", tokenRange);
                 }
