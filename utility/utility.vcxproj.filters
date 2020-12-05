@@ -46,6 +46,12 @@
     <Filter Include="Header Files\Html">
       <UniqueIdentifier>{ea588c52-a8cc-4a2a-af86-e221787b128f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\SourceCode">
+      <UniqueIdentifier>{8e90fefd-dae5-4bd1-98e3-18ba7d56ce4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SourceCode">
+      <UniqueIdentifier>{293c1151-b5e3-47d2-abac-5f626513559b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Database\DatabaseColumnDict.h">
@@ -78,6 +84,9 @@
     <ClInclude Include="include\ExecutionTimeMeasurement\ExecutionTimeMeasurement.h">
       <Filter>Header Files\ExecutionTimeMeasurement</Filter>
     </ClInclude>
+    <ClInclude Include="include\SourceCode\SourceCode.hpp">
+      <Filter>Header Files\SourceCode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Database\Database.cpp">
@@ -97,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="src\LibClangStruct2Str\LibClangStruct2Str.cpp">
       <Filter>Source Files\LibClangStruct2Str</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SourceCode\SourceCode.cpp">
+      <Filter>Source Files\SourceCode</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
