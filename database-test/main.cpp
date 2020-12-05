@@ -1,26 +1,41 @@
+#include <SourceCode/SourceCode.hpp>
+
 #include <iostream>
-#include <string>
-#include <fstream>
-
-#include <clang-c/Index.h>
-
+#include <map>
 #include <FolderBrowser/FolderBrowser.h>
-
 #include <ExecutionTimeMeasurement/ExecutionTimeMeasurement.h>
+#include <LibClangStruct2Str/LibClangStruct2Str.h>
 
-#include <Database/Database.h>
-#include <Database/DatabaseColumnDict.h>
-#include <Database/ColumnDefinition.h>
+using std::map;
+using std::to_string;
 
-using namespace std;
+struct FunctionPos
+{
+    void setCXSourceRange(const CXSourceRange& range)
+    {
+        CXSourceLocation locStart  = clang_getRangeStart(range);
+        CXSourceLocation locEnd    = clang_getRangeEnd(range);
 
-void createDatabaseTables(Database& database, const string& filePath, const CXTranslationUnit& translationUnit);
+        clang_getExpansionLocation(locStart, nullptr, &startLine, &startCol, nullptr);
+        clang_getExpansionLocation(locEnd,   nullptr, &endLine, &endCol, nullptr);
+    }
 
-void createInsertTokensTableData(Database& database, const string& filePath, uint32_t tokenID, const CXTokenKind& tokenKind, const CXString& tokenSpelling, const CXSourceRange& tokenRange);
-void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t cursorRefID, uint32_t tokenID, const CXCursor& cursor);
+    uint32_t startLine, startCol;
+    uint32_t endLine, endCol;
+};
 
-int64_t countFileLines(const string& filePath);
-int64_t countFileLineColumns(const string& filePath, int64_t line);
+struct Function             // clang_getCursorReferenced, clang_isCursorDefinition, clang_equalCursors, clang_getCanonicalCursor (dla definicji zwroci plik .hpp)
+                            // clang_getCursorResultType, clang_getNumArgTypes
+{
+    uint8_t     kind;       // 0 - empty, 1 - function, 2 - method, 3 - invoke
+
+    string      usr;        // clang_getCursorUSR
+    string      mangling;   // clang_Cursor_getMangling
+    FunctionPos pos;        // clang_getCursorLocation ?
+
+    string      name;       // clang_getCursorSpelling ?
+    uint8_t     argCount;   // clang_Cursor_getNumArguments
+};
 
 int main()
 {
@@ -37,224 +52,108 @@ int main()
     FolderBrowser fb;
     fb.clearFileList();
     fb.setFileTypeBrowser(FileType::SOURCE_FILE);
+
+    fb.addIgnoreFilePath("..\\lib\\src\\TestPrimitives.cpp");
+
     fb.startFolderBrowse(libPath);
 
     const size_t        fileCount = fb.getFileCount();
     const list<string>& fileList  = fb.getFileList();
 
-    Database database(databasePath);
-    database.openDatabase(DatabaseOptions::TRUNCATE_DB_FILE   | 
-                          DatabaseOptions::READ_WRITE_DB_FILE | 
-                          DatabaseOptions::FILE_DB_FILE       |
-                          DatabaseOptions::DUMP_QUERIES_TO_FILE);
-
-    string dbErrMsg = database.createGlobalTable(clang_getClangVersion(), APP_NAME, APP_VERSION);
-    if(database.isNotOK())
-    {
-        cout << "createGlobalTable() Error : " << dbErrMsg << endl;
-        return EXIT_SUCCESS;
-    }
-
-    dbErrMsg = database.createLinkingTable();
-    if(database.isNotOK())
-    {
-        cout << "createLinkingTable() Error : " << dbErrMsg << endl;
-        return EXIT_SUCCESS;
-    }
-
     for(const string& filePath : fileList)
     {
-        CXIndex           index     = clang_createIndex(0, 0);
+        ExecutionTimeMeasurement timeMeasurement("Parsing " + filePath + " file in");
 
-        CXTranslationUnit translationUnit;
-        CXErrorCode       errorCode = clang_parseTranslationUnit2(index, 
-                                                                    filePath.c_str(), 
-                                                                    COMPILATION_ARGS, 
-                                                                    sizeof(COMPILATION_ARGS) / sizeof(const char*),
-                                                                    nullptr,
-                                                                    0,
-                                                                    CXTranslationUnit_None,
-                                                                    &translationUnit);
+        map<string, Function> functionsDefMap;
 
-        if (errorCode == CXError_Success)
-        {
-            if(database.isOK())
+        SourceCode sourceCode(filePath, COMPILATION_ARGS, 2);
+        AST&       ast    = sourceCode.getAST();
+        Tokens&    tokens = sourceCode.getTokens();
+
+        ast.traversingAST
+        (
+            [&functionsDefMap](shared_ptr<ASTNode> astNode) -> void
             {
-                ExecutionTimeMeasurement timeMeasurement("Parsing " + filePath + " file in");
+                CXCursor     cursor     = astNode->cursor;
+                CXCursorKind cursorKind = clang_getCursorKind(cursor);
 
-                createDatabaseTables(database, filePath, translationUnit);
+                if(cursorKind == CXCursor_FunctionDecl)
+                {
+                    if(clang_isCursorDefinition(cursor))
+                    {
+                        Function function;
+
+                        function.kind     = 1;
+
+                        function.usr      = to_string(clang_getCursorUSR(cursor));
+                        function.mangling = to_string(clang_Cursor_getMangling(cursor));
+                        function.pos.setCXSourceRange(clang_getCursorExtent(cursor));
+
+                        function.name     = to_string(clang_getCursorSpelling(cursor));
+                        function.argCount = clang_Cursor_getNumArguments(cursor);
+
+                        functionsDefMap.insert( {function.usr, function} );
+                    }
+                }
+                else if(cursorKind == CXCursor_CXXMethod)
+                {
+                    if(clang_isCursorDefinition(cursor))
+                    {
+                        Function function;
+
+                        function.kind     = 2;
+
+                        function.usr      = to_string(clang_getCursorUSR(cursor));
+                        function.mangling = to_string(clang_Cursor_getMangling(cursor));
+                        function.pos.setCXSourceRange(clang_getCursorExtent(cursor));
+
+                        function.name     = to_string(clang_getCursorSpelling(cursor));
+                        function.argCount = clang_Cursor_getNumArguments(cursor);
+
+                        functionsDefMap.insert( {function.usr, function} );
+                    }
+                }
+                else if(cursorKind == CXCursor_CallExpr)
+                {
+                    Function function;
+
+                    function.kind     = 3;
+
+                    function.pos.setCXSourceRange(clang_getCursorExtent(cursor));
+
+                    function.name     = to_string(clang_getCursorSpelling(cursor));
+                    function.argCount = clang_Cursor_getNumArguments(cursor);
+
+                    CXCursor     ref        = clang_getCursorReferenced(cursor);
+                    CXCursorKind cursorRefKind = clang_getCursorKind(ref);
+
+                    if(!clang_isInvalid(cursorRefKind) && cursorRefKind != CXCursor_Constructor && cursorRefKind != CXCursor_Destructor)
+                    {
+                        if(!clang_equalCursors(cursor, ref))
+                        {
+                            function.usr      = to_string(clang_getCursorUSR(ref));
+                            function.mangling = to_string(clang_Cursor_getMangling(ref));
+
+                            functionsDefMap.insert( {function.usr, function} );
+                        }
+                    }
+                }
             }
-            else
-                break;
+        );
 
-            clang_disposeTranslationUnit(translationUnit);
+        if(functionsDefMap.size())
+        {
+            cout << "\tResult : " << endl; 
+
+            for(auto& elem : functionsDefMap)
+            {
+                cout << "\t\t";
+                cout << (elem.second.kind == 3 ? "Invoke : " : "Def : ");
+                cout << elem.first << " -> " << elem.second.name << endl;
+            }
         }
-
-        clang_disposeIndex(index);
     }
 
     return EXIT_SUCCESS;
 }
 
-void createDatabaseTables(Database& database, const string& filePath, const CXTranslationUnit& translationUnit)
-{
-    string dbErrMsg = database.createSourceCodeTables(filePath);
-    if(database.isNotOK())
-    {
-        cout << dbErrMsg;
-        return;
-    }
-
-    CXFile           file            = clang_getFile(translationUnit, filePath.c_str());
-
-    const int64_t    lineCount       = countFileLines(filePath);
-    const int64_t    lastLineColumns = countFileLineColumns(filePath, lineCount);
-
-    CXSourceLocation beginLocation   = clang_getLocation(translationUnit, file, 1, 1);
-    CXSourceLocation endLocation     = clang_getLocation(translationUnit, file, static_cast<unsigned int>(lineCount), static_cast<unsigned int>(lastLineColumns));
-    CXSourceRange    tokenizerRange  = clang_getRange(beginLocation, endLocation);
-
-    CXToken*         tokensOut       = nullptr;
-    uint32_t         tokensNum       = 0;
-
-    clang_tokenize(translationUnit, tokenizerRange, &tokensOut, &tokensNum);
-
-    if (tokensNum > 0)
-    {
-        for (uint32_t index{ 0 }; index < tokensNum; ++index)
-        {
-            const CXToken&   token = tokensOut[index];
-
-            CXTokenKind      tokenKind        = clang_getTokenKind(token);
-            CXString         tokenSpelling    = clang_getTokenSpelling(translationUnit, token);
-            CXSourceRange    tokenRange       = clang_getTokenExtent(translationUnit, token);
-
-            CXSourceLocation tokenLocation    = clang_getTokenLocation(translationUnit, token);
-
-            CXCursor         cursor           = clang_getCursor(translationUnit, tokenLocation);
-            CXCursor         cursorReferenced = clang_getCursorReferenced(cursor);
-
-            CXType           cursorType       = clang_getCursorType(cursor);
-            CXType           cursorRefType    = clang_getCursorType(cursorReferenced);
-
-            uint32_t         tokenID          = database.allocTokenID();
-
-            uint32_t         cursorID         = database.allocCursorID();
-            uint32_t         cursorRefID      = database.allocCursorID();
-
-            createInsertTokensTableData (database, filePath, tokenID, tokenKind, tokenSpelling, tokenRange);
-
-            createInsertCursorsTableData(database, filePath, cursorID,    cursorRefID, tokenID,    cursor);
-            createInsertCursorsTableData(database, filePath, cursorRefID, 0          , 0      , cursorReferenced);
-        }
-    }
-
-    if (tokensOut)
-        clang_disposeTokens(translationUnit, tokensOut, tokensNum);
-}
-
-void createInsertTokensTableData(Database& database, const string& filePath, uint32_t tokenID, const CXTokenKind& tokenKind, const CXString& tokenSpelling, const CXSourceRange& tokenRange)
-{
-    CXSourceLocation rangeStart = clang_getRangeStart(tokenRange);
-    CXSourceLocation rangeEnd   = clang_getRangeEnd(tokenRange);
-
-    uint32_t startExpansionLine, startExpansioColumn;
-    uint32_t endExpansionLine, endExpansioColumn;
-
-    clang_getExpansionLocation(rangeStart, nullptr, &startExpansionLine, &startExpansioColumn, nullptr);
-    clang_getExpansionLocation(rangeEnd,   nullptr, &endExpansionLine,   &endExpansioColumn,   nullptr);
-
-    DatabaseInsertQuery insertQueryBuilder;
-    insertQueryBuilder.newQuery(filePath + "\\tokens", g_tokenColumnDict);
-
-    insertQueryBuilder.addColumnValue(TokenID,                  tokenID);
-    insertQueryBuilder.addColumnValue(TokenKind,                (uint32_t)tokenKind);
-    insertQueryBuilder.addCXStringColumnValue(TokenSpelling,    tokenSpelling);
-    insertQueryBuilder.addColumnValue(TokenStartPos_Line,       startExpansionLine);
-    insertQueryBuilder.addColumnValue(TokenStartPos_Col,        startExpansioColumn);
-    insertQueryBuilder.addColumnValue(TokenEndPos_Line,         endExpansionLine);
-    insertQueryBuilder.addColumnValue(TokenEndPos_Col,          endExpansioColumn);
-
-    DatabaseQueryErrMsg tokenQueryErrMsg = database.sendQuery(insertQueryBuilder.buildQuery());
-    if(database.isNotOK())
-        cout << "sendQuery() error : " << tokenQueryErrMsg << endl;
-}
-
-void createInsertCursorsTableData(Database& database, const string& filePath, uint32_t cursorID, uint32_t cursorRefID, uint32_t tokenID, const CXCursor& cursor)
-{
-    CXString              mangling                            = clang_Cursor_getMangling(cursor);
-    CXCursorKind          templateCursorKind                  = clang_getTemplateCursorKind(cursor);
-    CXString              cursorUSR                           = clang_getCursorUSR(cursor);
-    CXString              cursorDisplayName                   = clang_getCursorDisplayName(cursor);
-    uint32_t              cursorHash                          = clang_hashCursor(cursor);
-    CXCursorKind          cursorKind                          = clang_getCursorKind(cursor);
-    CXString              cursorKindSpelling                  = clang_getCursorKindSpelling(cursorKind);
-
-    DatabaseInsertQuery insertQueryBuilder;
-    insertQueryBuilder.newQuery(filePath + "\\cursors", g_cursorColumnDict);
-
-    insertQueryBuilder.addColumnValue(CursorID,                       cursorID);
-    insertQueryBuilder.addColumnValue(TokenTable_TokenID,             tokenID);
-    insertQueryBuilder.addCXStringColumnValue(CursorMangling,         mangling);
-    insertQueryBuilder.addCXStringColumnValue(CursorUSR,              cursorUSR);
-    insertQueryBuilder.addCXStringColumnValue(CursorDisplayName,      cursorDisplayName);
-    insertQueryBuilder.addColumnValue(CursorTable_CursorReferenced,   cursorRefID);
-    insertQueryBuilder.addColumnValue(CursorHash,                     cursorHash);
-    insertQueryBuilder.addColumnValue(CursorKind,                     (uint32_t)cursorKind);
-    insertQueryBuilder.addCXStringColumnValue(CursorKindSpelling,     cursorKindSpelling);
-
-    DatabaseQueryErrMsg cursorQueryErrMsg = database.sendQuery(insertQueryBuilder.buildQuery());
-    if(database.isNotOK())
-        cout << "sendQuery() error : " << cursorQueryErrMsg << endl;
-}
-
-int64_t countFileLines(const string& filePath)
-{
-    fstream stream;
-    int64_t lines{ -1 };
-
-    stream.open(filePath, std::fstream::in);
-    if (stream.is_open())
-    {
-        lines = 0;
-
-        string s;
-        while (getline(stream, s))
-            ++lines;
-
-        stream.close();
-    }
-
-    return lines;
-}
-
-int64_t countFileLineColumns(const string& filePath, int64_t line)
-{
-    if (line < 0)
-        return -1;
-
-    fstream stream;
-    int64_t columns{ -1 };
-    int64_t lines{ -1 };
-
-    stream.open(filePath, std::fstream::in);
-    if (stream.is_open())
-    {
-        string str;
-        lines = 0;
-
-        while (getline(stream, str))
-        {
-            ++lines;
-            if (lines == line)
-                break;
-        }
-
-        if(lines == line) // file lines < line
-            columns = str.size();
-
-        stream.close();
-    }
-
-    return columns;
-}
