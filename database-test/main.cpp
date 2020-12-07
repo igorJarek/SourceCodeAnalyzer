@@ -23,6 +23,11 @@ int main()
     DatabaseBuilder databaseBuilder(database, APP_NAME, APP_VERSION, folderBrowser, COMPILATION_ARGS, 2);
     databaseBuilder.buildDatabase();
 
+    QueryResults queryResults;
+    DatabaseQueryErrMsg queryErrMsg = database.recvQuery("SELECT * FROM [..\\lib\\Main.cpp\\tokens]", queryResults);
+    if(database.isNotOK())
+        cout << "Recv Error : " << queryErrMsg << endl;
+
     return EXIT_SUCCESS;
 }
 
