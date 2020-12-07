@@ -52,6 +52,12 @@
     <Filter Include="Header Files\SourceCode">
       <UniqueIdentifier>{293c1151-b5e3-47d2-abac-5f626513559b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\DatabaseBuilder">
+      <UniqueIdentifier>{3cab1829-3978-40ec-8053-13abea469117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DatabaseBuilder">
+      <UniqueIdentifier>{50604517-9824-476f-ad93-0d6e0d30d7f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Database\DatabaseColumnDict.h">
@@ -87,6 +93,9 @@
     <ClInclude Include="include\SourceCode\SourceCode.hpp">
       <Filter>Header Files\SourceCode</Filter>
     </ClInclude>
+    <ClInclude Include="include\DatabaseBuilder\DatabaseBuilder.hpp">
+      <Filter>Header Files\DatabaseBuilder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Database\Database.cpp">
@@ -109,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="src\SourceCode\SourceCode.cpp">
       <Filter>Source Files\SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DatabaseBuilder\DatabaseBuilder.cpp">
+      <Filter>Source Files\DatabaseBuilder</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

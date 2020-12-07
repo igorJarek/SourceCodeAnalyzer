@@ -110,6 +110,7 @@ SourceCode::SourceCode(const string& filePath, const char* compilation_args[], u
 
 SourceCode::~SourceCode()
 {
+    clang_disposeTokens(m_translationUnit, m_tokens.tokens, m_tokens.tokensCount);
     clang_disposeTranslationUnit(m_translationUnit);
     clang_disposeIndex(m_index);
 }

@@ -76,8 +76,10 @@ class SourceCode
         static int64_t countFileLineColumns(const string& filePath, int64_t line);
 
     public:
-        AST&    getAST()    { return m_ast; }
-        Tokens& getTokens() { return m_tokens; }
+        CXTranslationUnit&  getTranslationUnit() { return m_translationUnit; }
+
+        AST&                getAST()             { return m_ast; }
+        Tokens&             getTokens()          { return m_tokens; }
 
     private:
         const string&       m_filePath;

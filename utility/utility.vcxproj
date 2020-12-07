@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\DatabaseBuilder\DatabaseBuilder.hpp" />
     <ClInclude Include="include\Database\ColumnDefinition.h" />
     <ClInclude Include="include\Database\Database.h" />
     <ClInclude Include="include\Database\DatabaseColumnDict.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="include\SourceCode\SourceCode.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DatabaseBuilder\DatabaseBuilder.cpp" />
     <ClCompile Include="src\Database\Database.cpp" />
     <ClCompile Include="src\Database\DatabaseColumnDict.cpp" />
     <ClCompile Include="src\FolderBrowser\FolderBrowser.cpp" />
