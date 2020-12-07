@@ -94,6 +94,12 @@ private:
     std::string                            m_query;
 };
 
+struct QueryResults
+{
+    std::list<std::string>            columns;
+    std::list<std::list<std::string>> rows;
+};
+
 enum DatabaseOptions
 {
     TRUNCATE_DB_FILE     = (1 << 1),
@@ -115,8 +121,9 @@ public:
     ~Database();
 
 public:
-    void                            openDatabase(uint32_t databaseOptions /* DatabaseFileMode enum */);
+    void                            openDatabase(uint32_t databaseOptions /* DatabaseOptions enum */);
     DatabaseQueryErrMsg             sendQuery(const std::string& query);
+    DatabaseQueryErrMsg             recvQuery(const std::string& query, QueryResults& results);
 
     std::string                     createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion);
     std::string                     createLinkingTable();
@@ -143,6 +150,9 @@ private:
     void                            createLinkingTableTemplateQuery();
 
     void                            dumpQueryToFile(const std::string& query, const char* comment = nullptr);
+
+private:
+    static int32_t                  recvQueryCallback(void* data, int32_t colCount, char** rowValues, char** columnsName);
 
 private:
     sqlite3*                        m_database      = nullptr;

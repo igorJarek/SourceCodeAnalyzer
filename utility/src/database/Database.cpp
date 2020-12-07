@@ -344,6 +344,40 @@ DatabaseQueryErrMsg Database::sendQuery(const std::string& query)
     return errMsg;
 }
 
+DatabaseQueryErrMsg Database::recvQuery(const std::string& query, QueryResults& results)
+{
+    dumpQueryToFile(query, "Recv query");
+
+    DatabaseQueryErrMsg errMsg;
+
+    m_lastError = sqlite3_exec(
+                                m_database,
+                                query.c_str(),
+                                &Database::recvQueryCallback,
+                                &results,
+                                errMsg
+                              );
+
+    return errMsg;
+}
+
+int32_t Database::recvQueryCallback(void* data, int32_t colCount, char** rowValues, char** columnsName)
+{
+    QueryResults* results = reinterpret_cast<QueryResults*>(data);
+
+    if(results->columns.empty())
+    for(int32_t colIndex = 0; colIndex < colCount; ++colIndex)
+        results->columns.push_back(columnsName[colIndex]);
+
+    std::list<string> row;
+    for(int32_t colIndex = 0; colIndex < colCount; ++colIndex)
+        row.push_back(rowValues[colIndex]);
+
+    results->rows.push_back(row);
+
+    return 0;
+}
+
 void Database::dumpQueryToFile(const std::string& query, const char* comment /* = nullptr */)
 {
     if(m_databaseOptions & DUMP_QUERIES_TO_FILE)
