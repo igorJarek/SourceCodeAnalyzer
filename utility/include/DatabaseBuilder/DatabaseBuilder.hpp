@@ -50,7 +50,7 @@ class DatabaseBuilder
         ~DatabaseBuilder();
 
     public:
-        void buildDatabase();
+        void buildDatabase(function<void (const string& filePath, size_t fileIndex, size_t fileCount)> buildState);
 
     private:
         void createDatabaseTables(const string& filePath);

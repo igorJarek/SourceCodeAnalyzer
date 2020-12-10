@@ -67,9 +67,10 @@ void DatabaseBuilder::createInsertTokensTableData(const string& filePath, uint32
         cout << "sendQuery() error : " << tokenQueryErrMsg << endl;
 }
 
-void DatabaseBuilder::buildDatabase()
+void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_t fileIndex, size_t fileCount)> buildState)
 {
-    const list<string>& fileList  = m_folderBrowser.getFileList();
+    const list<string>& fileList    = m_folderBrowser.getFileList();
+    size_t              fileCounter = 0;
 
     string dbErrMsg = m_database.createGlobalTable(clang_getClangVersion(), m_appName, m_appVersion);
     if(m_database.isNotOK())
@@ -80,6 +81,8 @@ void DatabaseBuilder::buildDatabase()
 
     for(const string& filePath : fileList)
     {
+        buildState(filePath, fileCounter++, m_folderBrowser.getFileCount());
+
         SourceCode sourceCode(filePath, m_compilationArgs, m_argsCount);
         const CXTranslationUnit& tu     = sourceCode.getTranslationUnit(); 
         const AST&               ast    = sourceCode.getAST();
