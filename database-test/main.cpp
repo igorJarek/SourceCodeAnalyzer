@@ -21,7 +21,13 @@ int main()
     Database database(DATABASE_PATH);
 
     DatabaseBuilder databaseBuilder(database, APP_NAME, APP_VERSION, folderBrowser, COMPILATION_ARGS, 2);
-    databaseBuilder.buildDatabase();
+    databaseBuilder.buildDatabase
+    (
+        [](const string& filePath, size_t fileIndex, size_t fileCount) -> void
+        {
+            cout << fileIndex + 1 << '/' << fileCount << " -> " << filePath << endl;
+        }
+    );
 
     QueryResults queryResults;
     DatabaseQueryErrMsg queryErrMsg = database.recvQuery("SELECT * FROM [..\\lib\\Main.cpp\\tokens]", queryResults);
