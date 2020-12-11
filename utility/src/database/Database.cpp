@@ -125,8 +125,6 @@ Database::Database(const std::string& databasePath) :
 {
     createGlobalTableTemplateQuery();
     createTokenTableTemplateQuery();
-    createCursorTableTemplateQuery();
-    createLinkingTableTemplateQuery();
 }
 
 Database::~Database()
@@ -208,39 +206,6 @@ void Database::createTokenTableTemplateQuery()
     };
 }
 
-void Database::createCursorTableTemplateQuery()
-{
-    m_cursorTableTemplateQuery =
-    {
-        "CREATE TABLE \"<?filePath?>\\cursors\""
-        "("
-            "CursorID INT PRIMARY KEY,"
-            "TokenTable_TokenID INT,"
-            "CursorMangling VARCHAR(255),"
-            "CursorUSR VARCHAR(255),"
-            "CursorDisplayName VARCHAR(255),"
-            "CursorTable_CursorReferenced INT,"
-            "CursorHash INT,"
-            "CursorKind SHORTINT,"
-            "CursorKindSpelling VARCHAR(255)"
-        ");"
-    };
-}
-
-void Database::createLinkingTableTemplateQuery()
-{
-    m_linkingTableTemplateQuery =
-    {
-        "CREATE TABLE \'..\\linking\'"
-        "("
-            "LinkingID INT PRIMARY KEY,"
-            "LinkingMangling VARCHAR (255),"
-            "LinkingTableName VARCHAR (255),"
-            "LinkingCursorID INT"
-        ");"
-    };
-}
-
 std::string Database::createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion)
 {
     DatabaseQueryErrMsg queryErrMsg;
@@ -272,28 +237,10 @@ std::string Database::createGlobalTable(const CXString& clangVersion, const std:
     return queryErrMsgStr;
 }
 
-std::string Database::createLinkingTable()
-{
-    DatabaseQueryErrMsg queryErrMsg;
-    std::string         queryErrMsgStr;
-
-    if(isOK())
-    {
-        queryErrMsg = sendQuery(m_linkingTableTemplateQuery);
-        if(isNotOK())
-            queryErrMsgStr += queryErrMsg;
-    }
-    else
-        return lastErrorMsg();
-
-    return queryErrMsgStr;
-}
-
 std::string Database::createSourceCodeTables(const std::string& tableName)
 {
     DatabaseQueryErrMsg queryErrMsg;
     std::string tokenTableQuery  = m_tokenTableTemplateQuery;
-    std::string cursorTableQuery = m_cursorTableTemplateQuery;
 
     if(isOK())
     {
@@ -305,21 +252,6 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
             tokenTableQuery.erase(pos, keyword.size());
             tokenTableQuery.insert(pos, tableName);
         }
-
-        queryErrMsg = sendQuery(tokenTableQuery);
-        if(isNotOK())
-            return queryErrMsg.getString();
-
-        pos = cursorTableQuery.find(keyword);
-        if (pos != std::string::npos)
-        {
-            cursorTableQuery.erase(pos, keyword.size());
-            cursorTableQuery.insert(pos, tableName);
-        }
-
-        queryErrMsg = sendQuery(cursorTableQuery);
-        if(isNotOK())
-            return queryErrMsg.getString();
     }
     else
         return lastErrorMsg();

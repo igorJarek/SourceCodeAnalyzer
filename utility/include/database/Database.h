@@ -126,16 +126,11 @@ public:
     DatabaseQueryErrMsg             recvQuery(const std::string& query, QueryResults& results);
 
     std::string                     createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion);
-    std::string                     createLinkingTable();
     std::string                     createSourceCodeTables(const std::string& tableName);
 
     uint32_t                        getTokenID()   const { return m_tokenTableIdAllocator; }
-    uint32_t                        getCursorID()  const { return m_cursorTableIdAllocator; }
-    uint32_t                        getLinkingID() const { return m_linkingTableIdAllocator; }
 
     uint32_t                        allocTokenID()   { return ++m_tokenTableIdAllocator;  }
-    uint32_t                        allocCursorID()  { return ++m_cursorTableIdAllocator; }
-    uint32_t                        allocLinkingID() { return ++m_linkingTableIdAllocator; }
 
 public:
     bool                            isOK()              const { return m_lastError == SQLITE_OK; }
@@ -146,8 +141,6 @@ public:
 private:
     void                            createGlobalTableTemplateQuery();
     void                            createTokenTableTemplateQuery();
-    void                            createCursorTableTemplateQuery();
-    void                            createLinkingTableTemplateQuery();
 
     void                            dumpQueryToFile(const std::string& query, const char* comment = nullptr);
 
@@ -165,10 +158,6 @@ private:
 
     std::string                     m_globalTableTemplateQuery;
     std::string                     m_tokenTableTemplateQuery;
-    std::string                     m_cursorTableTemplateQuery;
-    std::string                     m_linkingTableTemplateQuery;
 
     uint32_t                        m_tokenTableIdAllocator = 0;
-    uint32_t                        m_cursorTableIdAllocator = 0;
-    uint32_t                        m_linkingTableIdAllocator = 0;
 };
