@@ -30,9 +30,17 @@ int main()
     );
 
     QueryResults queryResults;
-    DatabaseQueryErrMsg queryErrMsg = database.recvQuery("SELECT * FROM [..\\lib\\Main.cpp\\tokens]", queryResults);
+    DatabaseQueryErrMsg queryErrMsg = database.recvQuery("SELECT * FROM [..\\file_list]", queryResults);
     if(database.isNotOK())
         cout << "Recv Error : " << queryErrMsg << endl;
+
+    for(std::vector<string>& row : queryResults.rows)
+    {
+        string& idStr = row[0];
+        string& fileNameStr = row[1];
+
+        cout << fileNameStr << endl;
+    }
 
     return EXIT_SUCCESS;
 }
