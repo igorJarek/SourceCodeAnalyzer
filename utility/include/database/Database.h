@@ -126,11 +126,14 @@ public:
     DatabaseQueryErrMsg             recvQuery(const std::string& query, QueryResults& results);
 
     std::string                     createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion);
+    std::string                     createFileListTable();
     std::string                     createSourceCodeTables(const std::string& tableName);
 
-    uint32_t                        getTokenID()   const { return m_tokenTableIdAllocator; }
+    uint32_t                        getTokenID()    const { return m_tokenTableIdAllocator; }
+    uint32_t                        getFileListID() const { return m_fileListTableIdAllocator; }
 
-    uint32_t                        allocTokenID()   { return ++m_tokenTableIdAllocator;  }
+    uint32_t                        allocTokenID()    { return ++m_tokenTableIdAllocator;  }
+    uint32_t                        allocFileListID() { return ++m_fileListTableIdAllocator;  }
 
 public:
     bool                            isOK()              const { return m_lastError == SQLITE_OK; }
@@ -140,6 +143,7 @@ public:
 
 private:
     void                            createGlobalTableTemplateQuery();
+    void                            createFileListTableTemplateQuery();
     void                            createTokenTableTemplateQuery();
 
     void                            dumpQueryToFile(const std::string& query, const char* comment = nullptr);
@@ -157,7 +161,9 @@ private:
     int32_t                         m_lastError = SQLITE_ERROR;
 
     std::string                     m_globalTableTemplateQuery;
+    std::string                     m_fileListTableTemplateQuery;
     std::string                     m_tokenTableTemplateQuery;
 
     uint32_t                        m_tokenTableIdAllocator = 0;
+    uint32_t                        m_fileListTableIdAllocator = 0;
 };

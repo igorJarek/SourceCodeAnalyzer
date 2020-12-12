@@ -124,6 +124,7 @@ Database::Database(const std::string& databasePath) :
     m_databasePath(databasePath)
 {
     createGlobalTableTemplateQuery();
+    createFileListTableTemplateQuery();
     createTokenTableTemplateQuery();
 }
 
@@ -189,6 +190,18 @@ void Database::createGlobalTableTemplateQuery()
     };
 }
 
+void Database::createFileListTableTemplateQuery()
+{
+    m_fileListTableTemplateQuery =
+    {
+        "CREATE TABLE \'..\\file_list\'"
+        "("
+            "FileListID INT PRIMARY KEY,"
+            "FileListFileName VARCHAR(255)"
+        ");"
+    };
+}
+
 void Database::createTokenTableTemplateQuery()
 {
     m_tokenTableTemplateQuery =
@@ -237,20 +250,57 @@ std::string Database::createGlobalTable(const CXString& clangVersion, const std:
     return queryErrMsgStr;
 }
 
-std::string Database::createSourceCodeTables(const std::string& tableName)
+std::string Database::createFileListTable()
 {
     DatabaseQueryErrMsg queryErrMsg;
-    std::string tokenTableQuery  = m_tokenTableTemplateQuery;
+    std::string         queryErrMsgStr;
 
     if(isOK())
     {
-        const std::string keyword = "<?filePath?>";
+        queryErrMsg = sendQuery(m_fileListTableTemplateQuery);
+        if(isNotOK())
+            queryErrMsgStr += queryErrMsg;
+    }
+    else
+        return lastErrorMsg();
 
-        size_t pos = tokenTableQuery.find(keyword);
-        if (pos != std::string::npos)
+    return queryErrMsgStr;
+}
+
+std::string Database::createSourceCodeTables(const std::string& tableName)
+{
+    DatabaseQueryErrMsg queryErrMsg;
+    std::string         queryErrMsgStr;
+    std::string         tokenTableQuery = m_tokenTableTemplateQuery;
+
+    if(isOK())
+    {
+        DatabaseInsertQuery insertQueryBuilder;
+        insertQueryBuilder.newQuery("..\\file_list", g_fileListColumnDict);
+
+        insertQueryBuilder.addColumnValue(FileListTableColName::FileListID,             allocFileListID());
+        insertQueryBuilder.addStringColumnValue(FileListTableColName::FileListFileName, tableName);
+
+        queryErrMsg = sendQuery(insertQueryBuilder.buildQuery());
+        if(isNotOK())
         {
-            tokenTableQuery.erase(pos, keyword.size());
-            tokenTableQuery.insert(pos, tableName);
+            queryErrMsgStr += queryErrMsg;
+            return queryErrMsgStr;
+        }
+        else
+        {
+            const std::string keyword = "<?filePath?>";
+
+            size_t pos = tokenTableQuery.find(keyword);
+            if (pos != std::string::npos)
+            {
+                tokenTableQuery.erase(pos, keyword.size());
+                tokenTableQuery.insert(pos, tableName);
+            }
+
+            queryErrMsg = sendQuery(tokenTableQuery);
+            if(isNotOK())
+                return queryErrMsg.getString();
         }
     }
     else
@@ -298,7 +348,7 @@ int32_t Database::recvQueryCallback(void* data, int32_t colCount, char** rowValu
     QueryResults* results = reinterpret_cast<QueryResults*>(data);
 
     if(results->columns.empty())
-    for(int32_t colIndex = 0; colIndex < colCount; ++colIndex)
+        for(int32_t colIndex = 0; colIndex < colCount; ++colIndex)
         results->columns.push_back(columnsName[colIndex]);
 
     std::list<string> row;

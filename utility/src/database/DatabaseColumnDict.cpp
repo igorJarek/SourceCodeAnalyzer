@@ -1,14 +1,21 @@
 #include <Database/DatabaseColumnDict.h>
 #include <Database/ColumnDefinition.h>
 
-GlobalColumnDict  g_globalColumnDict;
-TokenColumnDict   g_tokenColumnDict;
+GlobalColumnDict   g_globalColumnDict;
+FileListColumnDict g_fileListColumnDict;
+TokenColumnDict    g_tokenColumnDict;
 
 GlobalColumnDict::GlobalColumnDict()
 {
     emplace(GlobalTableColName::ClangVersion,                       "ClangVersion");
     emplace(GlobalTableColName::AppName,                            "AppName");
     emplace(GlobalTableColName::AppVersion,                         "AppVersion");
+}
+
+FileListColumnDict::FileListColumnDict()
+{
+    emplace(FileListTableColName::FileListID,                       "FileListID");
+    emplace(FileListTableColName::FileListFileName,                 "FileListFileName");
 }
 
 TokenColumnDict::TokenColumnDict()

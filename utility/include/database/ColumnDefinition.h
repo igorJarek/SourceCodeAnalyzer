@@ -9,6 +9,14 @@ enum GlobalTableColName : uint32_t
     GlobalTableLast
 };
 
+enum FileListTableColName : uint32_t
+{
+    FileListID,
+    FileListFileName,
+
+    FileListTableLast
+};
+
 enum TokenTableColName : uint32_t
 {
     TokenID,

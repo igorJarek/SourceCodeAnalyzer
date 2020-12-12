@@ -6,10 +6,12 @@
 using namespace std;
 
 class GlobalColumnDict;
+class FileListColumnDict;
 class TokenColumnDict;
 
-extern GlobalColumnDict  g_globalColumnDict;
-extern TokenColumnDict   g_tokenColumnDict;
+extern GlobalColumnDict   g_globalColumnDict;
+extern FileListColumnDict g_fileListColumnDict;
+extern TokenColumnDict    g_tokenColumnDict;
 
 class DatabaseColumnDict : public map<uint32_t, string>
 {
@@ -23,6 +25,13 @@ class GlobalColumnDict : public DatabaseColumnDict
 public:
     GlobalColumnDict();
     ~GlobalColumnDict() {}
+};
+
+class FileListColumnDict : public DatabaseColumnDict
+{
+public:
+    FileListColumnDict();
+    ~FileListColumnDict() {}
 };
 
 class TokenColumnDict : public DatabaseColumnDict

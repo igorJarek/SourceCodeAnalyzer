@@ -79,6 +79,13 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
         return;
     }
 
+    dbErrMsg = m_database.createFileListTable();
+    if(m_database.isNotOK())
+    {
+        cout << dbErrMsg << endl;
+        return;
+    }
+
     for(const string& filePath : fileList)
     {
         buildState(filePath, fileCounter++, m_folderBrowser.getFileCount());
