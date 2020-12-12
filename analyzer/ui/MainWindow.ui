@@ -89,7 +89,7 @@
      </property>
      <addaction name="actionVisual_Studio_Project"/>
     </widget>
-    <addaction name="actionExplore_Folder"/>
+    <addaction name="actionStart_Analyze"/>
     <addaction name="separator"/>
     <addaction name="menuOpen_2"/>
     <addaction name="actionSettings"/>
@@ -114,9 +114,9 @@
     <string>Open</string>
    </property>
   </action>
-  <action name="actionExplore_Folder">
+  <action name="actionStart_Analyze">
    <property name="text">
-    <string>Explore Folder</string>
+    <string>Start Analyze</string>
    </property>
   </action>
   <action name="actionVisual_Studio_Project">

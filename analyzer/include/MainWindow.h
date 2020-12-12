@@ -3,6 +3,8 @@
 #include "App.h"
 #include "ui_MainWindow.h"
 
+#include "AnalyzeWindow.h"
+
 #include <QtWidgets/QMainWindow>
 #include <QDir.h>
 #include <QFileSysteMmodel.h>
@@ -22,12 +24,13 @@ private:
 
 private:
     Ui::MainWindowClass m_ui;
+    AnalyzeWindow*      m_analyzeWindow;
     App&                m_app;
 
     QFileSystemModel    model;
 
 private slots:
-    void                file_explore_folder();
+    void                start_analyze();
     void                filesTree_doubleClick(const QModelIndex& modelIndex);
     void                filesTab_closeTab(int index);
 };

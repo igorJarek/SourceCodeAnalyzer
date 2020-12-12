@@ -48,7 +48,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>include;$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;..\extlib\include;..\utility\include;$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
@@ -91,15 +97,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AnalyzeWindow.cpp" />
     <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\CodeRenderWindow.cpp" />
+    <ClCompile Include="src\SourceCodeBlock.cpp" />
     <QtRcc Include="rsc/MainWindow.qrc" />
     <QtUic Include="ui/MainWindow.ui" />
     <QtMoc Include="include/MainWindow.h" />
     <ClCompile Include="src/MainWindow.cpp" />
     <ClCompile Include="Main.cpp" />
+    <QtUic Include="ui\AnalyzeWindow.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\SourceCodeBlock.h" />
+    <QtMoc Include="include\CodeRenderWindow.h" />
+    <QtMoc Include="include\AnalyzeWindow.h" />
     <ClInclude Include="include\App.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\utility\utility.vcxproj">
+      <Project>{ae31d0a5-60a0-4894-8b32-69524ad5447d}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
