@@ -348,12 +348,16 @@ int32_t Database::recvQueryCallback(void* data, int32_t colCount, char** rowValu
     QueryResults* results = reinterpret_cast<QueryResults*>(data);
 
     if(results->columns.empty())
-        for(int32_t colIndex = 0; colIndex < colCount; ++colIndex)
-        results->columns.push_back(columnsName[colIndex]);
+    {
+        results->columns.resize(colCount);
 
-    std::list<string> row;
+        for(int32_t colIndex = 0; colIndex < colCount; ++colIndex)
+            results->columns[colIndex] = columnsName[colIndex];
+    }
+
+    std::vector<string> row(colCount);
     for(int32_t colIndex = 0; colIndex < colCount; ++colIndex)
-        row.push_back(rowValues[colIndex]);
+        row[colIndex] = rowValues[colIndex];
 
     results->rows.push_back(row);
 

@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <list>
+#include <vector>
 #include <fstream>
 
 class DatabaseQueryErrMsg
@@ -96,8 +97,8 @@ private:
 
 struct QueryResults
 {
-    std::list<std::string>            columns;
-    std::list<std::list<std::string>> rows;
+    std::vector<std::string>            columns;
+    std::list<std::vector<std::string>> rows;
 };
 
 enum DatabaseOptions
