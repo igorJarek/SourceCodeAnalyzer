@@ -99,6 +99,12 @@ struct QueryResults
 {
     std::vector<std::string>            columns;
     std::list<std::vector<std::string>> rows;
+
+    void clear()
+    {
+        columns.clear();
+        rows.clear();
+    }
 };
 
 enum DatabaseOptions
