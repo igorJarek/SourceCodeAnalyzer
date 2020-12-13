@@ -6,7 +6,7 @@
 #include <QTextDocument>
 
 CodeRenderWindow::CodeRenderWindow(App& app, QWidget *parent) :
-    m_app(app), QWidget(parent)
+    m_app(app), QOpenGLWidget(parent)
 {
 
 }
@@ -38,13 +38,3 @@ void CodeRenderWindow::wheelEvent(QWheelEvent * event)
 {
     
 }
-
-/*
-* QFontMetrics
-* QTextDocument
-* 
-* 
-* int id = QFontDatabase::addApplicationFont(":/fonts/monospace.ttf");
-QString family = QFontDatabase::applicationFontFamilies(id).at(0);
-QFont monospace(family);
-*/

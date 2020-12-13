@@ -1,11 +1,11 @@
 #pragma once
 
-#include <QWidget>
+#include <QOpenGLWidget>
 #include <QScrollBar>
 
 class App;
 
-class CodeRenderWindow : public QWidget // QOpenGLWidget zamiast QWidget
+class CodeRenderWindow : public QOpenGLWidget
 {
     Q_OBJECT
 
