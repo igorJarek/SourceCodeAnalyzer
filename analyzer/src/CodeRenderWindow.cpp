@@ -14,7 +14,7 @@ CodeRenderWindow::CodeRenderWindow(App& app, QWidget *parent) :
 void CodeRenderWindow::paintEvent(QPaintEvent * /* event */)
 {
     QPainter     painter(this);
-    QFont        font("arial", 10, 10);
+    QFont        font("JetBrains Mono", 10, 10);
     QFontMetrics fontMetrics(font);
 
     painter.setFont(font);
