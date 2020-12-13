@@ -51,6 +51,9 @@
       <AdditionalIncludeDirectories>include;..\extlib\include;..\utility\include;$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <Link>
+      <AdditionalOptions>/NODEFAULTLIB:libcmt.lib %(AdditionalOptions)</AdditionalOptions>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

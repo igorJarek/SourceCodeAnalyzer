@@ -1,10 +1,11 @@
 #include "MainWindow.h"
 
-#include <QFileDialog.h>
-#include <QTextEdit.h>
-#include <QTextStream.h>
-
 #include <CodeRenderWindow.h>
+
+#include <QFileDialog>
+#include <QTextEdit>
+#include <QTextStream>
+#include <QMessageBox>
 
 MainWindow::MainWindow(App& app, QWidget *parent) : 
     QMainWindow(parent),
@@ -47,15 +48,14 @@ void MainWindow::start_analyze()
         m_ui.filesTree->hideColumn(3);
 
         m_app.buildSourceCodeBlocks();
-    }
-    else ;//
 
-    /*
-    QTabWidget* filesTab = m_ui.filesTab;
-    CodeRenderWindow* render = new CodeRenderWindow(m_app, this);
-    int index = filesTab->addTab(render, QString("Renderer"));
-    filesTab->setCurrentIndex(index);
-    */
+        QTabWidget* filesTab = m_ui.filesTab;
+        CodeRenderWindow* render = new CodeRenderWindow(m_app, this);
+        int tabIndex = filesTab->addTab(render, QString("Renderer"));
+        filesTab->setCurrentIndex(tabIndex);
+    }
+    else
+        QMessageBox::warning(this, "Analizing Failed", "Something went wrong...", QMessageBox::StandardButton::Ok);
 }
 
 void MainWindow::filesTree_doubleClick(const QModelIndex& modelIndex)

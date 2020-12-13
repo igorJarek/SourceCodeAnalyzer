@@ -11,7 +11,6 @@ class CodeRenderWindow : public QWidget // QOpenGLWidget zamiast QWidget
 
 public:
     CodeRenderWindow(App& app, QWidget *parent);
-    void paint(QPainter &painter);
 
 protected:
     void paintEvent(QPaintEvent *event) override;

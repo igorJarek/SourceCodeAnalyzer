@@ -14,17 +14,19 @@ public:
     ~App();
 
 public:
-    QSharedPointer<Database>                 getDatabase() { return m_database; }
-    void                                     reallocateDatabase(const QString& databasePath);
-    void                                     allocateDatabase(const QString& databasePath);
+    QSharedPointer<Database>                        getDatabase() { return m_database; }
+    void                                            reallocateDatabase(const QString& databasePath);
+    void                                            allocateDatabase(const QString& databasePath);
 
-    void                                     setAnalizedFolderPath(QString& path) { m_analyzedFolderPath = path; }
-    const QString&                           getAnalizedFolderPath() const        { return m_analyzedFolderPath; }
+    const QVector<QSharedPointer<SourceCodeBlock>>& getSourceCodeBlocks() const          { return m_sourceCodeBlocks; }
 
-    void                                     buildSourceCodeBlocks();
+    void                                            setAnalizedFolderPath(QString& path) { m_analyzedFolderPath = path; }
+    const QString&                                  getAnalizedFolderPath() const        { return m_analyzedFolderPath; }
+
+    void                                            buildSourceCodeBlocks();
 private:
-    QSharedPointer<Database>                 m_database = nullptr;
-    QString                                  m_analyzedFolderPath;
+    QSharedPointer<Database>                        m_database = nullptr;
+    QString                                         m_analyzedFolderPath;
 
-    QVector<QSharedPointer<SourceCodeBlock>> m_sourceCodeBlocks;                     
+    QVector<QSharedPointer<SourceCodeBlock>>        m_sourceCodeBlocks;
 };

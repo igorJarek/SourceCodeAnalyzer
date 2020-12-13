@@ -26,6 +26,12 @@ void AnalyzeWindow::initUi()
 
     m_ui.progressBar->hide();
     m_ui.analyzedFilePath->hide();
+
+    m_ui.folderPathEdit->setText("F:\\Programowanie\\SourceCodeAnalyzer\\lib");
+    m_analizedFolderPath = "F:\\Programowanie\\SourceCodeAnalyzer\\lib";
+
+    m_ui.includeFolderEdit->append("F:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
+    m_includePaths.append("F:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
 }
 
 void AnalyzeWindow::initSignalsConnections()
@@ -86,12 +92,14 @@ void AnalyzeWindow::start()
     if(m_analizedFolderPath.isEmpty())
     {
         QMessageBox::warning(this, "Analyzed Folder", "Choose analyzed folder.", QMessageBox::StandardButton::Ok);
+        reject();
         return;
     }
 
     if(m_databasePath.isEmpty())
     {
         QMessageBox::warning(this, "Database File", "Choose database file.", QMessageBox::StandardButton::Ok);
+        reject();
         return;
     }
 
@@ -138,8 +146,5 @@ void AnalyzeWindow::start()
 
     m_app.setAnalizedFolderPath(m_analizedFolderPath);
 
-    if( m_analizedFolderPath.isEmpty())
-        reject();
-    else
-        accept();
+    accept();
 }
