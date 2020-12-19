@@ -70,7 +70,15 @@ public:
     template<typename T>
     void                                   addColumnValue( uint32_t columnIndex, const T value)
     {
-        m_colValueList.push_back(std::to_string(value));
+        std::string str = std::to_string(value);
+        std::size_t pos = 0;
+        while ((pos = str.find('\'', pos)) != std::string::npos) 
+        {
+             str.replace(pos, 1, "\'\'");
+             pos += 2;
+        }
+
+        m_colValueList.push_back(str);
 
         auto iter = m_colDefMap->find(columnIndex);
 
@@ -137,10 +145,10 @@ public:
     std::string                     createSourceCodeTables(const std::string& tableName);
 
     uint32_t                        getTokenID()    const { return m_tokenTableIdAllocator; }
-    uint32_t                        getFileListID() const { return m_fileListTableIdAllocator; }
+    uint32_t                        getFileListID()  const { return m_fileListTableIdAllocator; }
 
     uint32_t                        allocTokenID()    { return ++m_tokenTableIdAllocator;  }
-    uint32_t                        allocFileListID() { return ++m_fileListTableIdAllocator;  }
+    uint32_t                        allocFileListID()  { return ++m_fileListTableIdAllocator;  }
 
 public:
     bool                            isOK()              const { return m_lastError == SQLITE_OK; }
