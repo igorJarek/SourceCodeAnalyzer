@@ -92,25 +92,43 @@ SourceCode::SourceCode(const string& filePath, const char* compilation_args[], u
 
     // tokenize whole file
 
-    m_tokens.fileLines = countFileLines(filePath);
-    if (m_tokens.fileLines != -1)
+    m_rawTokens.fileLines = countFileLines(filePath);
+    if (m_rawTokens.fileLines != -1)
     {
-        m_tokens.fileLastLineColumns = countFileLineColumns(filePath, m_tokens.fileLines);
-        if(m_tokens.fileLastLineColumns != -1)
+        m_rawTokens.fileLastLineColumns = countFileLineColumns(filePath, m_rawTokens.fileLines);
+        if(m_rawTokens.fileLastLineColumns != -1)
         {
             CXFile           file           = clang_getFile(m_translationUnit, filePath.c_str());
             CXSourceLocation beginLocation  = clang_getLocation(m_translationUnit, file, 1, 1);
-            CXSourceLocation endLocation    = clang_getLocation(m_translationUnit, file, static_cast<unsigned int>(m_tokens.fileLines), static_cast<unsigned int>(m_tokens.fileLastLineColumns));
+            CXSourceLocation endLocation    = clang_getLocation(m_translationUnit, file, static_cast<unsigned int>(m_rawTokens.fileLines), 
+                                                                                         static_cast<unsigned int>(m_rawTokens.fileLastLineColumns));
             CXSourceRange    tokenizerRange = clang_getRange(beginLocation, endLocation);
 
-            clang_tokenize(m_translationUnit, tokenizerRange, &m_tokens.tokens, &m_tokens.tokensCount);
+            clang_tokenize(m_translationUnit, tokenizerRange, &m_rawTokens.tokens, &m_rawTokens.tokensCount);
+        }
+    }
+
+    // building tokens
+
+    if(m_rawTokens.tokensCount)
+    {
+        for (uint32_t index{ 0 }; index < m_rawTokens.tokensCount; ++index)
+        {
+            const CXToken&   rawToken         = m_rawTokens.tokens[index];
+
+            CXTokenKind      rawTokenKind     = clang_getTokenKind(rawToken);
+            CXString         rawTokenSpelling = clang_getTokenSpelling(m_translationUnit, rawToken);
+            CXSourceLocation rawTokenLocation = clang_getTokenLocation(m_translationUnit, rawToken);
+            CXSourceRange    rawTokenRange    = clang_getTokenExtent(m_translationUnit, rawToken);
+
+            m_tokens.emplace_back(0, rawTokenKind, to_string(rawTokenSpelling), rawTokenLocation, rawTokenRange);
         }
     }
 }
 
 SourceCode::~SourceCode()
 {
-    clang_disposeTokens(m_translationUnit, m_tokens.tokens, m_tokens.tokensCount);
+    clang_disposeTokens(m_translationUnit, m_rawTokens.tokens, m_rawTokens.tokensCount);
     clang_disposeTranslationUnit(m_translationUnit);
     clang_disposeIndex(m_index);
 }

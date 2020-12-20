@@ -1,5 +1,7 @@
 #pragma once
 
+#include <LibClangStruct2Str/LibClangStruct2Str.h>
+
 #include <clang-c/Index.h>
 
 #include <list>
@@ -9,8 +11,11 @@
 
 using std::list;
 using std::string;
+using std::to_string;
 using std::shared_ptr;
 using std::function;
+
+/*         AST         */
 
 struct ASTNode
 {
@@ -38,7 +43,7 @@ struct AST
         void     increaseNestingLevel()       { m_nestingLevel++; }
         void     decreaseNestingLevel()       { m_nestingLevel--; }
 
-    private:    
+    private:
         void     traversingNode(function<void (shared_ptr<ASTNode>)> traversingFunc, shared_ptr<ASTNode>& node);
 
     private:
@@ -48,14 +53,69 @@ struct AST
         uint32_t            m_nestingLevel = 0;
 };
 
+/*         ClientData         */
+
 class ClientData
 {
 public:
-    ClientData(AST* ast) : 
+    ClientData(AST* ast) :
         m_ast(ast) 
     { }
 
     AST* m_ast;
+};
+
+/*         Tokens         */
+
+struct TokenPos
+{
+    TokenPos() {}
+    TokenPos(const CXSourceLocation& location)
+    {
+        setCXSourceLocation(location);
+    }
+
+    void setCXSourceLocation(const CXSourceLocation& location)
+    {
+        CXFile file;
+        clang_getExpansionLocation(location, &file, &linePos, &colPos, nullptr);
+
+        fileName = to_string(clang_getFileName(file)); 
+    }
+
+    bool operator==(const TokenPos& right) const
+    {
+        return linePos == right.linePos && colPos == right.colPos;
+    }
+
+    string   fileName;
+
+    uint32_t linePos = 0;
+    uint32_t colPos  = 0;
+};
+
+struct TokenRange
+{
+    TokenRange() {}
+    TokenRange(const CXSourceRange& range)
+    {
+        setCXSourceRange(range);
+    }
+
+    void setCXSourceRange(const CXSourceRange& range)
+    {
+        CXSourceLocation locStart  = clang_getRangeStart(range);
+        CXSourceLocation locEnd    = clang_getRangeEnd(range);
+
+        clang_getExpansionLocation(locStart, nullptr, &startLine, &startCol, nullptr);
+        clang_getExpansionLocation(locEnd,   nullptr, &endLine,   &endCol,   nullptr);
+    }
+
+    uint32_t startLine = 0;
+    uint32_t startCol  = 0;
+
+    uint32_t endLine   = 0;
+    uint32_t endCol    = 0;
 };
 
 struct Tokens
@@ -65,6 +125,27 @@ struct Tokens
     CXToken* tokens              = nullptr;
     uint32_t tokensCount         = 0;
 };
+
+struct Token
+{
+    Token() {}
+    Token(uint32_t id, CXTokenKind kind, string spelling, CXSourceLocation location, CXSourceRange range) :
+        tokenID(id), tokenKind(kind), tokenSpelling(spelling), tokenLocation(location), tokenRange(range)
+    {
+
+    }
+
+    TokenPos   getTokenPos()      { return TokenPos(tokenLocation);       }
+    TokenRange getTokenRange()    { return TokenRange(tokenRange);   }
+
+    uint32_t         tokenID       = 0;
+    CXTokenKind      tokenKind;
+    string           tokenSpelling;
+    CXSourceLocation tokenLocation;
+    CXSourceRange    tokenRange;
+};
+
+/*         SourceCode         */
 
 class SourceCode
 {
@@ -78,8 +159,10 @@ class SourceCode
     public:
         CXTranslationUnit&  getTranslationUnit() { return m_translationUnit; }
 
-        AST&                getAST()             { return m_ast; }
-        Tokens&             getTokens()          { return m_tokens; }
+        AST&                getAST()          { return m_ast; }
+        const list<Token>&  getTokens() const { return m_tokens; }
+        list<Token>&        getTokens()       { return m_tokens; }
+
 
     private:
         const string&       m_filePath;
@@ -90,5 +173,6 @@ class SourceCode
         uint32_t            m_compilationErrorCount;
 
         AST                 m_ast;
-        Tokens              m_tokens;
+        Tokens              m_rawTokens;
+        list<Token>         m_tokens;
 };
