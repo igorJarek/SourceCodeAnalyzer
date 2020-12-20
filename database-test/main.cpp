@@ -14,7 +14,7 @@ int main()
 
     FolderBrowser folderBrowser;
     folderBrowser.clearFileList();
-    folderBrowser.setFileTypeBrowser(FileType::SOURCE_FILE);
+    folderBrowser.setFileTypeBrowser(FileType::SOURCE_AND_HEADER_FILE);
     folderBrowser.addIgnoreFilePath("..\\lib\\src\\TestPrimitives.cpp");
     folderBrowser.startFolderBrowse(LIB_PATH);
 

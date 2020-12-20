@@ -12,36 +12,42 @@
 using std::map;
 using std::to_string;
 
-struct FunctionPos
+struct DatabaseBuilderCalling
 {
-    void setCXSourceRange(const CXSourceRange& range)
-    {
-        CXSourceLocation locStart  = clang_getRangeStart(range);
-        CXSourceLocation locEnd    = clang_getRangeEnd(range);
+    // DB Elements
+    uint32_t callingID            = 0; 
+    uint32_t functionNameTokenID  = 0;
+    uint32_t functionDefinitionID = 0;
+    string   functionDefinitionPath;
 
-        clang_getExpansionLocation(locStart, nullptr, &startLine, &startCol, nullptr);
-        clang_getExpansionLocation(locEnd,   nullptr, &endLine, &endCol, nullptr);
-    }
+    //uint32_t openingBracketTokenID;
+    //uint32_t closingBracketTokenID;
 
-    uint32_t startLine, startCol;
-    uint32_t endLine, endCol;
+    // Internal Use
+    string   functionName;
+    TokenPos functionNamePos; 
 };
 
-struct Function             // clang_getCursorReferenced, clang_isCursorDefinition, clang_equalCursors, clang_getCanonicalCursor (dla definicji zwroci plik .hpp)
-                            // clang_getCursorResultType, clang_getNumArgTypes
+struct DatabaseBuilderFunction
 {
-    uint8_t     kind;       // 0 - empty, 1 - function, 2 - method, 3 - invoke
+    // DB Elements
+    uint32_t functionID          = 0;
+    uint32_t functionNameTokenID = 0;
 
-    string      usr;        // clang_getCursorUSR
-    string      mangling;   // clang_Cursor_getMangling
-    FunctionPos pos;        // clang_getCursorLocation ?
+    //uint32_t openingBracketTokenID;
+    //uint32_t closingBracketTokenID;
 
-    string      name;       // clang_getCursorSpelling ?
-    uint8_t     argCount;   // clang_Cursor_getNumArguments
+    // Internal Use
+    string   functionName;
+    TokenPos functionNamePos; 
 };
 
 class DatabaseBuilder
 {
+    public:
+        using CallingMap   = map<string, DatabaseBuilderCalling>;
+        using FunctionsMap = map<string, DatabaseBuilderFunction>;
+
     public:
         DatabaseBuilder(Database& database,
                         const string& appName, const string& appVersion,
@@ -55,7 +61,9 @@ class DatabaseBuilder
     private:
         void createDatabaseTables(const string& filePath);
 
-        void createInsertTokensTableData(const string& filePath, uint32_t tokenID, const CXTokenKind& tokenKind, const CXString& tokenSpelling, const CXSourceRange& tokenRange);
+        void createInsertTokensTableData(const string& filePath, const Token& token);
+        void createInsertCallingTableData(const string& filePath, const DatabaseBuilderCalling& calling);
+        void createInsertFunctionsTableData(const string& filePath, const DatabaseBuilderFunction& function);
 
     private:
         const string&        m_appName;
@@ -65,4 +73,6 @@ class DatabaseBuilder
         uint32_t             m_argsCount       = 0;
 
         Database&            m_database;
+        CallingMap           m_callingMap;
+        FunctionsMap         m_functionsMap;
 };

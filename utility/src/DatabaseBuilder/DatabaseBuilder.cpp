@@ -21,8 +21,6 @@ DatabaseBuilder::DatabaseBuilder(Database& database,
                             DatabaseOptions::READ_WRITE_DB_FILE |
                             DatabaseOptions::FILE_DB_FILE
                             );
-
-
 }
 
 DatabaseBuilder::~DatabaseBuilder()
@@ -40,10 +38,10 @@ void DatabaseBuilder::createDatabaseTables(const string& filePath)
     }
 }
 
-void DatabaseBuilder::createInsertTokensTableData(const string& filePath, uint32_t tokenID, const CXTokenKind& tokenKind, const CXString& tokenSpelling, const CXSourceRange& tokenRange)
+void DatabaseBuilder::createInsertTokensTableData(const string& filePath, const Token& token)
 {
-    CXSourceLocation rangeStart = clang_getRangeStart(tokenRange);
-    CXSourceLocation rangeEnd   = clang_getRangeEnd(tokenRange);
+    CXSourceLocation rangeStart = clang_getRangeStart(token.tokenRange);
+    CXSourceLocation rangeEnd   = clang_getRangeEnd(token.tokenRange);
 
     uint32_t startExpansionLine, startExpansioColumn;
     uint32_t endExpansionLine, endExpansioColumn;
@@ -54,24 +52,61 @@ void DatabaseBuilder::createInsertTokensTableData(const string& filePath, uint32
     DatabaseInsertQuery insertQueryBuilder;
     insertQueryBuilder.newQuery(filePath + "\\tokens", g_tokenColumnDict);
 
-    insertQueryBuilder.addColumnValue(TokenID,                  tokenID);
-    insertQueryBuilder.addColumnValue(TokenKind,                (uint32_t)tokenKind);
-    insertQueryBuilder.addCXStringColumnValue(TokenSpelling,    tokenSpelling);
-    insertQueryBuilder.addColumnValue(TokenStartPos_Line,       startExpansionLine);
-    insertQueryBuilder.addColumnValue(TokenStartPos_Col,        startExpansioColumn);
-    insertQueryBuilder.addColumnValue(TokenEndPos_Line,         endExpansionLine);
-    insertQueryBuilder.addColumnValue(TokenEndPos_Col,          endExpansioColumn);
+    insertQueryBuilder.addColumnValue(TokenID,            token.tokenID);
+    insertQueryBuilder.addColumnValue(TokenKind,          (uint32_t)token.tokenKind);
+    insertQueryBuilder.addColumnValue(TokenSpelling,      token.tokenSpelling);
+    insertQueryBuilder.addColumnValue(TokenStartPos_Line, startExpansionLine);
+    insertQueryBuilder.addColumnValue(TokenStartPos_Col,  startExpansioColumn);
+    insertQueryBuilder.addColumnValue(TokenEndPos_Line,   endExpansionLine);
+    insertQueryBuilder.addColumnValue(TokenEndPos_Col,    endExpansioColumn);
 
-    DatabaseQueryErrMsg tokenQueryErrMsg = m_database.sendQuery(insertQueryBuilder.buildQuery());
+    const string& query = insertQueryBuilder.buildQuery();
+    DatabaseQueryErrMsg tokenQueryErrMsg = m_database.sendQuery(query);
     if(m_database.isNotOK())
-        cout << "sendQuery() error : " << tokenQueryErrMsg << endl;
+    {
+        cout << "sendQuery() error in query : " << query << endl;
+        cout << "Error message : " << tokenQueryErrMsg << endl;
+    }
+}
+
+void DatabaseBuilder::createInsertCallingTableData(const string& filePath, const DatabaseBuilderCalling& calling)
+{
+    DatabaseInsertQuery insertQueryBuilder;
+    insertQueryBuilder.newQuery(filePath + "\\calling", g_callingColumnDict);
+
+    insertQueryBuilder.addColumnValue(CalllingID,         calling.callingID);
+    insertQueryBuilder.addColumnValue(CallingNameTokenID, calling.functionNameTokenID);
+    insertQueryBuilder.addColumnValue(CallingFilePath,    calling.functionDefinitionPath);
+    insertQueryBuilder.addColumnValue(CallingFunctionID,  calling.functionDefinitionID);
+
+    const string& query = insertQueryBuilder.buildQuery();
+    DatabaseQueryErrMsg tokenQueryErrMsg = m_database.sendQuery(query);
+    if(m_database.isNotOK())
+    {
+        cout << "sendQuery() error in query : " << query << endl;
+        cout << "Error message : " << tokenQueryErrMsg << endl;
+    }
+}
+
+void DatabaseBuilder::createInsertFunctionsTableData(const string& filePath, const DatabaseBuilderFunction& function)
+{
+    DatabaseInsertQuery insertQueryBuilder;
+    insertQueryBuilder.newQuery(filePath + "\\functions", g_functionsColumnDict);
+
+    insertQueryBuilder.addColumnValue(FunctionsID,          function.functionID);
+    insertQueryBuilder.addColumnValue(FunctionsNameTokenID, function.functionNameTokenID);
+
+    const string& query = insertQueryBuilder.buildQuery();
+    DatabaseQueryErrMsg tokenQueryErrMsg = m_database.sendQuery(query);
+    if(m_database.isNotOK())
+    {
+        cout << "sendQuery() error in query : " << query << endl;
+        cout << "Error message : " << tokenQueryErrMsg << endl;
+    }
 }
 
 void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_t fileIndex, size_t fileCount)> buildState)
 {
-    const list<string>& fileList    = m_folderBrowser.getFileList();
-    size_t              fileCounter = 0;
-
     string dbErrMsg = m_database.createGlobalTable(clang_getClangVersion(), m_appName, m_appVersion);
     if(m_database.isNotOK())
     {
@@ -86,120 +121,182 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
         return;
     }
 
+    const list<string>&                 fileList    = m_folderBrowser.getFileList();
+    map<string, shared_ptr<SourceCode>> headerSourceFileMap;
+    size_t                              fileCounter = 0;
+
     for(const string& filePath : fileList)
+        headerSourceFileMap.emplace(filePath, make_shared<SourceCode>(filePath, m_compilationArgs, m_argsCount));
+
+    for(const auto& [filePath, SourceCodePtr] : headerSourceFileMap)
     {
         buildState(filePath, fileCounter++, m_folderBrowser.getFileCount());
 
-        SourceCode sourceCode(filePath, m_compilationArgs, m_argsCount);
-        const CXTranslationUnit& tu     = sourceCode.getTranslationUnit(); 
-        const AST&               ast    = sourceCode.getAST();
-        const Tokens&            tokens = sourceCode.getTokens();
+        shared_ptr<SourceCode>   sourceCode = SourceCodePtr;
+        AST&                     ast        = sourceCode->getAST();
+        list<Token>&             tokens     = sourceCode->getTokens();
 
         createDatabaseTables(filePath);
 
-        if(tokens.tokensCount)
+        for(Token& token : tokens)
         {
-            for (uint32_t index{ 0 }; index < tokens.tokensCount; ++index)
-            {
-                const CXToken&   token = tokens.tokens[index];
+            if(token.tokenID == 0)
+                token.tokenID = m_database.allocTokenID();
 
-                CXTokenKind      tokenKind     = clang_getTokenKind(token);
-                CXString         tokenSpelling = clang_getTokenSpelling(tu, token);
-                CXSourceRange    tokenRange    = clang_getTokenExtent(tu, token);
-
-                uint32_t         tokenID       = m_database.allocTokenID();
-
-                createInsertTokensTableData(filePath, tokenID, tokenKind, tokenSpelling, tokenRange);
-            }
+            createInsertTokensTableData(filePath, token);
         }
-
-        /*
-        ExecutionTimeMeasurement timeMeasurement("Parsing " + filePath + " file in");
-
-        map<string, Function> functionsDefMap;
 
         ast.traversingAST
         (
-            [&functionsDefMap](shared_ptr<ASTNode> astNode) -> void
+            [this, &tokens, &headerSourceFileMap](shared_ptr<ASTNode> astNode) -> void
             {
                 CXCursor     cursor     = astNode->cursor;
                 CXCursorKind cursorKind = clang_getCursorKind(cursor);
 
-                if(cursorKind == CXCursor_FunctionDecl)
+                if(cursorKind == CXCursor_FunctionDecl ||
+                   cursorKind == CXCursor_CXXMethod)
                 {
                     if(clang_isCursorDefinition(cursor))
                     {
-                        Function function;
+                        DatabaseBuilderFunction dbFunction;
+                        dbFunction.functionID = m_database.allocFunctionsID();
+                        dbFunction.functionName = to_string(clang_getCursorSpelling(cursor));
+                        dbFunction.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
 
-                        function.kind     = 1;
+                        for(Token& token : tokens)
+                        {
+                            if(token.tokenSpelling == dbFunction.functionName)
+                            if(token.getTokenPos() == dbFunction.functionNamePos)
+                                dbFunction.functionNameTokenID = token.tokenID;
+                        }
 
-                        function.usr      = to_string(clang_getCursorUSR(cursor));
-                        function.mangling = to_string(clang_Cursor_getMangling(cursor));
-                        function.pos.setCXSourceRange(clang_getCursorExtent(cursor));
-
-                        function.name     = to_string(clang_getCursorSpelling(cursor));
-                        function.argCount = clang_Cursor_getNumArguments(cursor);
-
-                        functionsDefMap.insert( {function.usr, function} );
+                        m_functionsMap.insert( {to_string(clang_getCursorUSR(cursor)), dbFunction} );
                     }
                 }
-                else if(cursorKind == CXCursor_CXXMethod)
-                {
-                    if(clang_isCursorDefinition(cursor))
-                    {
-                        Function function;
 
-                        function.kind     = 2;
-
-                        function.usr      = to_string(clang_getCursorUSR(cursor));
-                        function.mangling = to_string(clang_Cursor_getMangling(cursor));
-                        function.pos.setCXSourceRange(clang_getCursorExtent(cursor));
-
-                        function.name     = to_string(clang_getCursorSpelling(cursor));
-                        function.argCount = clang_Cursor_getNumArguments(cursor);
-
-                        functionsDefMap.insert( {function.usr, function} );
-                    }
-                }
                 else if(cursorKind == CXCursor_CallExpr)
                 {
-                    Function function;
+                    CXCursor              cursorRef     = clang_getCursorReferenced(cursor);
+                    CXCursorKind          cursorRefKind = clang_getCursorKind(cursorRef);
 
-                    function.kind     = 3;
-
-                    function.pos.setCXSourceRange(clang_getCursorExtent(cursor));
-
-                    function.name     = to_string(clang_getCursorSpelling(cursor));
-                    function.argCount = clang_Cursor_getNumArguments(cursor);
-
-                    CXCursor     ref        = clang_getCursorReferenced(cursor);
-                    CXCursorKind cursorRefKind = clang_getCursorKind(ref);
-
-                    if(!clang_isInvalid(cursorRefKind) && cursorRefKind != CXCursor_Constructor && cursorRefKind != CXCursor_Destructor)
+                    if(!clang_isInvalid(cursorRefKind)        &&
+                        cursorRefKind != CXCursor_Constructor &&
+                        cursorRefKind != CXCursor_Destructor)
                     {
-                        if(!clang_equalCursors(cursor, ref))
+                        if(!clang_equalCursors(cursor, cursorRef))
                         {
-                            function.usr      = to_string(clang_getCursorUSR(ref));
-                            function.mangling = to_string(clang_Cursor_getMangling(ref));
+                            if(clang_isCursorDefinition(cursorRef))
+                            {
+                                if(cursorRefKind == CXCursor_FunctionDecl) // template after included is function
+                                {
+                                    DatabaseBuilderFunction dbFunction;
+                                    dbFunction.functionID = m_database.allocFunctionsID();
+                                    dbFunction.functionName = to_string(clang_getCursorSpelling(cursorRef));
+                                    dbFunction.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursorRef)); 
 
-                            functionsDefMap.insert( {function.usr, function} );
+                                    list<Token>& refFileTokens = headerSourceFileMap.find(dbFunction.functionNamePos.fileName)->second->getTokens();
+
+                                    for(Token& token : refFileTokens)
+                                    {
+                                        if(token.tokenID == 0)
+                                            token.tokenID = m_database.allocTokenID();
+
+                                        if(token.tokenSpelling == dbFunction.functionName)
+                                        if(token.getTokenPos() == dbFunction.functionNamePos)
+                                            dbFunction.functionNameTokenID = token.tokenID;
+                                    }
+
+                                    m_functionsMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbFunction} );
+                                }
+                            }
+
+                            DatabaseBuilderCalling dbCalling;
+                            dbCalling.callingID = m_database.allocCallingID();
+                            dbCalling.functionName = to_string(clang_getCursorSpelling(cursor));
+
+                            if(cursorRefKind == CXCursor_CXXMethod)
+                            {
+                                shared_ptr<ASTNode> memberRefExp = astNode->findChild(CXCursor_MemberRefExpr);
+                                if(memberRefExp)
+                                    dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(memberRefExp->cursor));
+                            }
+                            else
+                            {
+                                dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
+                            }
+
+                            for(Token& token : tokens)
+                            {
+                                if(token.tokenSpelling == dbCalling.functionName)
+                                if(token.getTokenPos() == dbCalling.functionNamePos)
+                                    dbCalling.functionNameTokenID = token.tokenID;
+                            }
+
+                            m_callingMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbCalling} );
                         }
                     }
                 }
             }
         );
+    }
 
-        if(functionsDefMap.size())
+    for(const string& filePath : fileList)
+    {
+        for(auto& [usr, dbCalling] : m_callingMap)
         {
-            cout << "\tResult : " << endl; 
-
-            for(auto& elem : functionsDefMap)
+            if(dbCalling.functionNamePos.fileName == filePath)
             {
-                cout << "\t\t";
-                cout << (elem.second.kind == 3 ? "Invoke : " : "Def : ");
-                cout << elem.first << " -> " << elem.second.name << endl;
+                map<string, DatabaseBuilderFunction>::iterator it = m_functionsMap.find(usr);
+                if(it != m_functionsMap.end())
+                {
+                    const DatabaseBuilderFunction& definition = it->second;
+                    dbCalling.functionDefinitionID = definition.functionID;
+                    dbCalling.functionDefinitionPath = definition.functionNamePos.fileName;
+
+                    createInsertCallingTableData(filePath, dbCalling);
+                }
             }
         }
-        */
+
+        for(const auto& [usr, dbFunction] : m_functionsMap)
+        {
+            if(dbFunction.functionNamePos.fileName == filePath)
+                createInsertFunctionsTableData(filePath, dbFunction);
+        }
     }
+
+    /*
+    for(const string& filePath : fileList)
+    {
+        cout << "Result " << filePath << " : " << endl; 
+
+        for(const auto& [usr, dbCalling] : m_callingMap)
+        {
+            if(dbCalling.functionNamePos.fileName == filePath)
+            {
+                map<string, DatabaseBuilderFunction>::iterator it = m_functionsMap.find(usr);
+                if(it != m_functionsMap.end())
+                {
+                    cout << "\tInvoke : " << endl;
+                    cout << "\t\tFunctionName : " << dbCalling.functionName << ' ' << endl;
+                    cout << "\t\tFunctionPath : " << dbCalling.functionNamePos.fileName << endl;
+                    cout << "\t\tTokenID : " << dbCalling.functionNameTokenID << endl;
+                    cout << "\t\tUSR : " << usr << endl;
+                }
+            }
+        }
+
+        for(const auto& [usr, dbFunction] : m_functionsMap)
+        {
+            if(dbFunction.functionNamePos.fileName == filePath)
+            {
+                cout << "\tDefinition : " << endl;
+                cout << "\t\tFunctionName : " << dbFunction.functionName << ' ' << endl;
+                cout << "\t\tFunctionPath : " << dbFunction.functionNamePos.fileName << endl;
+                cout << "\t\tTokenID : " << dbFunction.functionNameTokenID << endl;
+                cout << "\t\tUSR : " << usr << endl;
+            }
+        }
+    }
+    */
 }
