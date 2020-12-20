@@ -1,9 +1,11 @@
 #include <Database/DatabaseColumnDict.h>
 #include <Database/ColumnDefinition.h>
 
-GlobalColumnDict   g_globalColumnDict;
-FileListColumnDict g_fileListColumnDict;
-TokenColumnDict    g_tokenColumnDict;
+GlobalColumnDict    g_globalColumnDict;
+FileListColumnDict  g_fileListColumnDict;
+TokenColumnDict     g_tokenColumnDict;
+CallingColumnDict   g_callingColumnDict;
+FunctionsColumnDict g_functionsColumnDict;
 
 GlobalColumnDict::GlobalColumnDict()
 {
@@ -27,4 +29,18 @@ TokenColumnDict::TokenColumnDict()
     emplace(TokenTableColName::TokenStartPos_Col,                   "TokenStartPos_Col");
     emplace(TokenTableColName::TokenEndPos_Line,                    "TokenEndPos_Line");
     emplace(TokenTableColName::TokenEndPos_Col,                     "TokenEndPos_Col");
+}
+
+CallingColumnDict::CallingColumnDict()
+{
+    emplace(CallingTableColName::CalllingID,                        "CalllingID");
+    emplace(CallingTableColName::CallingNameTokenID,                "CallingNameTokenID");
+    emplace(CallingTableColName::CallingFilePath,                   "CallingFilePath");
+    emplace(CallingTableColName::CallingFunctionID,                 "CallingFunctionID");
+}
+
+FunctionsColumnDict::FunctionsColumnDict()
+{
+    emplace(FunctionsTableColName::FunctionsID,                     "FunctionsID");
+    emplace(FunctionsTableColName::FunctionsNameTokenID,            "FunctionsNameTokenID");
 }

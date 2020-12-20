@@ -126,6 +126,8 @@ Database::Database(const std::string& databasePath) :
     createGlobalTableTemplateQuery();
     createFileListTableTemplateQuery();
     createTokenTableTemplateQuery();
+    createCallingTableTemplateQuery();
+    createFunctionsTableTemplateQuery();
 }
 
 Database::~Database()
@@ -219,6 +221,32 @@ void Database::createTokenTableTemplateQuery()
     };
 }
 
+void Database::createCallingTableTemplateQuery()
+{
+    m_callingTableTemplateQuery =
+    {
+        "CREATE TABLE \"<?filePath?>\\calling\""
+        "("
+            "CalllingID INT PRIMARY KEY,"
+            "CallingNameTokenID INT NOT NULL,"
+            "CallingFilePath VARCHAR(255) NOT NULL,"
+            "CallingFunctionID INT NOT NULL"
+        ");"
+    };
+}
+
+void Database::createFunctionsTableTemplateQuery()
+{
+    m_functionsTableTemplateQuery =
+    {
+        "CREATE TABLE \"<?filePath?>\\functions\""
+        "("
+            "FunctionsID INT PRIMARY KEY,"
+            "FunctionsNameTokenID INT NOT NULL"
+        ");"
+    };
+}
+
 std::string Database::createGlobalTable(const CXString& clangVersion, const std::string& appName, const std::string& appVersion)
 {
     DatabaseQueryErrMsg queryErrMsg;
@@ -271,7 +299,9 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
 {
     DatabaseQueryErrMsg queryErrMsg;
     std::string         queryErrMsgStr;
-    std::string         tokenTableQuery = m_tokenTableTemplateQuery;
+    std::string         tokenTableQuery    = m_tokenTableTemplateQuery;
+    std::string         callingTableQuery  = m_callingTableTemplateQuery;
+    std::string         functionsTableQuery = m_functionsTableTemplateQuery;
 
     if(isOK())
     {
@@ -299,6 +329,28 @@ std::string Database::createSourceCodeTables(const std::string& tableName)
             }
 
             queryErrMsg = sendQuery(tokenTableQuery);
+            if(isNotOK())
+                return queryErrMsg.getString();
+
+            pos = callingTableQuery.find(keyword);
+            if (pos != std::string::npos)
+            {
+                callingTableQuery.erase(pos, keyword.size());
+                callingTableQuery.insert(pos, tableName);
+            }
+
+            queryErrMsg = sendQuery(callingTableQuery);
+            if(isNotOK())
+                return queryErrMsg.getString();
+
+            pos = functionsTableQuery.find(keyword);
+            if (pos != std::string::npos)
+            {
+                functionsTableQuery.erase(pos, keyword.size());
+                functionsTableQuery.insert(pos, tableName);
+            }
+
+            queryErrMsg = sendQuery(functionsTableQuery);
             if(isNotOK())
                 return queryErrMsg.getString();
         }

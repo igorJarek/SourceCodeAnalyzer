@@ -144,11 +144,15 @@ public:
     std::string                     createFileListTable();
     std::string                     createSourceCodeTables(const std::string& tableName);
 
-    uint32_t                        getTokenID()    const { return m_tokenTableIdAllocator; }
     uint32_t                        getFileListID()  const { return m_fileListTableIdAllocator; }
+    uint32_t                        getTokenID()     const { return m_tokenTableIdAllocator; }
+    uint32_t                        getCallingID()   const { return m_callingTableIdAllocator; }
+    uint32_t                        getFunctionsID() const { return m_functionsTableIdAllocator; }
 
-    uint32_t                        allocTokenID()    { return ++m_tokenTableIdAllocator;  }
     uint32_t                        allocFileListID()  { return ++m_fileListTableIdAllocator;  }
+    uint32_t                        allocTokenID()     { return ++m_tokenTableIdAllocator;  }
+    uint32_t                        allocCallingID()   { return ++m_callingTableIdAllocator;  }
+    uint32_t                        allocFunctionsID() { return ++m_functionsTableIdAllocator;  }
 
 public:
     bool                            isOK()              const { return m_lastError == SQLITE_OK; }
@@ -160,6 +164,8 @@ private:
     void                            createGlobalTableTemplateQuery();
     void                            createFileListTableTemplateQuery();
     void                            createTokenTableTemplateQuery();
+    void                            createCallingTableTemplateQuery();
+    void                            createFunctionsTableTemplateQuery();
 
     void                            dumpQueryToFile(const std::string& query, const char* comment = nullptr);
 
@@ -178,7 +184,11 @@ private:
     std::string                     m_globalTableTemplateQuery;
     std::string                     m_fileListTableTemplateQuery;
     std::string                     m_tokenTableTemplateQuery;
+    std::string                     m_callingTableTemplateQuery;
+    std::string                     m_functionsTableTemplateQuery;
 
-    uint32_t                        m_tokenTableIdAllocator = 0;
-    uint32_t                        m_fileListTableIdAllocator = 0;
+    uint32_t                        m_fileListTableIdAllocator  = 0;
+    uint32_t                        m_tokenTableIdAllocator     = 0;
+    uint32_t                        m_callingTableIdAllocator   = 0;
+    uint32_t                        m_functionsTableIdAllocator = 0;
 };

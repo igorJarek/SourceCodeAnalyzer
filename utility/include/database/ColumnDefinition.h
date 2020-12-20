@@ -30,3 +30,20 @@ enum TokenTableColName : uint32_t
     TokenTableLast
 };
 
+enum CallingTableColName : uint32_t
+{
+    CalllingID,
+    CallingNameTokenID,
+    CallingFilePath,
+    CallingFunctionID,
+
+    CallingTableLast
+};
+
+enum FunctionsTableColName : uint32_t
+{
+    FunctionsID,
+    FunctionsNameTokenID,
+
+    FunctionsTableLast
+};
