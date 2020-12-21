@@ -115,12 +115,15 @@ void AnalyzeWindow::start()
     folderBrowser.startFolderBrowse(m_analizedFolderPath.toStdString());
 
     int32_t includeCount = m_includePaths.size();
+    QScopedArrayPointer<QByteArray>  tmpArgs         = QScopedArrayPointer<QByteArray>(new QByteArray[includeCount]);
     QScopedArrayPointer<const char*> compilationArgs = QScopedArrayPointer<const char*>(new const char*[includeCount * 2]);
 
     for(int32_t index = 0; index < includeCount; ++index)
     {
+        tmpArgs[index].append(m_includePaths.at(index).toLocal8Bit().constData());
+
         compilationArgs[index * 2 + 0] = "-I";
-        compilationArgs[index * 2 + 1] = m_includePaths.at(index).toLocal8Bit().constData();
+        compilationArgs[index * 2 + 1] = tmpArgs[index];
     }
 
     DatabaseBuilder databaseBuilder(database, "Analyzer", "0.1alpha", folderBrowser, compilationArgs.get(), 2);
