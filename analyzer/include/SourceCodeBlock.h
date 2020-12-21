@@ -10,11 +10,11 @@
 
 class QueryResults;
 
-class Token : public QStaticText
+class SourceCodeBlockToken : public QStaticText
 {
     public:
-        Token() {}
-        ~Token() {}
+        SourceCodeBlockToken() {}
+        ~SourceCodeBlockToken() {}
 
     public:
         void     setKind(uint16_t kind)               { m_kind = kind; }
@@ -45,5 +45,5 @@ class SourceCodeBlock
         void draw(QPainter& painter, QFontMetrics& fontMetrics);
 
     private:
-        QVector<QSharedPointer<std::list<Token>>> m_tokens;
+        QVector<QSharedPointer<std::list<SourceCodeBlockToken>>> m_tokens;
 };

@@ -21,7 +21,7 @@ SourceCodeBlock::SourceCodeBlock(QueryResults& tokenResults, int32_t lineCount)
             QMessageBox::critical(nullptr, "Token Error", "tokenStartPos_Line != tokenEndPos_Line", QMessageBox::StandardButton::Ok);
         else
         {
-            Token token;
+            SourceCodeBlockToken token;
             token.setText(QString::fromStdString(tokenSpelling));
 
             token.setKind(tokenKind);
@@ -29,7 +29,7 @@ SourceCodeBlock::SourceCodeBlock(QueryResults& tokenResults, int32_t lineCount)
             token.setEndColPos(tokenEndPos_Col);
 
             if(!m_tokens[tokenStartPos_Line-1])
-                m_tokens[tokenStartPos_Line-1] = QSharedPointer<std::list<Token>>(new std::list<Token>);
+                m_tokens[tokenStartPos_Line-1] = QSharedPointer<std::list<SourceCodeBlockToken>>(new std::list<SourceCodeBlockToken>);
 
             m_tokens[tokenStartPos_Line-1]->push_back(token);
         }
@@ -63,7 +63,7 @@ void SourceCodeBlock::draw(QPainter& painter, QFontMetrics& fontMetrics)
     {
         if(m_tokens[tokenIndex]) // prevent against empty line
         {
-            for(Token& token : *m_tokens[tokenIndex])
+            for(SourceCodeBlockToken& token : *m_tokens[tokenIndex])
             {
                 if(lastTokenEndCol)
                 {
