@@ -8,6 +8,7 @@
 #include <list>
 #include <vector>
 #include <fstream>
+#include <functional>
 
 class DatabaseQueryErrMsg
 {
@@ -132,11 +133,14 @@ enum DatabaseOptions
 class Database
 {
 public:
+    Database();
     Database(const std::string& databasePath);
+
     ~Database();
 
 public:
     void                            openDatabase(uint32_t databaseOptions /* DatabaseOptions enum */);
+    void                            saveAsDatabase(const std::string& databasePath, std::function<void (double currentPercent)> saveState);
     DatabaseQueryErrMsg             sendQuery(const std::string& query);
     DatabaseQueryErrMsg             recvQuery(const std::string& query, QueryResults& results);
 

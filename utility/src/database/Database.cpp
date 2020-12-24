@@ -120,6 +120,16 @@ std::string& DatabaseInsertQuery::buildQuery()
 
 // *********************** Database ***********************
 
+Database::Database() :
+    m_databasePath(":memory:")
+{
+    createGlobalTableTemplateQuery();
+    createFileListTableTemplateQuery();
+    createTokenTableTemplateQuery();
+    createCallingTableTemplateQuery();
+    createFunctionsTableTemplateQuery();
+}
+
 Database::Database(const std::string& databasePath) :
     m_databasePath(databasePath)
 {
@@ -157,14 +167,17 @@ void Database::openDatabase(uint32_t databaseOptions)
     const int32_t sqliteFlags =  (readOnly  ? SQLITE_OPEN_READONLY : (readWrite ? (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE) : 0)) | 
                                  (inMemory  ? SQLITE_OPEN_MEMORY : 0);
 
-    const std::filesystem::path path(m_databasePath);
-
-    if (std::filesystem::exists(path))
+    if(!inMemory)
     {
-        if(m_databaseOptions & TRUNCATE_DB_FILE)
+        const std::filesystem::path path(m_databasePath);
+
+        if (std::filesystem::exists(path))
         {
-            if(std::filesystem::is_regular_file(path))
-                std::filesystem::remove(path);
+            if(m_databaseOptions & TRUNCATE_DB_FILE)
+            {
+                if(std::filesystem::is_regular_file(path))
+                    std::filesystem::remove(path);
+            }
         }
     }
 
@@ -177,6 +190,45 @@ void Database::openDatabase(uint32_t databaseOptions)
 
     if(m_databaseOptions & DUMP_QUERIES_TO_FILE)
         m_dumpQueryFile.open("dumpQueries.txt", std::ios::out | std::ios::trunc);
+}
+
+void Database::saveAsDatabase(const std::string& databasePath, std::function<void (double currentPercent)> saveState)
+{
+    sqlite3*        databaseFile;
+    sqlite3_backup* backup;
+    double          percent = 0.0;
+
+    m_lastError = sqlite3_open(databasePath.c_str(), &databaseFile);
+    if(isOK())
+    {
+        backup = sqlite3_backup_init(databaseFile, "main", m_database, "main");
+        if(backup)
+        {
+            do
+            {
+                m_lastError = sqlite3_backup_step(backup, -1);
+
+                percent = (sqlite3_backup_remaining(backup) / sqlite3_backup_pagecount(backup)) * 100.0;
+                saveState(percent);
+
+                if(m_lastError == SQLITE_OK || m_lastError == SQLITE_BUSY)
+                  sqlite3_sleep(100);
+                else if(m_lastError == SQLITE_DONE)
+                {
+                    saveState(100.0);
+                    break;
+                }
+                //else if(m_lastError == SQLITE_READONLY, SQLITE_NOMEM, SQLITE_LOCKED, SQLITE_IOERR_ACCESS)
+
+            } while(m_lastError == SQLITE_OK || m_lastError == SQLITE_BUSY || m_lastError == SQLITE_LOCKED);
+
+            sqlite3_backup_finish(backup);
+        }
+
+        m_lastError = sqlite3_errcode(databaseFile);
+
+        sqlite3_close(databaseFile);
+    }
 }
 
 void Database::createGlobalTableTemplateQuery()
