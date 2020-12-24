@@ -17,9 +17,8 @@ DatabaseBuilder::DatabaseBuilder(Database& database,
     m_compilationArgs(compilationArgs),
     m_argsCount(argsCount)
 {
-    m_database.openDatabase(DatabaseOptions::TRUNCATE_DB_FILE   |
-                            DatabaseOptions::READ_WRITE_DB_FILE |
-                            DatabaseOptions::FILE_DB_FILE
+    m_database.openDatabase(DatabaseOptions::READ_WRITE_DB_FILE |
+                            DatabaseOptions::IN_MEMORY_DB_FILE
                             );
 }
 
