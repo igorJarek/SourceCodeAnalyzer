@@ -18,8 +18,7 @@ int main()
     folderBrowser.addIgnoreFilePath("..\\lib\\src\\TestPrimitives.cpp");
     folderBrowser.startFolderBrowse(LIB_PATH);
 
-    Database database(DATABASE_PATH);
-
+    Database database;
     DatabaseBuilder databaseBuilder(database, APP_NAME, APP_VERSION, folderBrowser, COMPILATION_ARGS, 2);
     databaseBuilder.buildDatabase
     (
@@ -41,6 +40,18 @@ int main()
 
         cout << fileNameStr << endl;
     }
+
+    database.saveAsDatabase
+    (
+        DATABASE_PATH,
+        [](double currentPercent) -> void
+        {
+            cout << currentPercent << endl;
+        }
+    );
+
+    if(database.isNotOK())
+        cout << "Database hasn't saved correctly." << endl;
 
     return EXIT_SUCCESS;
 }
