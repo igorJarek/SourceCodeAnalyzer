@@ -97,7 +97,31 @@ void MainWindow::open_database()
 
 void MainWindow::save_as_database()
 {
+    QString filter = tr("SQLite File (*.sqlite3)");
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Database Path"), QString(), tr("SQLite File (*.sqlite3)"), &filter);
 
+    if(!filePath.isEmpty())
+    {
+        if(m_app.getDatabase())
+        {
+            Database& database = *m_app.getDatabase();
+
+            QProgressBar progressBar(this);
+            progressBar.setMinimum(0);
+            progressBar.setMaximum(100);
+            progressBar.setValue(0);
+            progressBar.show();
+
+            database.saveAsDatabase
+            (
+                filePath.toStdString(),
+                [&progressBar](double currentPercent) -> void
+                {
+                    progressBar.setValue(currentPercent);
+                }
+            );
+        }
+    }
 }
 
 void MainWindow::save_database()
