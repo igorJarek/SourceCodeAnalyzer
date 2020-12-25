@@ -17,12 +17,25 @@ App::~App()
     
 }
 
+void App::reallocateDatabase()
+{
+    if(m_database)
+        m_database.clear();
+
+    allocateDatabase();
+}
+
 void App::reallocateDatabase(const QString& databasePath)
 {
     if(m_database)
         m_database.clear();
 
     allocateDatabase(databasePath);
+}
+
+void App::allocateDatabase()
+{
+     m_database = QSharedPointer<Database>(new Database);
 }
 
 void App::allocateDatabase(const QString& databasePath)

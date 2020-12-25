@@ -15,7 +15,11 @@ public:
 
 public:
     QSharedPointer<Database>                        getDatabase() { return m_database; }
+
+    void                                            reallocateDatabase();
     void                                            reallocateDatabase(const QString& databasePath);
+
+    void                                            allocateDatabase();
     void                                            allocateDatabase(const QString& databasePath);
 
     const QVector<QSharedPointer<SourceCodeBlock>>& getSourceCodeBlocks() const          { return m_sourceCodeBlocks; }

@@ -103,6 +103,7 @@
     <ClCompile Include="src\AnalyzeWindow.cpp" />
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\CodeRenderWindow.cpp" />
+    <ClCompile Include="src\CreateDatabaseWindow.cpp" />
     <ClCompile Include="src\SourceCodeBlock.cpp" />
     <QtRcc Include="rsc/MainWindow.qrc" />
     <QtUic Include="ui/MainWindow.ui" />
@@ -110,8 +111,10 @@
     <ClCompile Include="src/MainWindow.cpp" />
     <ClCompile Include="Main.cpp" />
     <QtUic Include="ui\AnalyzeWindow.ui" />
+    <QtUic Include="ui\CreateDatabaseWindow.ui" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="include\CreateDatabaseWindow.h" />
     <ClInclude Include="include\SourceCodeBlock.h" />
     <QtMoc Include="include\CodeRenderWindow.h" />
     <QtMoc Include="include\AnalyzeWindow.h" />

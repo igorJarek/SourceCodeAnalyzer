@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 
-#include <CodeRenderWindow.h>
+#include "CodeRenderWindow.h"
+#include "AnalyzeWindow.h"
+#include "CreateDatabaseWindow.h"
 
 #include <QFileDialog>
 #include <QTextEdit>
@@ -29,16 +31,24 @@ void MainWindow::initUi()
 
 void MainWindow::initSignalsConnections()
 {
-    connect(m_ui.actionStart_Analyze,   SIGNAL(triggered()),                        this, SLOT(start_analyze()));
+    // Window Menu Actions
+    connect(m_ui.actionCreate_Database,  SIGNAL(triggered()),                        this, SLOT(create_database()));
+    connect(m_ui.actionOpen_Database,    SIGNAL(triggered()),                        this, SLOT(open_database()));
+    connect(m_ui.actionSave_As_Database, SIGNAL(triggered()),                        this, SLOT(save_as_database()));
+    connect(m_ui.actionSave_Database,    SIGNAL(triggered()),                        this, SLOT(save_database()));
+    connect(m_ui.actionStart_Analyze,    SIGNAL(triggered()),                        this, SLOT(start_analyze()));
+    connect(m_ui.actionExit,             SIGNAL(triggered()),                        this, SLOT(exit()));
+
+    // Other Actions
     connect(m_ui.filesTree,             SIGNAL(doubleClicked(const QModelIndex&)),  this, SLOT(filesTree_doubleClick(const QModelIndex &)));
     connect(m_ui.filesTab,              SIGNAL(tabCloseRequested(int)),             this, SLOT(filesTab_closeTab(int)));
 }
 
-void MainWindow::start_analyze()
+void MainWindow::create_database()
 {
-    m_analyzeWindow = new AnalyzeWindow(m_app, this);
-    m_analyzeWindow->setModal(true);
-    if(m_analyzeWindow->exec())
+    CreateDatabaseWindow createDatabaseWindow(m_app, this);
+    createDatabaseWindow.setModal(true);
+    if(createDatabaseWindow.exec())
     {
         QModelIndex index = model.setRootPath(m_app.getAnalizedFolderPath());
 
@@ -46,16 +56,32 @@ void MainWindow::start_analyze()
         m_ui.filesTree->setRootIndex(index);
         m_ui.filesTree->hideColumn(2);
         m_ui.filesTree->hideColumn(3);
-
-        m_app.buildSourceCodeBlocks();
-
-        QTabWidget* filesTab = m_ui.filesTab;
-        CodeRenderWindow* render = new CodeRenderWindow(m_app, this);
-        int tabIndex = filesTab->addTab(render, QString("Renderer"));
-        filesTab->setCurrentIndex(tabIndex);
     }
-    else
-        QMessageBox::warning(this, "Analizing Failed", "Something went wrong...", QMessageBox::StandardButton::Ok);
+}
+
+void MainWindow::open_database()
+{
+
+}
+
+void MainWindow::save_as_database()
+{
+
+}
+
+void MainWindow::save_database()
+{
+
+}
+
+void MainWindow::start_analyze()
+{
+
+}
+
+void MainWindow::exit()
+{
+    close();
 }
 
 void MainWindow::filesTree_doubleClick(const QModelIndex& modelIndex)

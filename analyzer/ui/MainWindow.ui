@@ -83,16 +83,13 @@
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuOpen_2">
-     <property name="title">
-      <string>Open ...</string>
-     </property>
-     <addaction name="actionVisual_Studio_Project"/>
-    </widget>
-    <addaction name="actionStart_Analyze"/>
+    <addaction name="actionCreate_Database"/>
     <addaction name="separator"/>
-    <addaction name="menuOpen_2"/>
-    <addaction name="actionSettings"/>
+    <addaction name="actionOpen_Database"/>
+    <addaction name="actionSave_As_Database"/>
+    <addaction name="actionSave_Database"/>
+    <addaction name="separator"/>
+    <addaction name="actionStart_Analyze"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -137,6 +134,26 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionCreate_Database">
+   <property name="text">
+    <string>Create Database</string>
+   </property>
+  </action>
+  <action name="actionOpen_Database">
+   <property name="text">
+    <string>Open Database</string>
+   </property>
+  </action>
+  <action name="actionSave_As_Database">
+   <property name="text">
+    <string>Save As Database</string>
+   </property>
+  </action>
+  <action name="actionSave_Database">
+   <property name="text">
+    <string>Save Database</string>
    </property>
   </action>
  </widget>

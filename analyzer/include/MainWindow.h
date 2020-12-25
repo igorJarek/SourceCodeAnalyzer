@@ -3,8 +3,6 @@
 #include "App.h"
 #include "ui_MainWindow.h"
 
-#include "AnalyzeWindow.h"
-
 #include <QtWidgets/QMainWindow>
 #include <QDir.h>
 #include <QFileSysteMmodel.h>
@@ -19,18 +17,23 @@ public:
     ~MainWindow();
 
 private:
-    void                initUi();
-    void                initSignalsConnections();
+    void                    initUi();
+    void                    initSignalsConnections();
 
 private:
-    Ui::MainWindowClass m_ui;
-    AnalyzeWindow*      m_analyzeWindow;
-    App&                m_app;
+    Ui::MainWindowClass     m_ui;
+    App&                    m_app;
 
-    QFileSystemModel    model;
+    QFileSystemModel        model;
 
 private slots:
-    void                start_analyze();
-    void                filesTree_doubleClick(const QModelIndex& modelIndex);
-    void                filesTab_closeTab(int index);
+    void                    create_database();
+    void                    open_database();
+    void                    save_as_database();
+    void                    save_database();
+    void                    start_analyze();
+    void                    exit();
+
+    void                    filesTree_doubleClick(const QModelIndex& modelIndex);
+    void                    filesTab_closeTab(int index);
 };
