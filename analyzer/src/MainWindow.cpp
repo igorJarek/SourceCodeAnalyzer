@@ -61,7 +61,38 @@ void MainWindow::create_database()
 
 void MainWindow::open_database()
 {
+    QString filter = tr("SQLite File (*.sqlite3)");
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Database Path"), QString(), tr("SQLite File (*.sqlite3)"), &filter);
 
+    if(!filePath.isEmpty())
+    {
+        if(m_app.getDatabase())
+        {
+            int32_t ret = QMessageBox::question(this, "Database Exists", "Do you want replace existed database ?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
+            if(ret == QMessageBox::StandardButton::Yes)
+                m_app.reallocateDatabase(filePath);
+            else
+                return;
+        }
+        else
+            m_app.allocateDatabase(filePath);
+
+        Database& database = *m_app.getDatabase();
+
+        database.openDatabase(DatabaseOptions::READ_WRITE_DB_FILE |
+                              DatabaseOptions::FILE_DB_FILE
+                              );
+
+        if(database.isNotOK())
+            QMessageBox::warning(this, "Database Error", database.lastErrorMsg().c_str(), QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::Cancel);
+        else
+        {
+            m_app.setDatabasePath(filePath);
+            QString newWindowTitle = windowTitle();
+            newWindowTitle += " - " + filePath;
+            setWindowTitle(newWindowTitle);
+        }
+    }
 }
 
 void MainWindow::save_as_database()
