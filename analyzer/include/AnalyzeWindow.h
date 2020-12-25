@@ -19,17 +19,16 @@ private:
     void initSignalsConnections();
 
 private:
-    Ui::Dialog m_ui;
+    Ui::AnalyzeWindow m_ui;
 
-    App& m_app;
+    App&              m_app;
 
-    QString     m_analizedFolderPath;
-    QStringList m_includePaths;
-    QString     m_databasePath;
+    QString           m_mainFilePath;
+    QString           m_functionName;
+    int32_t           m_functionLine;
 
 private slots:
-    void folder_path();
-    void include_path();
-    void database_path();
-    void start();
+    void              main_folder();
+    void              start();
+    void              cancel();
 };

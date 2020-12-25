@@ -131,7 +131,24 @@ void MainWindow::save_database()
 
 void MainWindow::start_analyze()
 {
+    if(m_app.getDatabase())
+    {
+        AnalyzeWindow analyzeWindow(m_app, this);
+        analyzeWindow.setModal(true);
+        if(analyzeWindow.exec())
+        {
+            //m_app.buildSourceCodeBlocks();
 
+            //QTabWidget* filesTab = m_ui.filesTab;
+            //CodeRenderWindow* render = new CodeRenderWindow(m_app, this);
+            //int tabIndex = filesTab->addTab(render, QString("Renderer"));
+            //filesTab->setCurrentIndex(tabIndex);
+        }
+        else
+            QMessageBox::warning(this, "Analizing Failed", "Something went wrong...", QMessageBox::StandardButton::Ok);
+    }
+    else
+        QMessageBox::warning(this, "Analizing Failed", "Please open or create database first", QMessageBox::StandardButton::Ok);
 }
 
 void MainWindow::exit()

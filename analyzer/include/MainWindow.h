@@ -4,9 +4,9 @@
 #include "ui_MainWindow.h"
 
 #include <QtWidgets/QMainWindow>
-#include <QDir.h>
-#include <QFileSysteMmodel.h>
-#include <QTreeWidget.h>
+#include <QDir>
+#include <QFileSysteMmodel>
+#include <QTreeWidget>
 
 class MainWindow : public QMainWindow
 {
