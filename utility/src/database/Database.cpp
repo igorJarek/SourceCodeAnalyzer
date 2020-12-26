@@ -294,7 +294,9 @@ void Database::createFunctionsTableTemplateQuery()
         "CREATE TABLE \"<?filePath?>\\functions\""
         "("
             "FunctionsID INT PRIMARY KEY,"
-            "FunctionsNameTokenID INT NOT NULL"
+            "FunctionsNameTokenID INT NOT NULL,"
+            "FunctionOpenDefTokenID INT NOT NULL,"
+            "FunctionCloseDefTokenID INT NOT NULL"
         ");"
     };
 }

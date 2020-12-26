@@ -44,6 +44,8 @@ enum FunctionsTableColName : uint32_t
 {
     FunctionsID,
     FunctionsNameTokenID,
+    FunctionOpenDefTokenID,
+    FunctionCloseDefTokenID,
 
     FunctionsTableLast
 };

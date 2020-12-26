@@ -43,4 +43,6 @@ FunctionsColumnDict::FunctionsColumnDict()
 {
     emplace(FunctionsTableColName::FunctionsID,                     "FunctionsID");
     emplace(FunctionsTableColName::FunctionsNameTokenID,            "FunctionsNameTokenID");
+    emplace(FunctionsTableColName::FunctionOpenDefTokenID,          "FunctionOpenDefTokenID");
+    emplace(FunctionsTableColName::FunctionCloseDefTokenID,         "FunctionCloseDefTokenID");
 }
