@@ -92,8 +92,10 @@ void DatabaseBuilder::createInsertFunctionsTableData(const string& filePath, con
     DatabaseInsertQuery insertQueryBuilder;
     insertQueryBuilder.newQuery(filePath + "\\functions", g_functionsColumnDict);
 
-    insertQueryBuilder.addColumnValue(FunctionsID,          function.functionID);
-    insertQueryBuilder.addColumnValue(FunctionsNameTokenID, function.functionNameTokenID);
+    insertQueryBuilder.addColumnValue(FunctionsID,             function.functionID);
+    insertQueryBuilder.addColumnValue(FunctionsNameTokenID,    function.functionNameTokenID);
+    insertQueryBuilder.addColumnValue(FunctionOpenDefTokenID,  function.openingDefinitionBracketTokenID);
+    insertQueryBuilder.addColumnValue(FunctionCloseDefTokenID, function.closingDefinitionBracketTokenID);
 
     const string& query = insertQueryBuilder.buildQuery();
     DatabaseQueryErrMsg tokenQueryErrMsg = m_database.sendQuery(query);
@@ -162,17 +164,28 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                         dbFunction.functionName = to_string(clang_getCursorSpelling(cursor));
                         dbFunction.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
 
+                        TokenRange compoundStmtRange;
+
+                        shared_ptr<ASTNode> compoundStmt = astNode->findChild(CXCursor_CompoundStmt);
+                        if(compoundStmt)
+                            compoundStmtRange.setCXSourceRange(clang_getCursorExtent(compoundStmt->cursor));
+
                         for(Token& token : tokens)
                         {
                             if(token.tokenSpelling == dbFunction.functionName)
-                            if(token.getTokenPos() == dbFunction.functionNamePos)
-                                dbFunction.functionNameTokenID = token.tokenID;
+                            {
+                                if(token.getTokenPos() == dbFunction.functionNamePos)
+                                    dbFunction.functionNameTokenID = token.tokenID;
+                            }
+                            else if(token.isStartsEqual(compoundStmtRange))
+                                dbFunction.openingDefinitionBracketTokenID = token.tokenID;
+                            else if(token.isEndsEqual(compoundStmtRange))
+                                dbFunction.closingDefinitionBracketTokenID = token.tokenID;
                         }
 
                         m_functionsMap.insert( {to_string(clang_getCursorUSR(cursor)), dbFunction} );
                     }
                 }
-
                 else if(cursorKind == CXCursor_CallExpr)
                 {
                     CXCursor              cursorRef     = clang_getCursorReferenced(cursor);

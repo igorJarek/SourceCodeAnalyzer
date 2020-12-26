@@ -20,8 +20,8 @@ struct DatabaseBuilderCalling
     uint32_t functionDefinitionID = 0;
     string   functionDefinitionPath;
 
-    //uint32_t openingBracketTokenID;
-    //uint32_t closingBracketTokenID;
+    //uint32_t openingArgumentsBracketTokenID;
+    //uint32_t closingArgumentsBracketTokenID;
 
     // Internal Use
     string   functionName;
@@ -31,11 +31,14 @@ struct DatabaseBuilderCalling
 struct DatabaseBuilderFunction
 {
     // DB Elements
-    uint32_t functionID          = 0;
-    uint32_t functionNameTokenID = 0;
+    uint32_t functionID                      = 0;
+    uint32_t functionNameTokenID             = 0;
 
-    //uint32_t openingBracketTokenID;
-    //uint32_t closingBracketTokenID;
+    //uint32_t openingArgumentsBracketTokenID  = 0;
+    //uint32_t closingArgumentsBracketTokenID  = 0;
+
+    uint32_t openingDefinitionBracketTokenID = 0;
+    uint32_t closingDefinitionBracketTokenID = 0;
 
     // Internal Use
     string   functionName;
