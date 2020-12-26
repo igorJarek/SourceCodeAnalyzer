@@ -135,8 +135,28 @@ struct Token
 
     }
 
-    TokenPos   getTokenPos()      { return TokenPos(tokenLocation);       }
+    TokenPos   getTokenPos()      { return TokenPos(tokenLocation);  }
     TokenRange getTokenRange()    { return TokenRange(tokenRange);   }
+
+    bool       isStartsEqual(const TokenRange& range)
+    {
+        const TokenRange tokenRange = getTokenRange();
+
+        return (
+                    tokenRange.startLine == range.startLine &&
+                    tokenRange.startCol  == range.startCol
+               );
+    }
+
+    bool       isEndsEqual(const TokenRange& range)
+    {
+        const TokenRange tokenRange = getTokenRange();
+
+        return (
+                    tokenRange.endLine == range.endLine &&
+                    tokenRange.endCol  == range.endCol
+               );
+    }
 
     uint32_t         tokenID       = 0;
     CXTokenKind      tokenKind;
