@@ -10,7 +10,11 @@ shared_ptr<ASTNode> ASTNode::findChild(enum CXCursorKind cursorKind)
         if(elem->cursor.kind == cursorKind)
             return elem;
         else
-            return elem->findChild(cursorKind);
+        {
+            shared_ptr<ASTNode> found = elem->findChild(cursorKind);
+            if(found)
+                return found;
+        }
     }
 
     return nullptr;
