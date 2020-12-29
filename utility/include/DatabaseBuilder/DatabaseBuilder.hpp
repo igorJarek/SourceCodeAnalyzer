@@ -25,24 +25,22 @@ struct DatabaseBuilderCalling
 
     // Internal Use
     string   functionName;
-    TokenPos functionNamePos; 
+    TokenPos functionNamePos;
 };
 
 struct DatabaseBuilderFunction
 {
     // DB Elements
-    uint32_t functionID                      = 0;
-    uint32_t functionNameTokenID             = 0;
+    uint32_t functionID               = 0;
+    uint32_t functionNameTokenID      = 0;
 
-    //uint32_t openingArgumentsBracketTokenID  = 0;
-    //uint32_t closingArgumentsBracketTokenID  = 0;
-
-    uint32_t openingDefinitionBracketTokenID = 0;
-    uint32_t closingDefinitionBracketTokenID = 0;
+    uint32_t openDefinitionTokenID    = 0;
+    uint32_t closeDefinitionTokenID   = 0;
 
     // Internal Use
-    string   functionName;
-    TokenPos functionNamePos; 
+    string     functionName;
+    TokenPos   functionNamePos; 
+    TokenRange functionDefRange; 
 };
 
 class DatabaseBuilder
