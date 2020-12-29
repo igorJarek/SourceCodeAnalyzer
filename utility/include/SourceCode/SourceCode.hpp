@@ -107,9 +107,15 @@ struct TokenRange
         CXSourceLocation locStart  = clang_getRangeStart(range);
         CXSourceLocation locEnd    = clang_getRangeEnd(range);
 
-        clang_getExpansionLocation(locStart, nullptr, &startLine, &startCol, nullptr);
+        CXFile file;
+
+        clang_getExpansionLocation(locStart, &file,   &startLine, &startCol, nullptr);
         clang_getExpansionLocation(locEnd,   nullptr, &endLine,   &endCol,   nullptr);
+
+        fileName = to_string(clang_getFileName(file)); 
     }
+
+    string   fileName;
 
     uint32_t startLine = 0;
     uint32_t startCol  = 0;
