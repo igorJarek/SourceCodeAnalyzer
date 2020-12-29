@@ -1,7 +1,7 @@
 #pragma once
 
+#include <SourceCodeView.h>
 #include <Database/Database.h>
-#include <SourceCodeBlock.h>
 
 #include <QtWidgets/QApplication>
 #include <QSharedPointer>
@@ -14,27 +14,26 @@ public:
     ~App();
 
 public:
-    QSharedPointer<Database>                        getDatabase() { return m_database; }
+    QSharedPointer<Database>                       getDatabase() { return m_database; }
 
-    void                                            reallocateDatabase();
-    void                                            reallocateDatabase(const QString& databasePath);
+    void                                           reallocateDatabase();
+    void                                           reallocateDatabase(const QString& databasePath);
 
-    void                                            allocateDatabase();
-    void                                            allocateDatabase(const QString& databasePath);
+    void                                           allocateDatabase();
+    void                                           allocateDatabase(const QString& databasePath);
 
-    const QVector<QSharedPointer<SourceCodeBlock>>& getSourceCodeBlocks() const          { return m_sourceCodeBlocks; }
+    void                                           setAnalizedFolderPath(QString& path) { m_analyzedFolderPath = path; }
+    const QString&                                 getAnalizedFolderPath() const        { return m_analyzedFolderPath; }
 
-    void                                            setAnalizedFolderPath(QString& path) { m_analyzedFolderPath = path; }
-    const QString&                                  getAnalizedFolderPath() const        { return m_analyzedFolderPath; }
+    void                                           setDatabasePath(QString& path)       { m_databasePath = path; }
+    const QString&                                 getDatabasePath() const              { return m_databasePath; }
 
-    void                                            setDatabasePath(QString& path)       { m_databasePath = path; }
-    const QString&                                  getDatabasePath() const              { return m_databasePath; }
-
-    void                                            buildSourceCodeBlocks();
+    void                                           addSourceCodeView(const QSharedPointer<SourceCodeView>& sourceCodeView);
+    QSharedPointer<SourceCodeView>                 getLastSourceCodeView() { return m_sourceCodeViews.last(); }
 private:
-    QSharedPointer<Database>                        m_database = nullptr;
-    QString                                         m_analyzedFolderPath;
-    QString                                         m_databasePath;
+    QSharedPointer<Database>                       m_database = nullptr;
+    QString                                        m_analyzedFolderPath;
+    QString                                        m_databasePath;
 
-    QVector<QSharedPointer<SourceCodeBlock>>        m_sourceCodeBlocks;
+    QVector<QSharedPointer<SourceCodeView>>        m_sourceCodeViews;
 };

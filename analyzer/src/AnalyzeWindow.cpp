@@ -1,5 +1,6 @@
 #include "AnalyzeWindow.h"
-#include <App.h>
+#include "App.h"
+#include "SourceCodeView.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -25,6 +26,12 @@ void AnalyzeWindow::initUi()
     m_ui.setupUi(this);
 
     m_ui.progressBar->hide();
+
+    m_mainFilePath = "F:\\Programowanie\\SourceCodeAnalyzer\\lib\\Main.cpp";
+    m_ui.mainFilePath->setText("F:\\Programowanie\\SourceCodeAnalyzer\\lib\\Main.cpp");
+
+    m_ui.functionName->setText("main");
+    m_ui.functionLine->setText("11");
 }
 
 void AnalyzeWindow::initSignalsConnections()
@@ -38,6 +45,7 @@ void AnalyzeWindow::main_folder()
 {
     QString filter = tr("Source Code (*.c *.cpp *.h *.hpp)");
     QString filePath = QFileDialog::getOpenFileName(this, tr("Source Code Path"), QString(), tr("Source Code (*.c *.cpp *.h *.hpp)"), &filter);
+    filePath.replace('/', '\\');
 
     if(!filePath.isEmpty())
     {
@@ -48,30 +56,41 @@ void AnalyzeWindow::main_folder()
 
 void AnalyzeWindow::start()
 {
-    m_functionName = m_ui.functionName->text();
+    QString functionName = m_ui.functionName->text();
 
     bool isConvOk;
-    m_functionLine = m_ui.functionLine->text().toInt(&isConvOk, 10);
+    int32_t functionLine = m_ui.functionLine->text().toInt(&isConvOk, 10);
 
     if(m_mainFilePath.isEmpty())
     {
         QMessageBox::warning(this, "Warning", "Main File Path must be not empty");
-        return;
+        reject();
     }
 
-    if(m_functionName.isEmpty())
+    if(functionName.isEmpty())
     {
         QMessageBox::warning(this, "Warning", "Function Name must be not empty");
-        return;
+        reject();
     }
 
-    if(!isConvOk || m_functionLine < 0)
+    if(!isConvOk || functionLine < 0)
     {
         QMessageBox::warning(this, "Warning", "Line Number must be integer number and greater than 0");
-        return;
+        reject();
     }
 
+    QSharedPointer<SourceCodeView> sourceCodeView = QSharedPointer<SourceCodeView>(new SourceCodeView(m_app.getDatabase(), m_mainFilePath, functionName, functionLine));
+    sourceCodeView->build
+    (
+        []() -> void
+        {
+            
+        }
+    );
 
+    m_app.addSourceCodeView(sourceCodeView);
+
+    accept();
 }
 
 void AnalyzeWindow::cancel()

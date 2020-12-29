@@ -53,12 +53,18 @@
     <ClCompile Include="src\CreateDatabaseWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SourceCodeView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\App.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\SourceCodeBlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SourceCodeView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

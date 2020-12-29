@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QDialog>
-#include <QStringList>
 #include <ui_AnalyzeWindow.h>
 
 class App;
@@ -24,8 +23,6 @@ private:
     App&              m_app;
 
     QString           m_mainFilePath;
-    QString           m_functionName;
-    int32_t           m_functionLine;
 
 private slots:
     void              main_folder();

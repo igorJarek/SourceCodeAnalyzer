@@ -8,6 +8,7 @@
 #include <QTextEdit>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QProgressBar>
 
 MainWindow::MainWindow(App& app, QWidget *parent) : 
     QMainWindow(parent),
@@ -131,21 +132,26 @@ void MainWindow::save_database()
 
 void MainWindow::start_analyze()
 {
-    if(m_app.getDatabase())
-    {
-        AnalyzeWindow analyzeWindow(m_app, this);
-        analyzeWindow.setModal(true);
-        if(analyzeWindow.exec())
-        {
-            //m_app.buildSourceCodeBlocks();
+    QSharedPointer<Database> database = m_app.getDatabase();
 
-            //QTabWidget* filesTab = m_ui.filesTab;
-            //CodeRenderWindow* render = new CodeRenderWindow(m_app, this);
-            //int tabIndex = filesTab->addTab(render, QString("Renderer"));
-            //filesTab->setCurrentIndex(tabIndex);
+    if(database)
+    {
+        if(database->isOK())
+        {
+            AnalyzeWindow analyzeWindow(m_app, this);
+            analyzeWindow.setModal(true);
+            if(analyzeWindow.exec())
+            {
+                QTabWidget* filesTab = m_ui.filesTab;
+                CodeRenderWindow* render = new CodeRenderWindow(m_app, this);
+                int tabIndex = filesTab->addTab(render, QString("Renderer"));
+                filesTab->setCurrentIndex(tabIndex);
+            }
+            else
+                QMessageBox::warning(this, "Analizing Failed", "Something went wrong...", QMessageBox::StandardButton::Ok);
         }
         else
-            QMessageBox::warning(this, "Analizing Failed", "Something went wrong...", QMessageBox::StandardButton::Ok);
+            QMessageBox::warning(this, "Analizing Failed", "Database has errors...", QMessageBox::StandardButton::Ok);
     }
     else
         QMessageBox::warning(this, "Analizing Failed", "Please open or create database first", QMessageBox::StandardButton::Ok);
