@@ -54,6 +54,7 @@ class SourceCodeBlock
 
     private:
         QVector<QSharedPointer<std::list<SourceCodeBlockToken>>> m_tokens;
+        QVector<QStaticText> m_lineCounter;
         uint32_t m_width  = 0;
         uint32_t m_height = 0;
 };

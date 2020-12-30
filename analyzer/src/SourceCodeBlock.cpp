@@ -21,6 +21,8 @@ SourceCodeBlock::SourceCodeBlock(QueryResults& tokenResults, QueryResults& calli
         if(currentLine == 0)
         {
             currentLine = tokenStartPos_Line;
+
+            m_lineCounter.append(QStaticText(QString::number(currentLine) + "."));
             m_tokens.append(QSharedPointer<std::list<SourceCodeBlockToken>>(new std::list<SourceCodeBlockToken>));
         }
 
@@ -44,8 +46,10 @@ SourceCodeBlock::SourceCodeBlock(QueryResults& tokenResults, QueryResults& calli
 
             while(currentLine != tokenStartPos_Line)
             {
-                m_tokens.append(QSharedPointer<std::list<SourceCodeBlockToken>>(new std::list<SourceCodeBlockToken>));
                 ++currentLine;
+
+                m_tokens.append(QSharedPointer<std::list<SourceCodeBlockToken>>(new std::list<SourceCodeBlockToken>));
+                m_lineCounter.append(QStaticText(QString::number(currentLine) + "."));
             }
 
             m_tokens.last()->push_back(token);
@@ -61,6 +65,7 @@ SourceCodeBlock::~SourceCodeBlock()
 void SourceCodeBlock::draw(QPainter& painter, QFontMetrics& fontMetrics)
 {
     QPen penWhite(Qt::white);
+    QPen penLines(QColor(43, 145, 175));
     QPen penKeywords(QColor(78, 201, 176));
     QPen penLiterals(QColor(214, 157, 133));
     QPen penCallings(QColor(255, 0, 0));
@@ -77,11 +82,17 @@ void SourceCodeBlock::draw(QPainter& painter, QFontMetrics& fontMetrics)
 
     uint32_t xMax = 0;
 
-    for(uint64_t tokenIndex = 0; tokenIndex < m_tokens.size(); ++tokenIndex)
+    for(uint64_t lineIndex = 0; lineIndex < m_tokens.size(); ++lineIndex)
     {
-        if(m_tokens[tokenIndex]) // prevent against empty line
+        painter.setPen(penLines);
+        painter.drawStaticText(QPoint(x, y), m_lineCounter[lineIndex]);
+        painter.setPen(penWhite);
+
+        x += spaceWidth * 6;
+
+        if(m_tokens[lineIndex]) // prevent against empty line
         {
-            for(SourceCodeBlockToken& token : *m_tokens[tokenIndex])
+            for(SourceCodeBlockToken& token : *m_tokens[lineIndex])
             {
                 if(lastTokenEndCol)
                 {
