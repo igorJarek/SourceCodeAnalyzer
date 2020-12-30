@@ -18,6 +18,12 @@ SourceCodeBlock::SourceCodeBlock(QueryResults& tokenResults, QueryResults& calli
         uint32_t     tokenEndPos_Line   = std::stoll(tokenRow[5]);
         uint32_t     tokenEndPos_Col    = std::stoll(tokenRow[6]);
 
+        if(currentLine == 0)
+        {
+            currentLine = tokenStartPos_Line;
+            m_tokens.append(QSharedPointer<std::list<SourceCodeBlockToken>>(new std::list<SourceCodeBlockToken>));
+        }
+
         if(tokenStartPos_Line != tokenEndPos_Line)
             QMessageBox::critical(nullptr, "Token Error", "tokenStartPos_Line != tokenEndPos_Line", QMessageBox::StandardButton::Ok);
         else
@@ -36,10 +42,10 @@ SourceCodeBlock::SourceCodeBlock(QueryResults& tokenResults, QueryResults& calli
                     token.setIsCalling(true);
             }
 
-            if(currentLine != tokenStartPos_Line)
+            while(currentLine != tokenStartPos_Line)
             {
-                currentLine = tokenStartPos_Line;
                 m_tokens.append(QSharedPointer<std::list<SourceCodeBlockToken>>(new std::list<SourceCodeBlockToken>));
+                ++currentLine;
             }
 
             m_tokens.last()->push_back(token);
