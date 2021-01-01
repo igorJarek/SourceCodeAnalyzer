@@ -9,16 +9,15 @@
 #include <iostream>
 
 CodeRenderWindow::CodeRenderWindow(App& app, QWidget *parent) :
-    m_app(app), QOpenGLWidget(parent), m_renderTarget(3000, 3000, QImage::Format_RGB32)
+    m_app(app), QOpenGLWidget(parent), m_renderTarget(3000, 5000, QImage::Format_RGB32)
 {
     /*
-    QPainter     painter(this);
+    QPainter     painter(&m_renderTarget);
     QFont        font("JetBrains Mono", 10, 10);
     QFontMetrics fontMetrics(font);
 
     painter.setFont(font);
-    painter.fillRect(QRect(0, 0, 3000, 3000), Qt::black);
-    painter.setViewport(m_xPos - 20, m_yPos - 20, width(), height());
+    painter.fillRect(QRect(0, 0, 3000, 5000), Qt::black);
 
     QSharedPointer<SourceCodeView> latestSourceCodeView = m_app.getLastSourceCodeView();
     QVector<SourceCodeView::SourceCodeBlockVecPtr>& sourceCodeBlockVec = latestSourceCodeView->getSourceCodeBlockVec();
@@ -26,7 +25,7 @@ CodeRenderWindow::CodeRenderWindow(App& app, QWidget *parent) :
     for(uint32_t i = 0; i < sourceCodeBlockVec.size(); ++i)
     {
         const SourceCodeView::SourceCodeBlockVecPtr& vecPtr = sourceCodeBlockVec[i];
-        painter.translate(m_xTranslate, m_yTranslate);
+        painter.translate(m_translateX, m_translateY);
         painter.save();
 
         uint32_t maxStageWidth = 0;
@@ -35,20 +34,16 @@ CodeRenderWindow::CodeRenderWindow(App& app, QWidget *parent) :
             const SourceCodeView::SourceCodeBlockPtr& sourceCodeBlockPtr = vecPtr->at(j);
             sourceCodeBlockPtr->draw(painter, fontMetrics);
 
-            painter.translate(0, sourceCodeBlockPtr->getHeight());
+            painter.translate(0, sourceCodeBlockPtr->getHeight() + 30);
 
             if(sourceCodeBlockPtr->getWidth() > maxStageWidth)
                 maxStageWidth = sourceCodeBlockPtr->getWidth();
-
-            break;
         }
 
         painter.restore();
 
-        m_xTranslate = maxStageWidth;
-        m_yTranslate = 0;
-
-        break;
+        m_translateX = maxStageWidth + 30;
+        m_translateY = 0;
     }
 
     painter.end();
@@ -66,7 +61,7 @@ void CodeRenderWindow::paintEvent(QPaintEvent * /* event */)
 
     painter.setFont(font);
     painter.fillRect(QRect(0, 0, 10000, 10000), Qt::black);
-    painter.setViewport(m_xPos - 20, m_yPos - 20, width(), height());
+    painter.setViewport(m_viewportPosX - 20, m_viewportPosY - 20, width(), height());
 
     QSharedPointer<SourceCodeView> latestSourceCodeView = m_app.getLastSourceCodeView();
     QVector<SourceCodeView::SourceCodeBlockVecPtr>& sourceCodeBlockVec = latestSourceCodeView->getSourceCodeBlockVec();
@@ -74,7 +69,7 @@ void CodeRenderWindow::paintEvent(QPaintEvent * /* event */)
     for(uint32_t i = 0; i < sourceCodeBlockVec.size(); ++i)
     {
         const SourceCodeView::SourceCodeBlockVecPtr& vecPtr = sourceCodeBlockVec[i];
-        painter.translate(m_xTranslate, m_yTranslate);
+        painter.translate(m_translateX, m_translateY);
         painter.save();
 
         uint32_t maxStageWidth = 0;
@@ -91,8 +86,8 @@ void CodeRenderWindow::paintEvent(QPaintEvent * /* event */)
 
         painter.restore();
 
-        m_xTranslate = maxStageWidth + 30;
-        m_yTranslate = 0;
+        m_translateX = maxStageWidth + 30;
+        m_translateY = 0;
     }
 
     painter.end();
@@ -104,12 +99,9 @@ void CodeRenderWindow::mouseMoveEvent(QMouseEvent* event)
 
     if(m_buttonState)
     {
-        QPoint delta = m_startPos - event->pos();
-        m_xPos += delta.x();
-        m_yPos += delta.y();
-
-        //std::cout << m_xPos << std::endl;
-        //std::cout << m_yPos << std::endl << std::endl;
+        QPoint delta = m_leftButtonMoveStartPos - event->pos();
+        m_viewportPosX += delta.x();
+        m_viewportPosY += delta.y();
 
         repaint();
     }
@@ -122,7 +114,7 @@ void CodeRenderWindow::mousePressEvent(QMouseEvent* event)
     Qt::MouseButton button = event->button();
     if(button == Qt::LeftButton)
     {
-        m_startPos = event->pos();
+        m_leftButtonMoveStartPos = event->pos();
         m_buttonState = true;
     }
 
@@ -138,23 +130,32 @@ void CodeRenderWindow::mouseReleaseEvent(QMouseEvent* event)
         m_buttonState = false;
 }
 
+void CodeRenderWindow::wheelEvent(QWheelEvent * event)
+{
+    if(event->angleDelta().y() > 0)
+        m_zoom += 0.1;
+    else
+        m_zoom -= 0.1;
+
+    repaint();
+}
 
 void CodeRenderWindow::keyPressEvent(QKeyEvent* event)
 {
     QOpenGLWidget::keyPressEvent(event);
 
     if(event->key() == Qt::Key_Up)
-        m_yPos += 30;
+        m_viewportPosY += 30;
     else if(event->key() == Qt::Key_Down)
-        m_yPos -= 30;
+        m_viewportPosY -= 30;
     else if(event->key() == Qt::Key_Left)
-        m_xPos += 30;
+        m_viewportPosX += 30;
     else if(event->key() == Qt::Key_Right)
-        m_xPos -= 30;
+        m_viewportPosX -= 30;
     else if(event->key() == Qt::Key_R)
     {
-        m_xPos = 20;
-        m_yPos = 20;
+        m_viewportPosX = 20;
+        m_viewportPosY = 20;
     }
 
     repaint();
