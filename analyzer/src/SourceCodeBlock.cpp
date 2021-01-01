@@ -77,7 +77,7 @@ void SourceCodeBlock::draw(QPainter& painter, QFontMetrics& fontMetrics)
 
     uint32_t lineSpacing = fontMetrics.lineSpacing();
     uint32_t spaceWidth = fontMetrics.width(" ");
-    uint32_t x = getBorderWidth() + getPadding(), y = getBorderWidth() + getPadding();
+    uint32_t x = getBorderWidth() / 2 + getPadding(), y = getBorderWidth() / 2 + getPadding();
     uint32_t lastTokenEndCol = 0;
 
     uint32_t xMax = 0;
@@ -135,19 +135,19 @@ void SourceCodeBlock::draw(QPainter& painter, QFontMetrics& fontMetrics)
 
                 x += fontMetrics.width(token.text());
                 lastTokenEndCol = token.getEndColPos();
-
-                if(x > xMax)
-                    xMax = x;
             }
         }
 
-        x = getBorderWidth() + getPadding();
+        if(x > xMax)
+            xMax = x;
+
+        x = getBorderWidth() / 2 + getPadding();
         y += lineSpacing;
         lastTokenEndCol = 0;
     }
 
-    m_width  = xMax + getBorderWidth() + getPadding();
-    m_height = y + lineSpacing + getPadding();
+    m_width  = xMax + (getBorderWidth() / 2 + 1) + 2 * getPadding();
+    m_height = y + getPadding();
 
     painter.setPen(penRed);
     painter.drawRect(0, 0, m_width, m_height);
