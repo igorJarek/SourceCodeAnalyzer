@@ -24,11 +24,7 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
 private:
-    App& m_app;
-
-    QImage   m_renderTarget;
-    uint32_t m_translateX = 20;
-    uint32_t m_translateY = 20;
+    App&     m_app;
 
     bool     m_buttonState = false;
     QPoint   m_leftButtonMoveStartPos;
