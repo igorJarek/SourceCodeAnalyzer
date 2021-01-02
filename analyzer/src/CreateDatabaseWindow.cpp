@@ -52,6 +52,7 @@ void CreateDatabaseWindow::folder_path()
     if(fileDialog.exec())
     {
         QString folderPath = fileDialog.selectedFiles().first();
+        folderPath.replace('/', '\\');
         m_analizedFolderPath = folderPath;
         m_ui.folderPathEdit->setText(folderPath);
     }
@@ -66,6 +67,7 @@ void CreateDatabaseWindow::include_path()
     if(fileDialog.exec())
     {
         QString includePath = fileDialog.selectedFiles().first();
+        includePath.replace('/', '\\');
         if(m_includePaths.contains(includePath))
             QMessageBox::warning(this, "Include Path", includePath + " path exists in include list.", QMessageBox::StandardButton::Ok);
         else
