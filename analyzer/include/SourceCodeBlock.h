@@ -43,7 +43,7 @@ class SourceCodeBlockToken : public QStaticText
         bool     m_isCalling = false;
 };
 
-class SourceCodeBlockLineNumber : public QStaticText
+class SourceCodeBlockLineNumber : public QStaticText // QGraphicsScene ?
 {
     public:
         SourceCodeBlockLineNumber() {}
@@ -74,6 +74,8 @@ class SourceCodeBlock
         static uint16_t getBorderWidth() { return 5; }
 
     public:
+        void   addDefinitions(QSharedPointer<SourceCodeBlock> def) { m_definitions.append(def); }
+
         QPoint getSize()     { return m_size; }
         QPoint getPosition() { return m_pos; };
         int    getWidth()    { return m_size.x(); }
@@ -82,6 +84,9 @@ class SourceCodeBlock
         void   setWidth(int width);
         void   setPosition(uint32_t x, uint32_t y);
 
+        QVector<QPoint>& getCallingFirstPos() { return m_callingFirstPos; }
+        QSharedPointer<SourceCodeBlock> getIthDefinition(uint32_t i) { return m_definitions[i]; }
+
         void   draw(QPainter& painter);
 
     private:
@@ -89,8 +94,11 @@ class SourceCodeBlock
         void   prepareTokensPos();
 
     private:
+        QVector<QSharedPointer<SourceCodeBlockLineNumber>>                       m_lineCounter;
         QVector<QSharedPointer<std::list<QSharedPointer<SourceCodeBlockToken>>>> m_tokens;
-        QVector<QSharedPointer<SourceCodeBlockLineNumber>> m_lineCounter;
+
+        QVector<QPoint>                                                          m_callingFirstPos;
+        QVector<QSharedPointer<SourceCodeBlock>>                                 m_definitions;
 
         QPoint m_size;
         QPoint m_pos;

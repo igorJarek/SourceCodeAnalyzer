@@ -77,13 +77,14 @@ void SourceCodeBlock::prepareTokensPos()
     QFont        font("JetBrains Mono", 10, 10);
     QFontMetrics fontMetrics(font);
 
-    uint32_t lineSpacing     = fontMetrics.lineSpacing();
-    uint32_t spaceWidth      = fontMetrics.width(" ");
-    uint32_t x               = getBorderWidth() / 2 + getPadding();
-    uint32_t y               = getBorderWidth() / 2 + getPadding();
-    uint32_t lastTokenEndCol = 0;
+    uint32_t lineSpacing          = fontMetrics.lineSpacing();
+    uint32_t spaceWidth           = fontMetrics.width(" ");
+    uint32_t x                    = getBorderWidth() / 2 + getPadding();
+    uint32_t y                    = getBorderWidth() / 2 + getPadding();
+    uint32_t lastTokenEndCol      = 0;
+    uint16_t callingInLineCounter = 0;
 
-    uint32_t xMax            = 0;
+    uint32_t xMax                 = 0;
 
     for(uint64_t lineIndex = 0; lineIndex < m_tokens.size(); ++lineIndex)
     {
@@ -94,6 +95,8 @@ void SourceCodeBlock::prepareTokensPos()
 
         if(m_tokens[lineIndex]) // prevent against empty line
         {
+            callingInLineCounter = 0;
+
             for(QSharedPointer<SourceCodeBlockToken>& token : *m_tokens[lineIndex])
             {
                 if(lastTokenEndCol)
@@ -114,7 +117,17 @@ void SourceCodeBlock::prepareTokensPos()
 
                 x += fontMetrics.width(token->text());
                 lastTokenEndCol = token->getEndColPos();
+
+                if(token->getIsCalling())
+                    ++callingInLineCounter;
             }
+        }
+
+        while(callingInLineCounter)
+        {
+            --callingInLineCounter;
+
+            m_callingFirstPos.append(QPoint(x + 20, y + lineSpacing / 2));
         }
 
         if(x > xMax)

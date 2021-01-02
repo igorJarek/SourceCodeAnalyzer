@@ -1,5 +1,5 @@
 #include "SourceCodeView.h"
-#include <Database/Database.h>
+#include "Database/Database.h"
 
 #include <QMessageBox>
 #include <string>
@@ -22,6 +22,8 @@ void SourceCodeView::build(std::function<void (void)> stateStatus)
 {
     findAndProcessMainFunction(stateStatus);
     iteratesCallsQueue(stateStatus);
+    setSourceCodeBlocksAlignment();
+    generateConnectionLines();
 }
 
 void SourceCodeView::findAndProcessMainFunction(std::function<void (void)> stateStatus)
@@ -103,21 +105,22 @@ void SourceCodeView::findAndProcessMainFunction(std::function<void (void)> state
         return;
     }
 
-    for(std::vector<std::string>& callingRow : mainFunctionCallings.rows)
-    {
-        SourceCodeViewCalling sourceCodeViewCalling;
-        sourceCodeViewCalling.filePath   = callingRow[2];
-        sourceCodeViewCalling.functionID = std::stoll(callingRow[3]);
-
-        m_functionCallsQueue.enqueue(sourceCodeViewCalling);
-    }
-
     SourceCodeBlockPtr sourceCodeBlock = SourceCodeBlockPtr(new SourceCodeBlock(mainFileTokens, mainFunctionCallings));
 
     SourceCodeBlockVecPtr sourceCodeBlockVecPtr = SourceCodeBlockVecPtr(new QVector<QSharedPointer<SourceCodeBlock>>);
     sourceCodeBlockVecPtr->append(sourceCodeBlock);
 
     m_functionSourceCodeBlockVec.append(sourceCodeBlockVecPtr);
+
+    for(std::vector<std::string>& callingRow : mainFunctionCallings.rows)
+    {
+        SourceCodeViewCalling sourceCodeViewCalling;
+        sourceCodeViewCalling.filePath   = callingRow[2];
+        sourceCodeViewCalling.functionID = std::stoll(callingRow[3]);
+        sourceCodeViewCalling.caller     = sourceCodeBlock;
+
+        m_functionCallsQueue.enqueue(sourceCodeViewCalling);
+    }
 }
 
 void SourceCodeView::iteratesCallsQueue(std::function<void (void)> stateStatus)
@@ -131,17 +134,17 @@ void SourceCodeView::iteratesCallsQueue(std::function<void (void)> stateStatus)
             m_functionSourceCodeBlockVec.append(sourceCodeBlockVecPtr);
         }
 
-        SourceCodeViewCalling sourceCodeViewCalling;
+        SourceCodeViewCalling sourceCodeViewCallingQueue;
         for(int32_t i = 0; i < stageSize; ++i)
         {
-            sourceCodeViewCalling = m_functionCallsQueue.dequeue();
+            sourceCodeViewCallingQueue = m_functionCallsQueue.dequeue();
 
             QueryResults fileFunctionDef;
             DatabaseQueryErrMsg queryErrMsg = m_database->recvQuery
             (
                 "SELECT * "
-                "FROM [" + sourceCodeViewCalling.filePath + "\\functions] "
-                "WHERE FunctionsID = " + std::to_string(sourceCodeViewCalling.functionID),
+                "FROM [" + sourceCodeViewCallingQueue.filePath + "\\functions] "
+                "WHERE FunctionsID = " + std::to_string(sourceCodeViewCallingQueue.functionID),
                 fileFunctionDef
             );
             if(m_database->isNotOK())
@@ -161,7 +164,7 @@ void SourceCodeView::iteratesCallsQueue(std::function<void (void)> stateStatus)
             queryErrMsg = m_database->recvQuery
             (
                 "SELECT * "
-                "FROM [" + sourceCodeViewCalling.filePath + "\\tokens] "
+                "FROM [" + sourceCodeViewCallingQueue.filePath + "\\tokens] "
                 "WHERE TokenID BETWEEN " + openingDefTokenIDStr + " AND " + closingDefTokenIDStr,
                 functionsTokens
             );
@@ -175,7 +178,7 @@ void SourceCodeView::iteratesCallsQueue(std::function<void (void)> stateStatus)
             queryErrMsg = m_database->recvQuery
             (
                 "SELECT * "
-                "FROM [" + sourceCodeViewCalling.filePath + "\\calling] "
+                "FROM [" + sourceCodeViewCallingQueue.filePath + "\\calling] "
                 "WHERE CallingNameTokenID BETWEEN " + openingDefTokenIDStr + " AND " + closingDefTokenIDStr,
                 functionCallings
             );
@@ -185,19 +188,136 @@ void SourceCodeView::iteratesCallsQueue(std::function<void (void)> stateStatus)
                 return;
             }
 
+            SourceCodeBlockPtr sourceCodeBlock = SourceCodeBlockPtr(new SourceCodeBlock(functionsTokens, functionCallings));
+            sourceCodeViewCallingQueue.caller->addDefinitions(sourceCodeBlock);
+            m_functionSourceCodeBlockVec.last()->append(sourceCodeBlock);
+
             for(std::vector<std::string>& callingRow : functionCallings.rows)
             {
                 SourceCodeViewCalling sourceCodeViewCalling;
                 sourceCodeViewCalling.filePath   = callingRow[2];
                 sourceCodeViewCalling.functionID = std::stoll(callingRow[3]);
+                sourceCodeViewCalling.caller     = sourceCodeBlock;
 
                 m_functionCallsQueue.enqueue(sourceCodeViewCalling);
             }
-
-            SourceCodeBlockPtr sourceCodeBlock = SourceCodeBlockPtr(new SourceCodeBlock(functionsTokens, functionCallings));
-
-            m_functionSourceCodeBlockVec.last()->append(sourceCodeBlock);
         }
 
     }while(!m_functionCallsQueue.empty());
+}
+
+void SourceCodeView::setSourceCodeBlocksAlignment()
+{
+    const uint16_t STAGE_X_GAP {100};
+    const uint16_t STAGE_Y_GAP {20};
+
+    // get stages info (max height stage, stages width and height)
+    uint64_t maxHeightStage {0};
+    QVector<QPoint> stagesInfo(m_functionSourceCodeBlockVec.size());
+
+    for(size_t stageListIndex {0}; stageListIndex < m_functionSourceCodeBlockVec.size(); ++stageListIndex)
+    {
+        const SourceCodeView::SourceCodeBlockVecPtr& vecPtr = m_functionSourceCodeBlockVec[stageListIndex];
+        for(uint32_t j = 0; j < vecPtr->size(); j++)
+        {
+            const SourceCodeView::SourceCodeBlockPtr& sourceCodeBlockPtr = vecPtr->at(j);
+            QPoint sourceCodeBlockSize = sourceCodeBlockPtr->getSize();
+
+            stagesInfo[stageListIndex].setY( stagesInfo[stageListIndex].y() + sourceCodeBlockSize.y() + STAGE_Y_GAP);
+            if(sourceCodeBlockSize.x() > stagesInfo[stageListIndex].x())
+                stagesInfo[stageListIndex].setX(sourceCodeBlockSize.x());
+        }
+
+        stagesInfo[stageListIndex].setY( stagesInfo[stageListIndex].y() - STAGE_Y_GAP);
+
+        if(stagesInfo[stageListIndex].y() > maxHeightStage)
+            maxHeightStage = stagesInfo[stageListIndex].y();
+    }
+
+    // set initial positions
+    uint64_t xPosition {0};
+    for(size_t stageListIndex {0}; stageListIndex < m_functionSourceCodeBlockVec.size(); ++stageListIndex)
+    {
+        SourceCodeView::SourceCodeBlockVecPtr& vecPtr = m_functionSourceCodeBlockVec[stageListIndex];
+
+        uint64_t yPosition = (maxHeightStage - stagesInfo[stageListIndex].y()) / 2;
+        for(uint32_t j = 0; j < vecPtr->size(); j++)
+        {
+            SourceCodeView::SourceCodeBlockPtr& sourceCodeBlockPtr = vecPtr->operator[](j);
+
+            sourceCodeBlockPtr->setWidth(stagesInfo[stageListIndex].x());
+            sourceCodeBlockPtr->setPosition(xPosition, yPosition);
+            yPosition += sourceCodeBlockPtr->getSize().y() + STAGE_Y_GAP;
+        }
+
+        xPosition += stagesInfo[stageListIndex].x() + STAGE_X_GAP;
+    }
+}
+
+void SourceCodeView::generateConnectionLines()
+{
+    for(size_t stageListIndex {0}; stageListIndex < m_functionSourceCodeBlockVec.size(); ++stageListIndex)
+    {
+        SourceCodeView::SourceCodeBlockVecPtr& vecPtr = m_functionSourceCodeBlockVec[stageListIndex];
+
+        for(uint32_t j = 0; j < vecPtr->size(); j++)
+        {
+            SourceCodeView::SourceCodeBlockPtr& sourceCodeBlockPtr = vecPtr->operator[](j);
+
+            QVector<QPoint>& callingFirstPosVec = sourceCodeBlockPtr->getCallingFirstPos();
+            QPoint sourceCodeBlockSize = sourceCodeBlockPtr->getSize();
+            QPoint sourceCodeBlockPos  = sourceCodeBlockPtr->getPosition();
+
+            for(uint32_t callingIndex = 0; callingIndex < callingFirstPosVec.size(); ++callingIndex)
+            {
+                QPoint callingPos = callingFirstPosVec[callingIndex];
+                SourceCodeViewLinesPtr sourceCodeViewLinesPtr = QSharedPointer<SourceCodeViewLines>(new SourceCodeViewLines);
+
+                QSharedPointer<SourceCodeBlock> ithDefinition = sourceCodeBlockPtr->getIthDefinition(callingIndex);
+                QPoint ithDefBlockSize = ithDefinition->getSize();
+                QPoint ithDefBlockPos  = ithDefinition->getPosition();
+
+                sourceCodeViewLinesPtr->firstLine.setLine(sourceCodeBlockPos.x() + callingPos.x(),
+                                                          sourceCodeBlockPos.y() + callingPos.y(),
+                                                          sourceCodeBlockPos.x() + sourceCodeBlockSize.x(),
+                                                          sourceCodeBlockPos.y() + callingPos.y());
+
+                sourceCodeViewLinesPtr->secondLine.setLine(sourceCodeBlockPos.x() + sourceCodeBlockSize.x(),
+                                                           sourceCodeBlockPos.y() + callingPos.y(),
+                                                           ithDefBlockPos.x(),
+                                                           ithDefBlockPos.y() + ithDefBlockSize.y() / 2);
+
+                m_lines.append(sourceCodeViewLinesPtr);
+            }
+        }
+    }
+}
+
+void SourceCodeView::draw(QPainter& painter, double zoom)
+{
+    painter.scale(zoom, zoom);
+
+    for(const SourceCodeBlockVecPtr& sourceCodeBlockVec : m_functionSourceCodeBlockVec)
+    {
+        for(const SourceCodeBlockPtr& sourceCodeBlockPtr : *sourceCodeBlockVec)
+        {
+            painter.translate(sourceCodeBlockPtr->getPosition().x(), sourceCodeBlockPtr->getPosition().y());
+            sourceCodeBlockPtr->draw(painter);
+            painter.translate(-sourceCodeBlockPtr->getPosition().x(), -sourceCodeBlockPtr->getPosition().y());
+        }
+    }
+
+    QPen pen(QColor(80, 200, 175));
+
+    if(zoom < 1.0)
+        pen.setWidth(2);
+    else
+        pen.setWidth(1);
+
+    for(const SourceCodeViewLinesPtr& sourceCodeViewLines : m_lines)
+    {
+        painter.setPen(pen);
+        painter.drawLine(sourceCodeViewLines->firstLine);
+        painter.drawLine(sourceCodeViewLines->secondLine);
+    }
 }

@@ -16,6 +16,14 @@ struct SourceCodeViewCalling
 {
     std::string filePath;
     uint32_t    functionID = 0;
+
+    QSharedPointer<SourceCodeBlock> caller = nullptr;
+};
+
+struct SourceCodeViewLines
+{
+    QLine firstLine;
+    QLine secondLine;
 };
 
 class SourceCodeView
@@ -27,14 +35,18 @@ class SourceCodeView
     using SourceCodeBlockPtr    = QSharedPointer<SourceCodeBlock>;
     using SourceCodeBlockVecPtr = QSharedPointer<QVector<SourceCodeBlockPtr>>;
 
+    using SourceCodeViewLinesPtr = QSharedPointer<SourceCodeViewLines>;
+
 public:
-    QVector<SourceCodeBlockVecPtr>& getSourceCodeBlockVec() { return m_functionSourceCodeBlockVec; }
+    void draw(QPainter& painter, double zoom);
 
     void build(std::function<void (void)> stateStatus);
 
 private:
     void findAndProcessMainFunction(std::function<void (void)> stateStatus);
     void iteratesCallsQueue(std::function<void (void)> stateStatus);
+    void setSourceCodeBlocksAlignment();
+    void generateConnectionLines();
 
 private:
     const QSharedPointer<Database>& m_database;
@@ -46,4 +58,5 @@ private:
     //QSet<QString>                 m_functionCallsSet;
 
     QVector<SourceCodeBlockVecPtr>  m_functionSourceCodeBlockVec;
+    QVector<SourceCodeViewLinesPtr> m_lines;
 };
