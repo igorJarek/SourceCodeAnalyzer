@@ -27,8 +27,8 @@ void AnalyzeWindow::initUi()
 
     m_ui.progressBar->hide();
 
-    m_mainFilePath = "F:\\Programowanie\\SourceCodeAnalyzer\\lib\\Main.cpp";
-    m_ui.mainFilePath->setText("F:\\Programowanie\\SourceCodeAnalyzer\\lib\\Main.cpp");
+    m_mainFilePath = "D:\\Programowanie\\SourceCodeAnalyzer\\lib\\Main.cpp";
+    m_ui.mainFilePath->setText("D:\\Programowanie\\SourceCodeAnalyzer\\lib\\Main.cpp");
 
     m_ui.functionName->setText("main");
     m_ui.functionLine->setText("11");

@@ -27,11 +27,11 @@ void CreateDatabaseWindow::initUi()
     m_ui.progressBar->hide();
     m_ui.analyzedFilePath->hide();
 
-    m_ui.folderPathEdit->setText("F:\\Programowanie\\SourceCodeAnalyzer\\lib");
-    m_analizedFolderPath = "F:\\Programowanie\\SourceCodeAnalyzer\\lib";
+    m_ui.folderPathEdit->setText("D:\\Programowanie\\SourceCodeAnalyzer\\lib");
+    m_analizedFolderPath = "D:\\Programowanie\\SourceCodeAnalyzer\\lib";
 
-    m_ui.includeFolderEdit->append("F:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
-    m_includePaths.append("F:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
+    m_ui.includeFolderEdit->append("D:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
+    m_includePaths.append("D:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
 }
 
 void CreateDatabaseWindow::initSignalsConnections()
