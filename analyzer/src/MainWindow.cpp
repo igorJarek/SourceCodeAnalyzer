@@ -228,8 +228,6 @@ void MainWindow::create_view()
                 viewsTab->setCurrentIndex(tabIndex);
                 fillViews();
             }
-            else
-                QMessageBox::warning(this, "Analizing Failed", "Something went wrong...", QMessageBox::StandardButton::Ok);
         }
         else
             QMessageBox::warning(this, "Analizing Failed", "Database has errors...", QMessageBox::StandardButton::Ok);

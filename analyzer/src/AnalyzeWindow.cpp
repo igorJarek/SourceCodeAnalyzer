@@ -46,25 +46,29 @@ void AnalyzeWindow::start()
     if(viewName.isEmpty())
     {
         QMessageBox::warning(this, "Warning", "View Name must be not empty");
-        reject();
+
+        return;
     }
 
     if(mainFile.isEmpty())
     {
         QMessageBox::warning(this, "Warning", "Main File Path must be not empty");
-        reject();
+
+        return;
     }
 
     if(functionName.isEmpty())
     {
         QMessageBox::warning(this, "Warning", "Function Name must be not empty");
-        reject();
+
+        return;
     }
 
     if(!isConvOk || functionLine < 0)
     {
         QMessageBox::warning(this, "Warning", "Line Number must be integer number and greater than 0");
-        reject();
+
+        return;
     }
 
     QSharedPointer<SourceCodeView> sourceCodeView = QSharedPointer<SourceCodeView>(new SourceCodeView(m_app.getDatabase(), viewName, mainFile, functionName, functionLine));
