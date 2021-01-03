@@ -31,8 +31,10 @@ private slots:
     void                    open_database();
     void                    save_as_database();
     void                    save_database();
-    void                    start_analyze();
     void                    exit();
 
+    void                    create_view();
+
     void                    filesTab_closeTab(int index);
+    void                    databaseTree_contextMenu(const QPoint& point);
 };

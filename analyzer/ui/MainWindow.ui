@@ -41,6 +41,9 @@
         </item>
         <item>
          <widget class="QTreeWidget" name="databaseTree">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <column>
            <property name="text">
             <string>File Path</string>
@@ -94,18 +97,11 @@
     <addaction name="actionSave_As_Database"/>
     <addaction name="actionSave_Database"/>
     <addaction name="separator"/>
-    <addaction name="actionStart_Analyze"/>
-    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionStart_Analyze">
-   <property name="text">
-    <string>Start Analyze</string>
-   </property>
-  </action>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
@@ -129,6 +125,14 @@
   <action name="actionSave_Database">
    <property name="text">
     <string>Save Database</string>
+   </property>
+  </action>
+  <action name="actionCreateView">
+   <property name="text">
+    <string>Create View</string>
+   </property>
+   <property name="toolTip">
+    <string>Create View</string>
    </property>
   </action>
  </widget>

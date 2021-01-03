@@ -10,7 +10,7 @@ class AnalyzeWindow : public QDialog
     Q_OBJECT
 
 public:
-    AnalyzeWindow(App& app, QWidget *parent = Q_NULLPTR);
+    AnalyzeWindow(App& app, const QStringList& args, QWidget *parent = Q_NULLPTR);
     ~AnalyzeWindow();
 
 private:
@@ -18,14 +18,12 @@ private:
     void initSignalsConnections();
 
 private:
-    Ui::AnalyzeWindow m_ui;
+    Ui::AnalyzeWindow   m_ui;
 
-    App&              m_app;
-
-    QString           m_mainFilePath;
+    App&                m_app;
+     const QStringList& m_args;
 
 private slots:
-    void              main_folder();
     void              start();
     void              cancel();
 };
