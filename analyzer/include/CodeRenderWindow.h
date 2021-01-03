@@ -13,7 +13,7 @@ class CodeRenderWindow : public QOpenGLWidget
     Q_OBJECT
 
 public:
-    CodeRenderWindow(App& app, QWidget *parent);
+    CodeRenderWindow(QSharedPointer<SourceCodeView> sourceCodeView, QWidget *parent);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -27,7 +27,6 @@ protected:
 
 private:
     QSharedPointer<SourceCodeView> m_sourceCodeView = nullptr;
-    App&     m_app;
 
     bool     m_buttonState = false;
     QPoint   m_leftButtonMoveStartPos;

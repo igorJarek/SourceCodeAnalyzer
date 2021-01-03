@@ -8,10 +8,10 @@
 
 #include <iostream>
 
-CodeRenderWindow::CodeRenderWindow(App& app, QWidget *parent) :
-    m_app(app), QOpenGLWidget(parent)
+CodeRenderWindow::CodeRenderWindow(QSharedPointer<SourceCodeView> sourceCodeView, QWidget *parent) :
+    m_sourceCodeView(sourceCodeView), QOpenGLWidget(parent)
 {
-    m_sourceCodeView = m_app.getLastSourceCodeView();
+
 }
 
 void CodeRenderWindow::paintEvent(QPaintEvent * /* event */)

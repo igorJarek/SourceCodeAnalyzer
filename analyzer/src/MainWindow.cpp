@@ -222,8 +222,9 @@ void MainWindow::create_view()
             if(analyzeWindow.exec())
             {
                 QTabWidget* viewsTab = m_ui.viewsTab;
-                CodeRenderWindow* render = new CodeRenderWindow(m_app, this);
-                int tabIndex = viewsTab->addTab(render, QString("Renderer"));
+                QSharedPointer<SourceCodeView> view = m_app.getLastSourceCodeView();
+                CodeRenderWindow* render = new CodeRenderWindow(view, this);
+                int tabIndex = viewsTab->addTab(render, view->getViewName());
                 viewsTab->setCurrentIndex(tabIndex);
                 fillViews();
             }
