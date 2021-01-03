@@ -18,7 +18,7 @@ void CodeRenderWindow::paintEvent(QPaintEvent * /* event */)
 {
     QPainter painter(this);
 
-    painter.fillRect(QRect(0, 0, 3000, 5000), Qt::black);
+    painter.fillRect(QRect(0, 0, 3000, 5000), QColor(30, 30, 30));
     painter.setViewport(m_viewportPosX - 20, m_viewportPosY - 20, width(), height());
 
     QSharedPointer<SourceCodeView> latestSourceCodeView = m_app.getLastSourceCodeView();
