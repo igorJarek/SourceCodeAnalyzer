@@ -29,7 +29,7 @@ struct SourceCodeViewLines
 class SourceCodeView
 {
  public:
-    SourceCodeView(const QSharedPointer<Database>& database, const QString& mainFilePath, const QString& mainFunctionName, int32_t mainFunctionLine);
+    SourceCodeView(const QSharedPointer<Database>& database, const QString& viewName, const QString& mainFilePath, const QString& mainFunctionName, int32_t mainFunctionLine);
     ~SourceCodeView();
 
     using SourceCodeBlockPtr    = QSharedPointer<SourceCodeBlock>;
@@ -38,6 +38,9 @@ class SourceCodeView
     using SourceCodeViewLinesPtr = QSharedPointer<SourceCodeViewLines>;
 
 public:
+    const QString getViewName()     { return m_viewName; }
+    const QString getViewMainPath() { return m_mainFilePath; }
+
     void draw(QPainter& painter, double zoom);
 
     void build(std::function<void (void)> stateStatus);
@@ -50,8 +53,9 @@ private:
 
 private:
     const QSharedPointer<Database>& m_database;
-    const QString&                  m_mainFilePath;
-    const QString&                  m_mainFunctionName;
+    const QString                   m_viewName;
+    const QString                   m_mainFilePath;
+    const QString                   m_mainFunctionName;
     const int32_t                   m_mainFunctionLine;
 
     QQueue<SourceCodeViewCalling>   m_functionCallsQueue;

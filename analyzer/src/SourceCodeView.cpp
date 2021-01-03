@@ -4,8 +4,9 @@
 #include <QMessageBox>
 #include <string>
 
-SourceCodeView::SourceCodeView(const QSharedPointer<Database>& database, const QString& mainFilePath, const QString& mainFunctionName, int32_t mainFunctionLine) :
+SourceCodeView::SourceCodeView(const QSharedPointer<Database>& database, const QString& viewName, const QString& mainFilePath, const QString& mainFunctionName, int32_t mainFunctionLine) :
     m_database(database),
+    m_viewName(viewName),
     m_mainFilePath(mainFilePath),
     m_mainFunctionName(mainFunctionName),
     m_mainFunctionLine(mainFunctionLine)

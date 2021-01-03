@@ -9,6 +9,7 @@
 #include <QTextStream>
 #include <QMessageBox>
 #include <QProgressBar>
+#include <QTableWidgetItem>
 
 MainWindow::MainWindow(App& app, QWidget *parent) : 
     QMainWindow(parent),
@@ -112,6 +113,17 @@ void MainWindow::fillDatabaseTree()
     }
 }
 
+void MainWindow::fillViews()
+{
+    QSharedPointer<SourceCodeView> sourceCodeViewPtr = m_app.getLastSourceCodeView();
+    const QString viewName = sourceCodeViewPtr->getViewName();
+    QString mainPath = sourceCodeViewPtr->getViewMainPath();
+
+    QTreeWidgetItem* viewItem = new QTreeWidgetItem(m_ui.viewsTree);
+    viewItem->setText(0, viewName);
+    viewItem->setText(1, mainPath.remove(0, m_app.getAnalizedFolderPath().size()));
+}
+
 void MainWindow::create_database()
 {
     CreateDatabaseWindow createDatabaseWindow(m_app, this);
@@ -213,6 +225,7 @@ void MainWindow::create_view()
                 CodeRenderWindow* render = new CodeRenderWindow(m_app, this);
                 int tabIndex = viewsTab->addTab(render, QString("Renderer"));
                 viewsTab->setCurrentIndex(tabIndex);
+                fillViews();
             }
             else
                 QMessageBox::warning(this, "Analizing Failed", "Something went wrong...", QMessageBox::StandardButton::Ok);

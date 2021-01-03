@@ -21,6 +21,7 @@ private:
     void                    initSignalsConnections();
 
     void                    fillDatabaseTree();
+    void                    fillViews();
 
 private:
     Ui::MainWindowClass     m_ui;
