@@ -101,39 +101,9 @@
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionFolder">
-   <property name="text">
-    <string>Folder</string>
-   </property>
-  </action>
-  <action name="actionDatabase">
-   <property name="text">
-    <string>Database</string>
-   </property>
-  </action>
-  <action name="actionOpen_2">
-   <property name="text">
-    <string>Open</string>
-   </property>
-  </action>
   <action name="actionStart_Analyze">
    <property name="text">
     <string>Start Analyze</string>
-   </property>
-  </action>
-  <action name="actionVisual_Studio_Project">
-   <property name="text">
-    <string>Visual Studio Project</string>
-   </property>
-  </action>
-  <action name="actionDatabase_2">
-   <property name="text">
-    <string>Database</string>
-   </property>
-  </action>
-  <action name="actionSettings">
-   <property name="text">
-    <string>Settings</string>
    </property>
   </action>
   <action name="actionExit">
