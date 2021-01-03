@@ -164,36 +164,43 @@ void MainWindow::open_database()
             QString newWindowTitle = windowTitle();
             newWindowTitle += " - " + filePath;
             setWindowTitle(newWindowTitle);
+            fillDatabaseTree();
+            QMessageBox::information(this, "Success", "Database has opened correctly");
         }
     }
 }
 
 void MainWindow::save_as_database()
 {
+    if(!m_app.getDatabase())
+    {
+        QMessageBox::critical(this, "Failure", "First create database");
+        return;
+    }
+
     QString filter = tr("SQLite File (*.sqlite3)");
     QString filePath = QFileDialog::getSaveFileName(this, tr("Database Path"), QString(), tr("SQLite File (*.sqlite3)"), &filter);
 
     if(!filePath.isEmpty())
     {
-        if(m_app.getDatabase())
-        {
-            Database& database = *m_app.getDatabase();
+        Database& database = *m_app.getDatabase();
 
-            QProgressBar progressBar(this);
-            progressBar.setMinimum(0);
-            progressBar.setMaximum(100);
-            progressBar.setValue(0);
-            progressBar.show();
+        QProgressBar progressBar(this);
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(100);
+        progressBar.setValue(0);
+        progressBar.show();
 
-            database.saveAsDatabase
-            (
-                filePath.toStdString(),
-                [&progressBar](double currentPercent) -> void
-                {
-                    progressBar.setValue(currentPercent);
-                }
-            );
-        }
+        database.saveAsDatabase
+        (
+            filePath.toStdString(),
+            [&progressBar](double currentPercent) -> void
+            {
+                progressBar.setValue(currentPercent);
+            }
+        );
+
+        QMessageBox::information(this, "Success", "Database has saved correctly");
     }
 }
 
