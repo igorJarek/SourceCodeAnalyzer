@@ -27,7 +27,7 @@ void MainWindow::initUi()
 {
     m_ui.setupUi(this);
 
-    m_ui.splitter->setSizes({200, 400});
+    m_ui.splitter->setSizes({300, 400});
 }
 
 void MainWindow::initSignalsConnections()
@@ -41,8 +41,74 @@ void MainWindow::initSignalsConnections()
     connect(m_ui.actionExit,             SIGNAL(triggered()),                        this, SLOT(exit()));
 
     // Other Actions
-    connect(m_ui.filesTree,             SIGNAL(doubleClicked(const QModelIndex&)),  this, SLOT(filesTree_doubleClick(const QModelIndex &)));
-    connect(m_ui.filesTab,              SIGNAL(tabCloseRequested(int)),             this, SLOT(filesTab_closeTab(int)));
+    connect(m_ui.viewsTab,               SIGNAL(tabCloseRequested(int)),                    this, SLOT(filesTab_closeTab(int)));
+}
+
+void MainWindow::fillDatabaseTree()
+{
+    if(!m_app.getDatabase())
+        QMessageBox::critical(this, "Database Error", "First create database");
+    else
+        m_ui.databaseTree->clear();
+
+    QSharedPointer<Database> databasePtr = m_app.getDatabase();
+
+    QueryResults fileList;
+    DatabaseQueryErrMsg queryErrMsg = databasePtr->recvQuery
+    (
+        "SELECT * FROM [..\\file_list]",
+        fileList
+    );
+    if(databasePtr->isNotOK())
+    {
+        QMessageBox::critical(nullptr, "Query Error", QString(queryErrMsg), QMessageBox::StandardButton::Ok);
+        return;
+    }
+
+    for(std::vector<std::string>& fileRow : fileList.rows)
+    {
+        const std::string& filePath = fileRow[1];
+
+        QTreeWidgetItem* fileRootItem = new QTreeWidgetItem(m_ui.databaseTree);
+        fileRootItem->setText(0, QString::fromStdString(filePath.substr(m_app.getAnalizedFolderPath().size())));
+        fileRootItem->setText(1, "");
+        fileRootItem->setText(2, "");
+
+        QueryResults fileCallings;
+        queryErrMsg = databasePtr->recvQuery
+        (
+            "SELECT CallingNameTokenID FROM [" + filePath + "\\calling]",
+            fileCallings
+        );
+        if(databasePtr->isNotOK())
+        {
+            QMessageBox::critical(nullptr, "Query Error", QString(queryErrMsg), QMessageBox::StandardButton::Ok);
+            return;
+        }
+
+        for(std::vector<std::string>& fileCalling : fileCallings.rows)
+        {
+            QueryResults callingToken;
+            queryErrMsg = databasePtr->recvQuery
+            (
+                "SELECT TokenSpelling, TokenStartPos_Line "
+                "FROM [" + filePath + "\\tokens] "
+                "WHERE TokenID = " + fileCalling[0],
+                callingToken
+            );
+            if(databasePtr->isNotOK())
+            {
+                QMessageBox::critical(nullptr, "Query Error", QString(queryErrMsg), QMessageBox::StandardButton::Ok);
+           
+            }
+
+            std::vector<std::string>& fileCallingToken = callingToken.rows.front();
+            QTreeWidgetItem* item = new QTreeWidgetItem(fileRootItem);
+            item->setText(0, "");
+            item->setText(1, QString::fromStdString(fileCallingToken[0]));
+            item->setText(2, QString::fromStdString(fileCallingToken[1]));
+        }
+    }
 }
 
 void MainWindow::create_database()
@@ -50,14 +116,7 @@ void MainWindow::create_database()
     CreateDatabaseWindow createDatabaseWindow(m_app, this);
     createDatabaseWindow.setModal(true);
     if(createDatabaseWindow.exec())
-    {
-        QModelIndex index = model.setRootPath(m_app.getAnalizedFolderPath());
-
-        m_ui.filesTree->setModel(&model);
-        m_ui.filesTree->setRootIndex(index);
-        m_ui.filesTree->hideColumn(2);
-        m_ui.filesTree->hideColumn(3);
-    }
+        fillDatabaseTree();
 }
 
 void MainWindow::open_database()
@@ -142,10 +201,10 @@ void MainWindow::start_analyze()
             analyzeWindow.setModal(true);
             if(analyzeWindow.exec())
             {
-                QTabWidget* filesTab = m_ui.filesTab;
+                QTabWidget* viewsTab = m_ui.viewsTab;
                 CodeRenderWindow* render = new CodeRenderWindow(m_app, this);
-                int tabIndex = filesTab->addTab(render, QString("Renderer"));
-                filesTab->setCurrentIndex(tabIndex);
+                int tabIndex = viewsTab->addTab(render, QString("Renderer"));
+                viewsTab->setCurrentIndex(tabIndex);
             }
             else
                 QMessageBox::warning(this, "Analizing Failed", "Something went wrong...", QMessageBox::StandardButton::Ok);
@@ -162,44 +221,22 @@ void MainWindow::exit()
     close();
 }
 
-void MainWindow::filesTree_doubleClick(const QModelIndex& modelIndex)
-{
-    QTabWidget* filesTab = m_ui.filesTab;
-    QString absoluteFilePath = model.filePath(modelIndex);
-
-    QFile file(absoluteFilePath);
-    if(file.exists())
-    {
-        if(file.open(QIODevice::ReadOnly))
-        {
-            QStringList absoluteFilePathSplitted = absoluteFilePath.split("/");
-
-            // QTextDocument zamiast QTextEdit
-            QTextEdit* textEdit = new QTextEdit();
-            int index = filesTab->addTab(textEdit, absoluteFilePathSplitted.last());
-
-            filesTab->setCurrentIndex(index);
-
-            QTextStream stream(&file);
-            QString line;
-
-            while(!stream.atEnd())
-            {
-                line = stream.readLine();
-                textEdit->append(line);
-            }
-
-            file.close();
-        }
-    }
-}
-
 void MainWindow::filesTab_closeTab(int index)
 {
-    QTabWidget* filesTab = m_ui.filesTab;
+    QTabWidget* viewsTab = m_ui.viewsTab;
 
-    QWidget* deletedTabs = filesTab->widget(index);
-    filesTab->removeTab(index);
+    QWidget* deletedTabs = viewsTab->widget(index);
+    viewsTab->removeTab(index);
 
     delete deletedTabs;
+}
+
+void MainWindow::databaseTree_contextMenu(const QPoint& point)
+{
+    /*QTreeWidgetItem* clickedItem = m_ui.databaseTree->itemAt(point);
+
+    QMenu menu(this); // add menu items
+    menu.addAction(m_ui.actionAkcja);
+
+    menu.exec(m_ui.databaseTree->mapToGlobal(point));*/
 }

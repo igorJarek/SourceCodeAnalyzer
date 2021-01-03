@@ -20,11 +20,11 @@ private:
     void                    initUi();
     void                    initSignalsConnections();
 
+    void                    fillDatabaseTree();
+
 private:
     Ui::MainWindowClass     m_ui;
     App&                    m_app;
-
-    QFileSystemModel        model;
 
 private slots:
     void                    create_database();
@@ -34,6 +34,5 @@ private slots:
     void                    start_analyze();
     void                    exit();
 
-    void                    filesTree_doubleClick(const QModelIndex& modelIndex);
     void                    filesTab_closeTab(int index);
 };
