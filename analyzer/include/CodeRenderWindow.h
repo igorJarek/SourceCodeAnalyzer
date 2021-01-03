@@ -1,5 +1,7 @@
 #pragma once
 
+#include "SourceCodeView.h"
+
 #include <QOpenGLWidget>
 #include <QScrollBar>
 #include <QImage>
@@ -24,6 +26,7 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
 private:
+    QSharedPointer<SourceCodeView> m_sourceCodeView = nullptr;
     App&     m_app;
 
     bool     m_buttonState = false;
