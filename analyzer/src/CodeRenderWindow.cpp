@@ -16,9 +16,9 @@ CodeRenderWindow::CodeRenderWindow(App& app, QWidget *parent) :
 
 void CodeRenderWindow::paintEvent(QPaintEvent * /* event */)
 {
-    QPainter     painter(this);
+    QPainter painter(this);
 
-    painter.fillRect(QRect(0, 0, 10000, 10000), Qt::black);
+    painter.fillRect(QRect(0, 0, 3000, 5000), Qt::black);
     painter.setViewport(m_viewportPosX - 20, m_viewportPosY - 20, width(), height());
 
     QSharedPointer<SourceCodeView> latestSourceCodeView = m_app.getLastSourceCodeView();
@@ -67,9 +67,9 @@ void CodeRenderWindow::mouseReleaseEvent(QMouseEvent* event)
 void CodeRenderWindow::wheelEvent(QWheelEvent * event)
 {
     if(event->angleDelta().y() > 0)
-        m_zoom += 0.1;
+        m_zoom += 0.05;
     else
-        m_zoom -= 0.1;
+        m_zoom -= 0.05;
 
     repaint();
 }
