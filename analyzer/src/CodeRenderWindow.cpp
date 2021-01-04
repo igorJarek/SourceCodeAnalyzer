@@ -6,20 +6,20 @@
 #include <QMouseEvent>
 #include <QPainter>
 
-#include <iostream>
-
 CodeRenderWindow::CodeRenderWindow(QSharedPointer<SourceCodeView> sourceCodeView, QWidget *parent) :
     m_sourceCodeView(sourceCodeView), QOpenGLWidget(parent)
 {
 
 }
 
-void CodeRenderWindow::paintEvent(QPaintEvent * /* event */)
+void CodeRenderWindow::paintEvent(QPaintEvent* /* event */)
 {
     QPainter painter(this);
 
     painter.fillRect(QRect(0, 0, 3000, 5000), QColor(30, 30, 30));
-    painter.setViewport(m_viewportPosX - 20, m_viewportPosY - 20, width(), height());
+
+    QPoint viewPos = m_viewportPos + m_leftMouseButtonMovingDeltaPos;
+    painter.setViewport(viewPos.x(), viewPos.y(), width(), height());
 
     m_sourceCodeView->draw(painter, m_zoom);
 
@@ -30,11 +30,9 @@ void CodeRenderWindow::mouseMoveEvent(QMouseEvent* event)
 {
     QOpenGLWidget::mousePressEvent(event);
 
-    if(m_buttonState)
+    if(m_leftMouseButtonState)
     {
-        QPoint delta = m_leftButtonMoveStartPos - event->pos();
-        m_viewportPosX += delta.x();
-        m_viewportPosY += delta.y();
+        m_leftMouseButtonMovingDeltaPos = m_leftMouseButtonMovingStartPos - event->pos();
 
         repaint();
     }
@@ -47,8 +45,9 @@ void CodeRenderWindow::mousePressEvent(QMouseEvent* event)
     Qt::MouseButton button = event->button();
     if(button == Qt::LeftButton)
     {
-        m_leftButtonMoveStartPos = event->pos();
-        m_buttonState = true;
+        m_leftMouseButtonMovingStartPos = event->pos();
+
+        m_leftMouseButtonState = true;
     }
 
     setFocus();
@@ -60,7 +59,15 @@ void CodeRenderWindow::mouseReleaseEvent(QMouseEvent* event)
 
     Qt::MouseButton button = event->button();
     if(button == Qt::LeftButton)
-        m_buttonState = false;
+    {
+        m_leftMouseButtonState = false;
+
+        m_viewportPos += m_leftMouseButtonMovingDeltaPos;
+
+        m_leftMouseButtonMovingDeltaPos = QPoint(0, 0);
+
+        repaint();
+    }
 }
 
 void CodeRenderWindow::wheelEvent(QWheelEvent * event)
@@ -78,18 +85,13 @@ void CodeRenderWindow::keyPressEvent(QKeyEvent* event)
     QOpenGLWidget::keyPressEvent(event);
 
     if(event->key() == Qt::Key_Up)
-        m_viewportPosY += 30;
+        m_viewportPos += QPoint(0, 30);
     else if(event->key() == Qt::Key_Down)
-        m_viewportPosY -= 30;
+        m_viewportPos -= QPoint(0, 30);
     else if(event->key() == Qt::Key_Left)
-        m_viewportPosX += 30;
+        m_viewportPos += QPoint(30, 0);
     else if(event->key() == Qt::Key_Right)
-        m_viewportPosX -= 30;
-    else if(event->key() == Qt::Key_R)
-    {
-        m_viewportPosX = 20;
-        m_viewportPosY = 20;
-    }
+        m_viewportPos -= QPoint(30, 0);
 
     repaint();
 }

@@ -26,13 +26,12 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
 private:
-    QSharedPointer<SourceCodeView> m_sourceCodeView = nullptr;
+    QSharedPointer<SourceCodeView> m_sourceCodeView                = nullptr;
 
-    bool     m_buttonState = false;
-    QPoint   m_leftButtonMoveStartPos;
+    QPoint                         m_viewportPos;
+    double                         m_zoom                          = 1.0;
 
-    uint32_t m_viewportPosX = 20;
-    uint32_t m_viewportPosY = 20;
-
-    double   m_zoom = 1.0;
+    bool                           m_leftMouseButtonState          = false;
+    QPoint                         m_leftMouseButtonMovingStartPos;
+    QPoint                         m_leftMouseButtonMovingDeltaPos;
 };
