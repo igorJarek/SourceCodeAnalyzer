@@ -34,16 +34,17 @@ void MainWindow::initUi()
 void MainWindow::initSignalsConnections()
 {
     // Window Menu Actions
-    connect(m_ui.actionCreate_Database,  SIGNAL(triggered()),                        this, SLOT(create_database()));
-    connect(m_ui.actionOpen_Database,    SIGNAL(triggered()),                        this, SLOT(open_database()));
-    connect(m_ui.actionSave_As_Database, SIGNAL(triggered()),                        this, SLOT(save_as_database()));
-    connect(m_ui.actionSave_Database,    SIGNAL(triggered()),                        this, SLOT(save_database()));
-    connect(m_ui.actionExit,             SIGNAL(triggered()),                        this, SLOT(exit()));
+    connect(m_ui.actionCreate_Database,  SIGNAL(triggered()),                               this, SLOT(create_database()));
+    connect(m_ui.actionOpen_Database,    SIGNAL(triggered()),                               this, SLOT(open_database()));
+    connect(m_ui.actionSave_As_Database, SIGNAL(triggered()),                               this, SLOT(save_as_database()));
+    connect(m_ui.actionSave_Database,    SIGNAL(triggered()),                               this, SLOT(save_database()));
+    connect(m_ui.actionExit,             SIGNAL(triggered()),                               this, SLOT(exit()));
 
     // Other Actions
     connect(m_ui.actionCreateView,       SIGNAL(triggered()),                               this, SLOT(create_view()));
-    connect(m_ui.viewsTab,               SIGNAL(tabCloseRequested(int)),                    this, SLOT(filesTab_closeTab(int)));
     connect(m_ui.databaseTree,           SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(databaseTree_contextMenu(const QPoint&)));
+    connect(m_ui.viewsTab,               SIGNAL(tabCloseRequested(int)),                    this, SLOT(close_view(int)));
+    connect(m_ui.viewsTree,              SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)),  this, SLOT(open_view(QTreeWidgetItem*, int)));
 }
 
 void MainWindow::fillDatabaseTree()
@@ -243,16 +244,6 @@ void MainWindow::create_view()
         QMessageBox::warning(this, "Analizing Failed", "Please open or create database first", QMessageBox::StandardButton::Ok);
 }
 
-void MainWindow::filesTab_closeTab(int index)
-{
-    QTabWidget* viewsTab = m_ui.viewsTab;
-
-    QWidget* deletedTabs = viewsTab->widget(index);
-    viewsTab->removeTab(index);
-
-    delete deletedTabs;
-}
-
 void MainWindow::databaseTree_contextMenu(const QPoint& point)
 {
     QTreeWidgetItem* clickedItem       = m_ui.databaseTree->itemAt(point);
@@ -273,4 +264,33 @@ void MainWindow::databaseTree_contextMenu(const QPoint& point)
 
         menu.exec(m_ui.databaseTree->mapToGlobal(point));
     }
+}
+
+void MainWindow::close_view(int index)
+{
+    QTabWidget* viewsTab = m_ui.viewsTab;
+
+    QWidget* deletedTabs = viewsTab->widget(index);
+    viewsTab->removeTab(index);
+
+    delete deletedTabs;
+}
+
+void MainWindow::open_view(QTreeWidgetItem* item, int column)
+{
+    QString clickedViewName = item->text(0);
+    for(QSharedPointer<SourceCodeView> view : m_app.getSourceCodeViews())
+    {
+        if(view->getViewName() == clickedViewName)
+        {
+            QTabWidget* viewsTab = m_ui.viewsTab;
+            CodeRenderWindow* render = new CodeRenderWindow(view, this);
+            int tabIndex = viewsTab->addTab(render, view->getViewName());
+            viewsTab->setCurrentIndex(tabIndex);
+            break;
+        }
+    }
+
+    // TODO
+    // change App::m_sourceCodeViews type from QVector to QMap<viewName, view>
 }

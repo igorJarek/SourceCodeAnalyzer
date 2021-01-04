@@ -29,9 +29,12 @@ public:
     const QString&                                 getDatabasePath() const              { return m_databasePath; }
 
     void                                           addSourceCodeView(const QSharedPointer<SourceCodeView>& sourceCodeView);
-    QSharedPointer<SourceCodeView>                 getLastSourceCodeView() { return m_sourceCodeViews.last(); }
+
+    QSharedPointer<SourceCodeView>                 getLastSourceCodeView()              { return m_sourceCodeViews.last(); }
+    QVector<QSharedPointer<SourceCodeView>>&       getSourceCodeViews()                 { return m_sourceCodeViews; }
+
 private:
-    QSharedPointer<Database>                       m_database = nullptr;
+    QSharedPointer<Database>                       m_database           = nullptr;
     QString                                        m_analyzedFolderPath;
     QString                                        m_databasePath;
 

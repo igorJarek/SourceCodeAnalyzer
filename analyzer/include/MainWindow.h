@@ -36,6 +36,7 @@ private slots:
 
     void                    create_view();
 
-    void                    filesTab_closeTab(int index);
     void                    databaseTree_contextMenu(const QPoint& point);
+    void                    close_view(int index);
+    void                    open_view(QTreeWidgetItem* item, int column);
 };
