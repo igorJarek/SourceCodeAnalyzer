@@ -37,8 +37,10 @@ private slots:
     void                    exit();
 
     void                    create_view();
+    void                    save_view_as_svg();
 
     void                    databaseTree_contextMenu(const QPoint& point);
     void                    close_view(int index);
     void                    open_view(QTreeWidgetItem* item, int column);
+    void                    viewsTree_contextMenu(const QPoint& point);
 };

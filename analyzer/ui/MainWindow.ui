@@ -70,6 +70,9 @@
         </item>
         <item>
          <widget class="QTreeWidget" name="viewsTree">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <column>
            <property name="text">
             <string>View Name</string>
@@ -151,6 +154,14 @@
    </property>
    <property name="toolTip">
     <string>Create View</string>
+   </property>
+  </action>
+  <action name="actionExport_to_SVG">
+   <property name="text">
+    <string>Export to SVG</string>
+   </property>
+   <property name="toolTip">
+    <string>Export to SVG</string>
    </property>
   </action>
  </widget>

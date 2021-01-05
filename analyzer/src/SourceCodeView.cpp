@@ -1,6 +1,7 @@
 #include "SourceCodeView.h"
 #include "Database/Database.h"
 
+#include <QtSvg/QSvgGenerator>
 #include <QMessageBox>
 #include <string>
 
@@ -296,6 +297,8 @@ void SourceCodeView::generateConnectionLines()
 
 void SourceCodeView::draw(QPainter& painter, double zoom)
 {
+    painter.fillRect(QRect(0, 0, 3000, 5000), QColor(30, 30, 30));
+
     painter.scale(zoom, zoom);
 
     for(const SourceCodeBlockVecPtr& sourceCodeBlockVec : m_functionSourceCodeBlockVec)
@@ -321,4 +324,20 @@ void SourceCodeView::draw(QPainter& painter, double zoom)
         painter.drawLine(sourceCodeViewLines->firstLine);
         painter.drawLine(sourceCodeViewLines->secondLine);
     }
+}
+
+void SourceCodeView::saveToSVG(const QString& filePath)
+{
+    QSvgGenerator generator;
+    generator.setFileName(filePath + '/' + m_viewName + ".svg");
+    generator.setSize(QSize(3000, 5000));
+    generator.setViewBox(QRect(0, 0, 3000, 5000));
+    generator.setTitle(m_viewName);
+    generator.setDescription("An SVG drawing created by the SVG Generator Example provided with Qt.");
+    
+    QPainter painter(&generator);
+
+    draw(painter, 1.0);
+
+    painter.end();
 }

@@ -43,6 +43,8 @@ public:
 
     void draw(QPainter& painter, double zoom);
 
+    void saveToSVG(const QString& filePath);
+
     void build(std::function<void (void)> stateStatus);
 
 private:

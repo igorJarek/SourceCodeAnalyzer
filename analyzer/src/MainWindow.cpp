@@ -46,6 +46,8 @@ void MainWindow::initSignalsConnections()
     connect(m_ui.databaseTree,           SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(databaseTree_contextMenu(const QPoint&)));
     connect(m_ui.viewsTab,               SIGNAL(tabCloseRequested(int)),                    this, SLOT(close_view(int)));
     connect(m_ui.viewsTree,              SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)),  this, SLOT(open_view(QTreeWidgetItem*, int)));
+    connect(m_ui.viewsTree,              SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(viewsTree_contextMenu(const QPoint&)));
+    connect(m_ui.actionExport_to_SVG,    SIGNAL(triggered()),                               this, SLOT(save_view_as_svg()));
 }
 
 void MainWindow::openCodeRenderWindow(QSharedPointer<SourceCodeView> view)
@@ -250,6 +252,21 @@ void MainWindow::create_view()
         QMessageBox::warning(this, "Analizing Failed", "Please open or create database first", QMessageBox::StandardButton::Ok);
 }
 
+void MainWindow::save_view_as_svg()
+{
+    const QString& viewName = m_ui.actionExport_to_SVG->data().toString();
+
+    QString filePath = QFileDialog::getExistingDirectory(this, tr("SVG Path"));
+
+    if(!filePath.isEmpty())
+    {
+        QSharedPointer<SourceCodeView> view = m_app.getSourceCodeView(viewName);
+        view->saveToSVG(filePath);
+
+        QMessageBox::information(this, "Success", "SVG File has created correctly");
+    }
+}
+
 void MainWindow::databaseTree_contextMenu(const QPoint& point)
 {
     QTreeWidgetItem* clickedItem       = m_ui.databaseTree->itemAt(point);
@@ -288,4 +305,17 @@ void MainWindow::open_view(QTreeWidgetItem* item, int column)
     QSharedPointer<SourceCodeView> view = m_app.getSourceCodeView(clickedViewName);
 
     openCodeRenderWindow(view);
+}
+
+void MainWindow::viewsTree_contextMenu(const QPoint& point)
+{
+    QTreeWidgetItem* clickedItem = m_ui.viewsTree->itemAt(point);
+    QString          viewName    = clickedItem->text(0);
+
+    m_ui.actionExport_to_SVG->setData(QVariant(viewName));
+
+    QMenu menu(this);
+    menu.addAction(m_ui.actionExport_to_SVG);
+
+    menu.exec(m_ui.viewsTree->mapToGlobal(point));
 }
