@@ -20,8 +20,10 @@ private:
     void                    initUi();
     void                    initSignalsConnections();
 
+    void                    openCodeRenderWindow(QSharedPointer<SourceCodeView> view);
+
     void                    fillDatabaseTree();
-    void                    fillViews();
+    void                    fillViewsTree(QSharedPointer<SourceCodeView> view);
 
 private:
     Ui::MainWindowClass     m_ui;

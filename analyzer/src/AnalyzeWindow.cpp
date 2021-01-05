@@ -50,6 +50,13 @@ void AnalyzeWindow::start()
         return;
     }
 
+    if(m_app.isViewExists(viewName))
+    {
+        QMessageBox::warning(this, "Warning", "View '" + viewName + "' already exists");
+
+        return;
+    }
+
     if(mainFile.isEmpty())
     {
         QMessageBox::warning(this, "Warning", "Main File Path must be not empty");
@@ -71,16 +78,14 @@ void AnalyzeWindow::start()
         return;
     }
 
-    QSharedPointer<SourceCodeView> sourceCodeView = QSharedPointer<SourceCodeView>(new SourceCodeView(m_app.getDatabase(), viewName, mainFile, functionName, functionLine));
-    sourceCodeView->build
+    m_newSourceCodeView = QSharedPointer<SourceCodeView>(new SourceCodeView(m_app.getDatabase(), viewName, mainFile, functionName, functionLine));
+    m_newSourceCodeView->build
     (
         []() -> void
         {
             
         }
     );
-
-    m_app.addSourceCodeView(sourceCodeView);
 
     accept();
 }

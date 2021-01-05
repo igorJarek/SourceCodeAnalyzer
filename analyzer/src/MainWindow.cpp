@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QProgressBar>
 #include <QTableWidgetItem>
+#include <QMenu>
 
 MainWindow::MainWindow(App& app, QWidget *parent) : 
     QMainWindow(parent),
@@ -45,6 +46,13 @@ void MainWindow::initSignalsConnections()
     connect(m_ui.databaseTree,           SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(databaseTree_contextMenu(const QPoint&)));
     connect(m_ui.viewsTab,               SIGNAL(tabCloseRequested(int)),                    this, SLOT(close_view(int)));
     connect(m_ui.viewsTree,              SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)),  this, SLOT(open_view(QTreeWidgetItem*, int)));
+}
+
+void MainWindow::openCodeRenderWindow(QSharedPointer<SourceCodeView> view)
+{
+    QTabWidget* viewsTab = m_ui.viewsTab;
+    int tabIndex = viewsTab->addTab(new CodeRenderWindow(view, this), "View : " + view->getViewName());
+    viewsTab->setCurrentIndex(tabIndex);
 }
 
 void MainWindow::fillDatabaseTree()
@@ -114,11 +122,10 @@ void MainWindow::fillDatabaseTree()
     }
 }
 
-void MainWindow::fillViews()
+void MainWindow::fillViewsTree(QSharedPointer<SourceCodeView> view)
 {
-    QSharedPointer<SourceCodeView> sourceCodeViewPtr = m_app.getLastSourceCodeView();
-    const QString viewName = sourceCodeViewPtr->getViewName();
-    QString mainPath = sourceCodeViewPtr->getViewMainPath();
+    const QString viewName = view->getViewName();
+    QString       mainPath = view->getViewMainPath();
 
     QTreeWidgetItem* viewItem = new QTreeWidgetItem(m_ui.viewsTree);
     viewItem->setText(0, viewName);
@@ -229,12 +236,11 @@ void MainWindow::create_view()
             analyzeWindow.setModal(true);
             if(analyzeWindow.exec())
             {
-                QTabWidget* viewsTab = m_ui.viewsTab;
-                QSharedPointer<SourceCodeView> view = m_app.getLastSourceCodeView();
-                CodeRenderWindow* render = new CodeRenderWindow(view, this);
-                int tabIndex = viewsTab->addTab(render, view->getViewName());
-                viewsTab->setCurrentIndex(tabIndex);
-                fillViews();
+                QSharedPointer<SourceCodeView> view = analyzeWindow.getNewSourceCodeView();
+                m_app.addSourceCodeView(view);
+
+                openCodeRenderWindow(view);
+                fillViewsTree(view);
             }
         }
         else
@@ -279,18 +285,7 @@ void MainWindow::close_view(int index)
 void MainWindow::open_view(QTreeWidgetItem* item, int column)
 {
     QString clickedViewName = item->text(0);
-    for(QSharedPointer<SourceCodeView> view : m_app.getSourceCodeViews())
-    {
-        if(view->getViewName() == clickedViewName)
-        {
-            QTabWidget* viewsTab = m_ui.viewsTab;
-            CodeRenderWindow* render = new CodeRenderWindow(view, this);
-            int tabIndex = viewsTab->addTab(render, view->getViewName());
-            viewsTab->setCurrentIndex(tabIndex);
-            break;
-        }
-    }
+    QSharedPointer<SourceCodeView> view = m_app.getSourceCodeView(clickedViewName);
 
-    // TODO
-    // change App::m_sourceCodeViews type from QVector to QMap<viewName, view>
+    openCodeRenderWindow(view);
 }
