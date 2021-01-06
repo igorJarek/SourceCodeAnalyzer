@@ -4,7 +4,8 @@
 #include <QMessageBox>
 #include <clang-c/Index.h>
 
-SourceCodeBlock::SourceCodeBlock(QueryResults& tokenResults, QueryResults& callingResults)
+SourceCodeBlock::SourceCodeBlock(const QString& filePath, QueryResults& tokenResults, QueryResults& callingResults) :
+    m_filePath(filePath)
 {
     prepareTokens(tokenResults, callingResults);
     prepareTokensPos();
@@ -18,6 +19,8 @@ SourceCodeBlock::~SourceCodeBlock()
 void SourceCodeBlock::prepareTokens(QueryResults& tokenResults, QueryResults& callingResults)
 {
     uint32_t currentLine = 0;
+
+    m_filePathText = QSharedPointer<SourceCodeBlockText>(new SourceCodeBlockText(m_filePath));
 
     for(std::vector<std::string>& tokenRow : tokenResults.rows)
     {
@@ -33,7 +36,7 @@ void SourceCodeBlock::prepareTokens(QueryResults& tokenResults, QueryResults& ca
         {
             currentLine = tokenStartPos_Line;
 
-            QSharedPointer<SourceCodeBlockLineNumber> currentLineText = QSharedPointer<SourceCodeBlockLineNumber>(new SourceCodeBlockLineNumber(QString::number(currentLine) + "."));
+            QSharedPointer<SourceCodeBlockText> currentLineText = QSharedPointer<SourceCodeBlockText>(new SourceCodeBlockText(QString::number(currentLine) + "."));
 
             m_lineCounter.append(currentLineText);
             m_tokens.append(QSharedPointer<std::list<QSharedPointer<SourceCodeBlockToken>>>(new std::list<QSharedPointer<SourceCodeBlockToken>>));
@@ -63,7 +66,7 @@ void SourceCodeBlock::prepareTokens(QueryResults& tokenResults, QueryResults& ca
 
                 m_tokens.append(QSharedPointer<std::list<QSharedPointer<SourceCodeBlockToken>>>(new std::list<QSharedPointer<SourceCodeBlockToken>>));
 
-                QSharedPointer<SourceCodeBlockLineNumber> currentLineText = QSharedPointer<SourceCodeBlockLineNumber>(new SourceCodeBlockLineNumber(QString::number(currentLine) + "."));
+                QSharedPointer<SourceCodeBlockText> currentLineText = QSharedPointer<SourceCodeBlockText>(new SourceCodeBlockText(QString::number(currentLine) + "."));
                 m_lineCounter.append(currentLineText);
             }
 
@@ -74,17 +77,31 @@ void SourceCodeBlock::prepareTokens(QueryResults& tokenResults, QueryResults& ca
 
 void SourceCodeBlock::prepareTokensPos()
 {
-    QFont        font("Consolas", 10, 10);
-    QFontMetrics fontMetrics(font);
+    QFont        font10("Consolas", 10, 10);
+    QFont        font15("Consolas", 13, 13);
+    QFontMetrics font10Metrics(font10);
+    QFontMetrics font15Metrics(font15);
 
-    uint32_t lineSpacing          = fontMetrics.lineSpacing();
-    uint32_t spaceWidth           = fontMetrics.width(" ");
+    uint32_t lineSpacing          = font10Metrics.lineSpacing();
+    uint32_t spaceWidth           = font10Metrics.width(" ");
     uint32_t x                    = getBorderWidth() / 2 + getPadding();
     uint32_t y                    = getBorderWidth() / 2 + getPadding();
     uint32_t lastTokenEndCol      = 0;
     uint16_t callingInLineCounter = 0;
 
     uint32_t xMax                 = 0;
+
+    m_filePathText->setPosX(x);
+    m_filePathText->setPosY(y);
+
+    if(font15Metrics.width(m_filePathText->text() > xMax))
+        xMax = font15Metrics.width(m_filePathText->text());
+
+    y += font15Metrics.lineSpacing() + getPadding();
+
+    m_filePathLine = QLine(0, y, 0, y);
+
+    y += getPadding();
 
     for(uint64_t lineIndex = 0; lineIndex < m_tokens.size(); ++lineIndex)
     {
@@ -115,7 +132,7 @@ void SourceCodeBlock::prepareTokensPos()
                 token->setPosX(x);
                 token->setPosY(y);
 
-                x += fontMetrics.width(token->text());
+                x += font10Metrics.width(token->text());
                 lastTokenEndCol = token->getEndColPos();
 
                 if(token->getIsCalling())
@@ -144,18 +161,24 @@ void SourceCodeBlock::prepareTokensPos()
 
 void SourceCodeBlock::draw(QPainter& painter)
 {
-    QFont font("Consolas", 10, 10);
+    QFont font10("Consolas", 10, 10);
+    QFont font15("Consolas", 13, 13);
 
     QPen penWhite(Qt::white);
+    QPen penFilePath(Qt::yellow);
     QPen penLines(QColor(43, 145, 175));
     QPen penKeywords(QColor(78, 201, 176));
     QPen penLiterals(QColor(214, 157, 133));
     QPen penCallings(QColor(255, 0, 0));
 
     QPen penBorder(QColor(180, 0, 80));
-    penBorder.setWidth(getBorderWidth());
 
-    painter.setFont(font);
+    painter.setFont(font15);
+    painter.setPen(penFilePath);
+
+    painter.drawStaticText(m_filePathText->getPos(), *m_filePathText);
+
+    painter.setFont(font10);
     painter.setPen(penWhite);
 
     for(uint64_t lineIndex = 0; lineIndex < m_tokens.size(); ++lineIndex)
@@ -184,6 +207,11 @@ void SourceCodeBlock::draw(QPainter& painter)
         }
     }
 
+    penBorder.setWidth(2);
+    painter.setPen(penBorder);
+    painter.drawLine(m_filePathLine);
+
+    penBorder.setWidth(getBorderWidth());
     painter.setPen(penBorder);
     painter.drawRect(0, 0, m_size.x(), m_size.y());
 }
@@ -191,6 +219,7 @@ void SourceCodeBlock::draw(QPainter& painter)
 void SourceCodeBlock::setWidth(int width)
 {
     m_size.setX(width);
+    m_filePathLine.setP2(QPoint(m_size.x(), m_filePathLine.p2().y()));
 }
 
 void SourceCodeBlock::setPosition(uint32_t x, uint32_t y)

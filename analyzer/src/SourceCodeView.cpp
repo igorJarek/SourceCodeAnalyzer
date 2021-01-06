@@ -5,10 +5,12 @@
 #include <QMessageBox>
 #include <string>
 
-SourceCodeView::SourceCodeView(const QSharedPointer<Database>& database, const QString& viewName, const QString& mainFilePath, const QString& mainFunctionName, int32_t mainFunctionLine) :
+SourceCodeView::SourceCodeView(const QSharedPointer<Database>& database, const QString& viewName, const QString& mainFilePath, const QString& analyzedFolder, 
+                               const QString& mainFunctionName, int32_t mainFunctionLine) :
     m_database(database),
     m_viewName(viewName),
     m_mainFilePath(mainFilePath),
+    m_analyzedFolder(analyzedFolder),
     m_mainFunctionName(mainFunctionName),
     m_mainFunctionLine(mainFunctionLine)
 {
@@ -107,7 +109,8 @@ void SourceCodeView::findAndProcessMainFunction(std::function<void (void)> state
         return;
     }
 
-    SourceCodeBlockPtr sourceCodeBlock = SourceCodeBlockPtr(new SourceCodeBlock(mainFileTokens, mainFunctionCallings));
+    QString subStrMainFilePath = m_mainFilePath;
+    SourceCodeBlockPtr sourceCodeBlock = SourceCodeBlockPtr(new SourceCodeBlock(subStrMainFilePath.remove(0, m_analyzedFolder.size()), mainFileTokens, mainFunctionCallings));
 
     SourceCodeBlockVecPtr sourceCodeBlockVecPtr = SourceCodeBlockVecPtr(new QVector<QSharedPointer<SourceCodeBlock>>);
     sourceCodeBlockVecPtr->append(sourceCodeBlock);
@@ -190,7 +193,8 @@ void SourceCodeView::iteratesCallsQueue(std::function<void (void)> stateStatus)
                 return;
             }
 
-            SourceCodeBlockPtr sourceCodeBlock = SourceCodeBlockPtr(new SourceCodeBlock(functionsTokens, functionCallings));
+            QString subStrMainFilePath = QString::fromStdString(sourceCodeViewCallingQueue.filePath); 
+            SourceCodeBlockPtr sourceCodeBlock = SourceCodeBlockPtr(new SourceCodeBlock(subStrMainFilePath.remove(0, m_analyzedFolder.size()), functionsTokens, functionCallings));
             sourceCodeViewCallingQueue.caller->addDefinitions(sourceCodeBlock);
             m_functionSourceCodeBlockVec.last()->append(sourceCodeBlock);
 

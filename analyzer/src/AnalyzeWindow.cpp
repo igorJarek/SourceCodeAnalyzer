@@ -36,9 +36,9 @@ void AnalyzeWindow::initSignalsConnections()
 
 void AnalyzeWindow::start()
 {
-    const QString& viewName     = m_ui.viewNameEdit->text();
-    const QString& mainFile     = m_args[0];
-    const QString& functionName = m_args[1];
+    const QString& viewName         = m_ui.viewNameEdit->text();
+    const QString& mainFile         = m_args[0];
+    const QString& functionName     = m_args[1];
 
     bool isConvOk;
     int32_t functionLine = m_args[2].toInt(&isConvOk, 10);
@@ -78,7 +78,7 @@ void AnalyzeWindow::start()
         return;
     }
 
-    m_newSourceCodeView = QSharedPointer<SourceCodeView>(new SourceCodeView(m_app.getDatabase(), viewName, mainFile, functionName, functionLine));
+    m_newSourceCodeView = QSharedPointer<SourceCodeView>(new SourceCodeView(m_app.getDatabase(), viewName, mainFile, m_app.getAnalizedFolderPath(), functionName, functionLine));
     m_newSourceCodeView->build
     (
         []() -> void

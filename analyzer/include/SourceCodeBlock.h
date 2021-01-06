@@ -43,16 +43,16 @@ class SourceCodeBlockToken : public QStaticText
         bool     m_isCalling = false;
 };
 
-class SourceCodeBlockLineNumber : public QStaticText // QGraphicsScene ?
+class SourceCodeBlockText : public QStaticText // QGraphicsScene ?
 {
     public:
-        SourceCodeBlockLineNumber() {}
-        SourceCodeBlockLineNumber(const QString& string) : QStaticText(string)
+        SourceCodeBlockText() {}
+        SourceCodeBlockText(const QString& string) : QStaticText(string)
         {
             
         }
 
-        ~SourceCodeBlockLineNumber() {}
+        ~SourceCodeBlockText() {}
 
     public:
         void   setPosX(uint32_t x) { m_pos.setX(x); }
@@ -61,17 +61,17 @@ class SourceCodeBlockLineNumber : public QStaticText // QGraphicsScene ?
         QPoint getPos()            { return m_pos; }
 
     protected:
-        QPoint   m_pos;
+        QPoint m_pos;
 };
 
 class SourceCodeBlock
 {
     public:
-        SourceCodeBlock(QueryResults& tokenResults, QueryResults& callingResults);
+        SourceCodeBlock(const QString& filePath, QueryResults& tokenResults, QueryResults& callingResults);
         ~SourceCodeBlock();
 
         static uint16_t getPadding() { return 10; }
-        static uint16_t getBorderWidth() { return 5; }
+        static uint16_t getBorderWidth() { return 3; }
 
     public:
         void   addDefinitions(QSharedPointer<SourceCodeBlock> def) { m_definitions.append(def); }
@@ -94,8 +94,12 @@ class SourceCodeBlock
         void   prepareTokensPos();
 
     private:
-        QVector<QSharedPointer<SourceCodeBlockLineNumber>>                       m_lineCounter;
+        QVector<QSharedPointer<SourceCodeBlockText>>                             m_lineCounter;
         QVector<QSharedPointer<std::list<QSharedPointer<SourceCodeBlockToken>>>> m_tokens;
+
+        QString                                                                  m_filePath;
+        QSharedPointer<SourceCodeBlockText>                                      m_filePathText;
+        QLine                                                                    m_filePathLine;
 
         QVector<QPoint>                                                          m_callingFirstPos;
         QVector<QSharedPointer<SourceCodeBlock>>                                 m_definitions;

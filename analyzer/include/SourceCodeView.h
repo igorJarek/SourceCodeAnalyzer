@@ -29,7 +29,7 @@ struct SourceCodeViewLines
 class SourceCodeView
 {
  public:
-    SourceCodeView(const QSharedPointer<Database>& database, const QString& viewName, const QString& mainFilePath, const QString& mainFunctionName, int32_t mainFunctionLine);
+    SourceCodeView(const QSharedPointer<Database>& database, const QString& viewName, const QString& mainFilePath, const QString& analyzedFolder, const QString& mainFunctionName, int32_t mainFunctionLine);
     ~SourceCodeView();
 
     using SourceCodeBlockPtr    = QSharedPointer<SourceCodeBlock>;
@@ -57,6 +57,7 @@ private:
     const QSharedPointer<Database>& m_database;
     const QString                   m_viewName;
     const QString                   m_mainFilePath;
+    const QString                   m_analyzedFolder;
     const QString                   m_mainFunctionName;
     const int32_t                   m_mainFunctionLine;
 
