@@ -6,9 +6,7 @@
 App::App(int argc, char *argv[]) :
     QApplication(argc, argv)
 {
-    int id = QFontDatabase::addApplicationFont("fonts/JetBrainsMono-Regular.ttf");
-    if(id == -1)
-        QMessageBox::critical(nullptr, "Font Load Failed", "Couldn't load JetBrainsMono-Regular.ttf font.", QMessageBox::StandardButton::Ok);
+
 }
 
 App::~App()

@@ -74,7 +74,7 @@ void SourceCodeBlock::prepareTokens(QueryResults& tokenResults, QueryResults& ca
 
 void SourceCodeBlock::prepareTokensPos()
 {
-    QFont        font("JetBrains Mono", 10, 10);
+    QFont        font("Consolas", 10, 10);
     QFontMetrics fontMetrics(font);
 
     uint32_t lineSpacing          = fontMetrics.lineSpacing();
@@ -144,7 +144,7 @@ void SourceCodeBlock::prepareTokensPos()
 
 void SourceCodeBlock::draw(QPainter& painter)
 {
-    QFont font("JetBrains Mono", 10, 10);
+    QFont font("Consolas", 10, 10);
 
     QPen penWhite(Qt::white);
     QPen penLines(QColor(43, 145, 175));
