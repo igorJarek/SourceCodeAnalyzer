@@ -44,7 +44,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Folder Path</string>
+        <string>Analyzed Folder Path</string>
        </property>
       </widget>
      </item>
@@ -77,28 +77,44 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QTextEdit" name="includeFolderEdit">
+      <widget class="QTreeWidget" name="includeFolderTree">
        <property name="font">
         <font>
          <family>Consolas</family>
         </font>
        </property>
-       <property name="readOnly">
-        <bool>true</bool>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
        </property>
+       <column>
+        <property name="text">
+         <string>Include Folder Path</string>
+        </property>
+       </column>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="includeFolderButton">
-       <property name="font">
-        <font>
-         <family>Consolas</family>
-        </font>
-       </property>
-       <property name="text">
-        <string>Add Include Folder</string>
-       </property>
-      </widget>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QPushButton" name="includeFolderButton">
+         <property name="font">
+          <font>
+           <family>Consolas</family>
+          </font>
+         </property>
+         <property name="text">
+          <string>Add Include Folder</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="removeFolderButton">
+         <property name="text">
+          <string>Remove Include Folder</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>

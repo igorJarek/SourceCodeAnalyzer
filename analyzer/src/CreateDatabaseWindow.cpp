@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QScopedPointer>
+#include <QTreeWidget>
 
 #include <DatabaseBuilder/DatabaseBuilder.hpp>
 #include <FolderBrowser/FolderBrowser.h>
@@ -27,17 +28,18 @@ void CreateDatabaseWindow::initUi()
     m_ui.progressBar->hide();
     m_ui.analyzedFilePath->hide();
 
-    m_ui.folderPathEdit->setText("D:\\Programowanie\\SourceCodeAnalyzer\\lib");
-    m_analizedFolderPath = "D:\\Programowanie\\SourceCodeAnalyzer\\lib";
+    //m_ui.folderPathEdit->setText("D:\\Programowanie\\SourceCodeAnalyzer\\lib");
+    //m_analizedFolderPath = "D:\\Programowanie\\SourceCodeAnalyzer\\lib";
 
-    m_ui.includeFolderEdit->append("D:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
-    m_includePaths.append("D:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
+    //m_ui.includeFolderEdit->append("D:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
+    //m_includePaths.append("D:\\Programowanie\\SourceCodeAnalyzer\\lib\\include");
 }
 
 void CreateDatabaseWindow::initSignalsConnections()
 {
     connect(m_ui.folderPathButton,      SIGNAL(clicked()), this, SLOT(folder_path()));
     connect(m_ui.includeFolderButton,   SIGNAL(clicked()), this, SLOT(include_path()));
+    connect(m_ui.removeFolderButton,    SIGNAL(clicked()), this, SLOT(remove_path()));
 
     connect(m_ui.startButton,           SIGNAL(clicked()), this, SLOT(start()));
     connect(m_ui.cancelButton,          SIGNAL(clicked()), this, SLOT(cancel()));
@@ -68,13 +70,27 @@ void CreateDatabaseWindow::include_path()
     {
         QString includePath = fileDialog.selectedFiles().first();
         includePath.replace('/', '\\');
-        if(m_includePaths.contains(includePath))
+
+        QList<QTreeWidgetItem*> findDuplicate = m_ui.includeFolderTree->findItems(includePath, Qt::MatchExactly, 0); 
+
+        if(findDuplicate.size())
             QMessageBox::warning(this, "Include Path", includePath + " path exists in include list.", QMessageBox::StandardButton::Ok);
         else
         {
-            m_ui.includeFolderEdit->append(includePath);
-            m_includePaths.append(includePath);
+            QTreeWidgetItem* includeItem = new QTreeWidgetItem(m_ui.includeFolderTree);
+            includeItem->setText(0, includePath);
         }
+    }
+}
+
+void CreateDatabaseWindow::remove_path()
+{
+    QList<QTreeWidgetItem*> selectedPaths =  m_ui.includeFolderTree->selectedItems();
+
+    for(QTreeWidgetItem* selectedPath : selectedPaths)
+    {
+        int index = m_ui.includeFolderTree->indexOfTopLevelItem(selectedPath);
+        m_ui.includeFolderTree->takeTopLevelItem(index);
     }
 }
 
@@ -83,7 +99,6 @@ void CreateDatabaseWindow::start()
     if(m_analizedFolderPath.isEmpty())
     {
         QMessageBox::warning(this, "Analyzed Folder", "Choose analyzed folder.", QMessageBox::StandardButton::Ok);
-        reject();
         return;
     }
 
@@ -98,16 +113,22 @@ void CreateDatabaseWindow::start()
     folderBrowser.setFileTypeBrowser(FileType::SOURCE_AND_HEADER_FILE);
     folderBrowser.startFolderBrowse(m_analizedFolderPath.toStdString());
 
-    int32_t includeCount = m_includePaths.size();
+    int32_t includeCount = m_ui.includeFolderTree->topLevelItemCount();
     QScopedArrayPointer<QByteArray>  tmpArgs         = QScopedArrayPointer<QByteArray>(new QByteArray[includeCount]);
     QScopedArrayPointer<const char*> compilationArgs = QScopedArrayPointer<const char*>(new const char*[includeCount * 2]);
 
-    for(int32_t index = 0; index < includeCount; ++index)
+    QTreeWidgetItemIterator includeFolderIterator(m_ui.includeFolderTree);
+    int32_t index = 0;
+
+    while(*includeFolderIterator)
     {
-        tmpArgs[index].append(m_includePaths.at(index).toLocal8Bit().constData());
+        tmpArgs[index].append((*includeFolderIterator)->text(index).toLocal8Bit().constData());
 
         compilationArgs[index * 2 + 0] = "-I";
         compilationArgs[index * 2 + 1] = tmpArgs[index];
+
+        ++index;
+        ++includeFolderIterator;
     }
 
     DatabaseBuilder databaseBuilder(database, "Analyzer", "0.1alpha", folderBrowser, compilationArgs.get(), 2);

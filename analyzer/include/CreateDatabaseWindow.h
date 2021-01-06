@@ -24,11 +24,11 @@ private:
     App&                     m_app;
 
     QString                  m_analizedFolderPath;
-    QStringList              m_includePaths;
 
 private slots:
     void                     folder_path();
     void                     include_path();
+    void                     remove_path();
     void                     start();
     void                     cancel();
 };
