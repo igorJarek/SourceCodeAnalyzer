@@ -43,6 +43,8 @@ public:
 
     void draw(QPainter& painter, double zoom);
 
+    QSize getSize() { return m_size; }
+
     void saveToSVG(const QString& filePath);
 
     void build(std::function<void (void)> stateStatus);
@@ -63,6 +65,8 @@ private:
 
     QQueue<SourceCodeViewCalling>   m_functionCallsQueue;
     //QSet<QString>                 m_functionCallsSet;
+
+    QSize                           m_size;
 
     QVector<SourceCodeBlockVecPtr>  m_functionSourceCodeBlockVec;
     QVector<SourceCodeViewLinesPtr> m_lines;

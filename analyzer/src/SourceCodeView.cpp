@@ -258,6 +258,9 @@ void SourceCodeView::setSourceCodeBlocksAlignment()
 
         xPosition += stagesInfo[stageListIndex].x() + STAGE_X_GAP;
     }
+
+    m_size.setWidth(xPosition - STAGE_X_GAP);
+    m_size.setHeight(maxHeightStage);
 }
 
 void SourceCodeView::generateConnectionLines()
@@ -332,14 +335,14 @@ void SourceCodeView::saveToSVG(const QString& filePath)
 {
     QSvgGenerator generator;
     generator.setFileName(filePath + '/' + m_viewName + ".svg");
-    generator.setSize(QSize(3000, 5000));
-    generator.setViewBox(QRect(0, 0, 3000, 5000));
+    generator.setSize(m_size);
+    generator.setViewBox(QRect(0, 0, m_size.width(), m_size.height()));
     generator.setTitle(m_viewName);
     generator.setDescription("An SVG drawing created by the SVG Generator Example provided with Qt.");
     
     QPainter painter(&generator);
 
-    painter.fillRect(QRect(0, 0, 3000, 5000), QColor(30, 30, 30));
+    painter.fillRect(QRect(0, 0, m_size.width(), m_size.height()), QColor(30, 30, 30));
 
     draw(painter, 1.0);
 

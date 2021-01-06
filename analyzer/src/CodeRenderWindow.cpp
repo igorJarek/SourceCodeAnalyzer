@@ -16,7 +16,8 @@ void CodeRenderWindow::paintEvent(QPaintEvent* /* event */)
 {
     QPainter painter(this);
 
-    painter.fillRect(QRect(0, 0, 3000, 5000), QColor(30, 30, 30));
+    QSize viewSize = m_sourceCodeView->getSize();
+    painter.fillRect(QRect(0, 0, viewSize.width(), viewSize.height()), QColor(30, 30, 30));
 
     QPoint viewPos = m_viewportPos + m_leftMouseButtonMovingDeltaPos;
     painter.setViewport(viewPos.x(), viewPos.y(), width(), height());
