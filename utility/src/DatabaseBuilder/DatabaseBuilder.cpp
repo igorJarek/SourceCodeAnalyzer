@@ -199,22 +199,26 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                                     dbFunction.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursorRef)); 
                                     dbFunction.functionDefRange.setCXSourceRange(clang_getCursorExtent(cursorRef));
 
-                                    list<Token>& refFileTokens = headerSourceFileMap.find(dbFunction.functionNamePos.fileName)->second->getTokens();
-
-                                    for(Token& token : refFileTokens)
+                                    map<string, shared_ptr<SourceCode>>::iterator refFileTokensIter = headerSourceFileMap.find(dbFunction.functionNamePos.fileName);
+                                    if(refFileTokensIter != headerSourceFileMap.end())
                                     {
-                                        if(token.tokenID == 0)
-                                            token.tokenID = m_database.allocTokenID();
+                                        list<Token>& refFileTokens = refFileTokensIter->second->getTokens();
 
-                                        if(token.getTokenPos() == dbFunction.functionNamePos)
-                                            dbFunction.functionNameTokenID = token.tokenID;
-                                        else if(token.isStartsEqual(dbFunction.functionDefRange))
-                                            dbFunction.openDefinitionTokenID = token.tokenID;
-                                        else if(token.isEndsEqual(dbFunction.functionDefRange))
-                                            dbFunction.closeDefinitionTokenID = token.tokenID;
+                                        for(Token& token : refFileTokens)
+                                        {
+                                            if(token.tokenID == 0)
+                                                token.tokenID = m_database.allocTokenID();
+
+                                            if(token.getTokenPos() == dbFunction.functionNamePos)
+                                                dbFunction.functionNameTokenID = token.tokenID;
+                                            else if(token.isStartsEqual(dbFunction.functionDefRange))
+                                                dbFunction.openDefinitionTokenID = token.tokenID;
+                                            else if(token.isEndsEqual(dbFunction.functionDefRange))
+                                                dbFunction.closeDefinitionTokenID = token.tokenID;
+                                        }
+
+                                        m_functionsMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbFunction} );
                                     }
-
-                                    m_functionsMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbFunction} );
                                 }
                             }
 
