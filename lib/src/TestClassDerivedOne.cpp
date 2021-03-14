@@ -1,4 +1,4 @@
-#include <TestClassDerivedOne.hpp>
+#include "TestClassDerivedOne.h"
 
 TestClassDerivedOne::~TestClassDerivedOne()
 {

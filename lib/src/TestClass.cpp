@@ -1,4 +1,4 @@
-#include <TestClass.hpp>
+#include "TestClass.h"
 
 TestClass::~TestClass()
 {

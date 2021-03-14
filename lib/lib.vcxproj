@@ -116,15 +116,15 @@
     <ClCompile Include="src\TestPrimitives.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\TestClass.hpp" />
-    <ClInclude Include="include\TestClassDerivedOne.hpp" />
-    <ClInclude Include="include\TestFunction.hpp" />
-    <ClInclude Include="include\TestFunctionDefine.hpp" />
-    <ClInclude Include="include\TestFunctionOverloading.hpp" />
-    <ClInclude Include="include\TestFunctionOverloadingTemplate.hpp" />
-    <ClInclude Include="include\TestFunctionTemplate.hpp" />
-    <ClInclude Include="include\TestLambda.hpp" />
-    <ClInclude Include="include\TestPrimitives.hpp" />
+    <ClInclude Include="include\TestClass.h" />
+    <ClInclude Include="include\TestClassDerivedOne.h" />
+    <ClInclude Include="include\TestFunction.h" />
+    <ClInclude Include="include\TestFunctionDefine.h" />
+    <ClInclude Include="include\TestFunctionOverloading.h" />
+    <ClInclude Include="include\TestFunctionOverloadingTemplate.h" />
+    <ClInclude Include="include\TestFunctionTemplate.h" />
+    <ClInclude Include="include\TestLambda.h" />
+    <ClInclude Include="include\TestPrimitives.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

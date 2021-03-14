@@ -1,6 +1,6 @@
 #pragma once
 
-#include <TestClass.hpp>
+#include "TestClass.h"
 
 class TestClassDerivedOne : public TestClass
 {

@@ -1,12 +1,12 @@
-#include <TestFunction.hpp>
-#include <TestFunctionOverloading.hpp>
-#include <TestFunctionTemplate.hpp>
-#include <TestFunctionOverloadingTemplate.hpp>
-#include <TestLambda.hpp>
-#include <TestFunctionDefine.hpp>
+#include "TestFunction.h"
+#include "TestFunctionOverloading.h"
+#include "TestFunctionTemplate.h"
+#include "TestFunctionOverloadingTemplate.h"
+#include "TestLambda.h"
+#include "TestFunctionDefine.h"
 
-#include <TestClass.hpp>
-#include <TestClassDerivedOne.hpp>
+#include "TestClass.h"
+#include "TestClassDerivedOne.h"
 
 int main(void)
 {

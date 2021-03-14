@@ -35,31 +35,31 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\TestClass.hpp">
+    <ClInclude Include="include\TestClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TestFunction.hpp">
+    <ClInclude Include="include\TestClassDerivedOne.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TestPrimitives.hpp">
+    <ClInclude Include="include\TestFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TestFunctionOverloading.hpp">
+    <ClInclude Include="include\TestFunctionDefine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TestFunctionTemplate.hpp">
+    <ClInclude Include="include\TestFunctionOverloading.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TestFunctionOverloadingTemplate.hpp">
+    <ClInclude Include="include\TestFunctionOverloadingTemplate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TestLambda.hpp">
+    <ClInclude Include="include\TestFunctionTemplate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TestFunctionDefine.hpp">
+    <ClInclude Include="include\TestLambda.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\TestClassDerivedOne.hpp">
+    <ClInclude Include="include\TestPrimitives.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
