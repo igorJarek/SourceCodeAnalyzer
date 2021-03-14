@@ -90,10 +90,10 @@
     <ClInclude Include="include\ExecutionTimeMeasurement\ExecutionTimeMeasurement.h">
       <Filter>Header Files\ExecutionTimeMeasurement</Filter>
     </ClInclude>
-    <ClInclude Include="include\SourceCode\SourceCode.hpp">
+    <ClInclude Include="include\SourceCode\SourceCode.h">
       <Filter>Header Files\SourceCode</Filter>
     </ClInclude>
-    <ClInclude Include="include\DatabaseBuilder\DatabaseBuilder.hpp">
+    <ClInclude Include="include\DatabaseBuilder\DatabaseBuilder.h">
       <Filter>Header Files\DatabaseBuilder</Filter>
     </ClInclude>
   </ItemGroup>

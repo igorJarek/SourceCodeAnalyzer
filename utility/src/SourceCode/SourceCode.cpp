@@ -1,4 +1,4 @@
-#include <SourceCode/SourceCode.hpp>
+#include <SourceCode/SourceCode.h>
 #include <fstream>
 
 CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data);
@@ -103,7 +103,7 @@ SourceCode::SourceCode(const string& filePath, const char* compilation_args[], u
 
     // AST
 
-    if (m_compilationErrorCode == CXError_Success && m_compilationErrorCount == 0)
+    if (m_compilationErrorCode == CXError_Success /*&& m_compilationErrorCount == 0 */)
     {
         ClientData clientData(&m_ast);
 
@@ -114,9 +114,12 @@ SourceCode::SourceCode(const string& filePath, const char* compilation_args[], u
     // tokenize whole file
 
     m_rawTokens.fileLines = countFileLines(filePath);
-    if (m_rawTokens.fileLines != -1 && m_compilationErrorCount == 0)
+    if (m_rawTokens.fileLines != -1 /*&& m_compilationErrorCount == 0 */)
     {
         m_rawTokens.fileLastLineColumns = countFileLineColumns(filePath, m_rawTokens.fileLines);
+        if(m_rawTokens.fileLastLineColumns == 0)
+            m_rawTokens.fileLastLineColumns = 1;
+
         if(m_rawTokens.fileLastLineColumns != -1)
         {
             CXFile           file           = clang_getFile(m_translationUnit, filePath.c_str());
@@ -131,7 +134,7 @@ SourceCode::SourceCode(const string& filePath, const char* compilation_args[], u
 
     // building tokens
 
-    if(m_rawTokens.tokensCount && m_compilationErrorCount == 0)
+    if(m_rawTokens.tokensCount /* && m_compilationErrorCount == 0 */)
     {
         for (uint32_t index{ 0 }; index < m_rawTokens.tokensCount; ++index)
         {

@@ -30,8 +30,10 @@ public:
     OutputTree& operator=(const OutputTree& other);
     OutputTree& operator+=(const OutputTree& other);
 
+    using OutputTreeNodePtr = shared_ptr<OutputTreeNode>;
+
 public:
-    const shared_ptr<OutputTreeNode>& getRoot() const { return m_rootPtr; }
+    const OutputTreeNodePtr& getRoot() const { return m_rootPtr; }
 
 public:
     void                              addString(uint32_t level, const string&  str);

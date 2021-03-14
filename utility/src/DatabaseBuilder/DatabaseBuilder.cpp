@@ -1,4 +1,4 @@
-#include <DatabaseBuilder/DatabaseBuilder.hpp>
+#include <DatabaseBuilder/DatabaseBuilder.h>
 
 #include <Database/DatabaseColumnDict.h>
 #include <Database/ColumnDefinition.h>
