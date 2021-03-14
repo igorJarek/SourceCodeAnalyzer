@@ -56,8 +56,8 @@ void dumpAST(uint64_t astExtNode, OutputTree& astOutputTree, const CXCursor& cur
     string output;
 
     output += to_string(kindSpelling) + " (" + to_string(astExtNode + 1) + ") " + " ";
-    output += "<" + to_string(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", col:" + to_string(endColumn) + ">" + " col:" + to_string(cursorColumn);
-    output += " used " + to_string(cursorSpelling) + " '" + to_string(cursorTypeSpelling);
+    output += "<" + to_string(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", line:" + to_string(cursorColumn) + ':' + to_string(endColumn) + '>';
+    output += ' ' + to_string(cursorSpelling) + " '" + to_string(cursorTypeSpelling) + '\'';
 
     astOutputTree.addString(curLevel, output);
 }
