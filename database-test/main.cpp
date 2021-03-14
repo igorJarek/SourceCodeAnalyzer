@@ -1,4 +1,4 @@
-#include <DatabaseBuilder/DatabaseBuilder.hpp>
+#include "DatabaseBuilder/DatabaseBuilder.h"
 
 int main()
 {
