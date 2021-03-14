@@ -1,5 +1,5 @@
 #include "SourceCodeView.h"
-#include "Database/Database.h"
+#include <Database/Database.h>
 
 #include <QtSvg/QSvgGenerator>
 #include <QMessageBox>

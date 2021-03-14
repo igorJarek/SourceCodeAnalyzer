@@ -6,7 +6,7 @@
 #include <QScopedPointer>
 #include <QTreeWidget>
 
-#include <DatabaseBuilder/DatabaseBuilder.hpp>
+#include <DatabaseBuilder/DatabaseBuilder.h>
 #include <FolderBrowser/FolderBrowser.h>
 
 CreateDatabaseWindow::CreateDatabaseWindow(App& app, QWidget *parent) :

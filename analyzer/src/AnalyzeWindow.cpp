@@ -6,7 +6,7 @@
 #include <QMessageBox>
 #include <QScopedPointer>
 
-#include <DatabaseBuilder/DatabaseBuilder.hpp>
+#include <DatabaseBuilder/DatabaseBuilder.h>
 #include <FolderBrowser/FolderBrowser.h>
 
 AnalyzeWindow::AnalyzeWindow(App& app, const QStringList& args, QWidget *parent) :
