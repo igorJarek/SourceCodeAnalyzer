@@ -11,7 +11,6 @@
 #include "UtilityFunctions.h"
 #include "Paths.h"
 
-#include "0_1_Comment_introspection.h"
 #include "1_Name_Mangling_API_Functions.h"
 #include "3_C++_AST_introspection.h"
 #include "7_Information_for_attributes.h"

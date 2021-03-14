@@ -69,7 +69,6 @@ void printCursor(const CXTranslationUnit& translationUnit, OutputTree& astExtOut
 
     astExtOutputTree.addString(curLevel, "Cursor : ", kindSpelling);
 
-    _0_1_printCommentIntrospection              (astExtOutputTree, cursor, curLevel);
     _1_printMangling                            (astExtOutputTree, cursor, curLevel);
     _3_printASTIntrospection                    (translationUnit, astExtOutputTree, cursor, curLevel, true);
     _7_printInformationForAttributes            (astExtOutputTree, cursor, curLevel);
@@ -100,7 +99,6 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
             treeStaticCursorData.addString(0, "Cursor == Invalid");
         else
         {
-            _0_1_printCommentIntrospection              (treeStaticCursorData, *cursor, 0);
             _1_printMangling                            (treeStaticCursorData, *cursor, 0);
             _3_printASTIntrospection                    (*translationUnit, treeStaticCursorData, *cursor, 0, false);
             _7_printInformationForAttributes            (treeStaticCursorData, *cursor, 0);
