@@ -33,7 +33,6 @@ private slots:
     void                    create_database();
     void                    open_database();
     void                    save_as_database();
-    void                    save_database();
     void                    exit();
 
     void                    create_view();

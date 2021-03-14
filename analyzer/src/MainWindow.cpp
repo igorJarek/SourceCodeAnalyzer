@@ -38,7 +38,6 @@ void MainWindow::initSignalsConnections()
     connect(m_ui.actionCreate_Database,  SIGNAL(triggered()),                               this, SLOT(create_database()));
     connect(m_ui.actionOpen_Database,    SIGNAL(triggered()),                               this, SLOT(open_database()));
     connect(m_ui.actionSave_As_Database, SIGNAL(triggered()),                               this, SLOT(save_as_database()));
-    connect(m_ui.actionSave_Database,    SIGNAL(triggered()),                               this, SLOT(save_database()));
     connect(m_ui.actionExit,             SIGNAL(triggered()),                               this, SLOT(exit()));
 
     // Other Actions
@@ -212,11 +211,6 @@ void MainWindow::save_as_database()
 
         QMessageBox::information(this, "Success", "Database has saved correctly");
     }
-}
-
-void MainWindow::save_database()
-{
-
 }
 
 void MainWindow::exit()
