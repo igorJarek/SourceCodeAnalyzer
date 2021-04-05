@@ -1,8 +1,8 @@
 #pragma once
 
-#include <LibClangStruct2Str/LibClangStruct2Str.h>
+#include "LibClangStruct2Str/LibClangStruct2Str.h"
 
-#include <clang-c/Index.h>
+#include "clang-c/Index.h"
 
 #include <list>
 #include <string>

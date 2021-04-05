@@ -1,7 +1,7 @@
-#include <DatabaseBuilder/DatabaseBuilder.h>
+#include "DatabaseBuilder/DatabaseBuilder.h"
 
-#include <Database/DatabaseColumnDict.h>
-#include <Database/ColumnDefinition.h>
+#include "Database/DatabaseColumnDict.h"
+#include "Database/ColumnDefinition.h"
 
 DatabaseBuilder::DatabaseBuilder(Database& database, 
                                  const string& appName, const string& appVersion, 

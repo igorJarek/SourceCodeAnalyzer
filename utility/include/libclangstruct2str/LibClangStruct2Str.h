@@ -1,7 +1,7 @@
 #pragma once
 
-#include <clang-c/Index.h>
-#include <clang-c/Documentation.h>
+#include "clang-c/Index.h"
+#include "clang-c/Documentation.h"
 #include <string>
 
 using std::string;

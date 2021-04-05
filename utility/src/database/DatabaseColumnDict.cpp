@@ -1,5 +1,5 @@
-#include <Database/DatabaseColumnDict.h>
-#include <Database/ColumnDefinition.h>
+#include "Database/DatabaseColumnDict.h"
+#include "Database/ColumnDefinition.h"
 
 GlobalColumnDict    g_globalColumnDict;
 FileListColumnDict  g_fileListColumnDict;

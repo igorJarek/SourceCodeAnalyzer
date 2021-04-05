@@ -1,10 +1,10 @@
 #pragma once
 
-#include <ExecutionTimeMeasurement/ExecutionTimeMeasurement.h>
-#include <LibClangStruct2Str/LibClangStruct2Str.h>
-#include <FolderBrowser/FolderBrowser.h>
-#include <SourceCode/SourceCode.h>
-#include <Database/Database.h>
+#include "ExecutionTimeMeasurement/ExecutionTimeMeasurement.h"
+#include "LibClangStruct2Str/LibClangStruct2Str.h"
+#include "FolderBrowser/FolderBrowser.h"
+#include "SourceCode/SourceCode.h"
+#include "Database/Database.h"
 
 #include <iostream>
 #include <map>
