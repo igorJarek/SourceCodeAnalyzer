@@ -160,12 +160,13 @@ void OutputTree::addCXPlatformAvailability(uint32_t level, const string&& str, c
     int32_t   unavailable = platformAvailability.Unavailable;
     CXString  message     = platformAvailability.Message;
 
-    addString   (level, "Platform",    platform);
-    addCXVersion(level, "Introduced",  introduced);
-    addCXVersion(level, "Deprecated",  deprecated);
-    addCXVersion(level, "Obsoleted",   obsoleted);
-    addString   (level, "Unavailable", unavailable);
-    addString   (level, "Message",     message);
+    addString   (level + 0, str);
+    addString   (level + 1, "Platform",    platform);
+    addCXVersion(level + 1, "Introduced",  introduced);
+    addCXVersion(level + 1, "Deprecated",  deprecated);
+    addCXVersion(level + 1, "Obsoleted",   obsoleted);
+    addString   (level + 1, "Unavailable", unavailable);
+    addString   (level + 1, "Message",     message);
 }
 
 void OutputTree::addCXPrintingPolicy(uint32_t level, const string&& str, const CXPrintingPolicy& printingPolicy)

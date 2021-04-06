@@ -84,27 +84,50 @@ SourceCode::SourceCode(const string& filePath, const char* compilation_args[], u
 
     m_compilationErrorCount = clang_getNumDiagnostics(m_translationUnit);
 
+
     if(m_compilationErrorCount)
     {
+        std::fstream stream;
+        stream.open(m_filePath + ".error", std::fstream::out | std::fstream::trunc);
+
+        if(stream.is_open())
+            stream << m_filePath << '(' << m_compilationErrorCount << ')' << std::endl;
+
         for (uint32_t errorIndex = 0; errorIndex < m_compilationErrorCount; ++errorIndex)
         {
-            CXDiagnostic         diagnostic = clang_getDiagnostic(m_translationUnit, errorIndex);
+            CXDiagnostic diagnostic = clang_getDiagnostic(m_translationUnit, errorIndex);
 
             CXDiagnosticSeverity diagnosticSeverity = clang_getDiagnosticSeverity(diagnostic);
-            CXString             formatDiagnostic = clang_formatDiagnostic(diagnostic, CXDiagnostic_DisplaySourceLocation | CXDiagnostic_DisplayColumn |
-                                                                                       CXDiagnostic_DisplaySourceRanges   | CXDiagnostic_DisplayOption |
-                                                                                       CXDiagnostic_DisplayCategoryId     | CXDiagnostic_DisplayCategoryName);
+
+            if( diagnosticSeverity < CXDiagnostic_Error)
+            {
+                clang_disposeDiagnostic(diagnostic);
+
+                ++m_compilationIgnoreErrorCount;
+                continue;
+            }
+
+            CXString formatDiagnostic = clang_formatDiagnostic(diagnostic, CXDiagnostic_DisplaySourceLocation | CXDiagnostic_DisplayColumn |
+                                                                           CXDiagnostic_DisplaySourceRanges   | CXDiagnostic_DisplayOption |
+                                                                           CXDiagnostic_DisplayCategoryId     | CXDiagnostic_DisplayCategoryName);
 
             // print this message to cerr ?
             string errorMessage =  to_string(diagnosticSeverity) + " : " + to_string(formatDiagnostic);
 
+            if(stream.is_open())
+                stream << '\t' << errorMessage << std::endl << std::endl;
+
             clang_disposeDiagnostic(diagnostic);
         }
+
+        m_compilationErrorCount -= m_compilationIgnoreErrorCount;
+
+        stream.close();
     }
 
     // AST
 
-    if (m_compilationErrorCode == CXError_Success /*&& m_compilationErrorCount == 0 */)
+    if (m_compilationErrorCode == CXError_Success && m_compilationErrorCount == 0)
     {
         ClientData clientData(&m_ast);
 
@@ -115,7 +138,7 @@ SourceCode::SourceCode(const string& filePath, const char* compilation_args[], u
     // tokenize whole file
 
     m_rawTokens.fileLines = countFileLines(filePath);
-    if (m_rawTokens.fileLines != -1 /*&& m_compilationErrorCount == 0 */)
+    if (m_rawTokens.fileLines != -1 && m_compilationErrorCount == 0)
     {
         m_rawTokens.fileLastLineColumns = countFileLineColumns(filePath, m_rawTokens.fileLines);
         if(m_rawTokens.fileLastLineColumns == 0)
@@ -135,7 +158,7 @@ SourceCode::SourceCode(const string& filePath, const char* compilation_args[], u
 
     // building tokens
 
-    if(m_rawTokens.tokensCount /* && m_compilationErrorCount == 0 */)
+    if(m_rawTokens.tokensCount && m_compilationErrorCount == 0)
     {
         for (uint32_t index{ 0 }; index < m_rawTokens.tokensCount; ++index)
         {
