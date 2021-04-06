@@ -64,7 +64,7 @@ void DatabaseBuilder::createInsertTokensTableData(const string& filePath, const 
     if(m_database.isNotOK())
     {
         cout << "sendQuery() error in query : " << query << endl;
-        cout << "Error message : " << tokenQueryErrMsg << endl;
+        cout << "Error message : " << tokenQueryErrMsg.getString() << endl;
     }
 }
 
@@ -83,7 +83,7 @@ void DatabaseBuilder::createInsertCallingTableData(const string& filePath, const
     if(m_database.isNotOK())
     {
         cout << "sendQuery() error in query : " << query << endl;
-        cout << "Error message : " << tokenQueryErrMsg << endl;
+        cout << "Error message : " << tokenQueryErrMsg.getString() << endl;
     }
 }
 
@@ -102,7 +102,7 @@ void DatabaseBuilder::createInsertFunctionsTableData(const string& filePath, con
     if(m_database.isNotOK())
     {
         cout << "sendQuery() error in query : " << query << endl;
-        cout << "Error message : " << tokenQueryErrMsg << endl;
+        cout << "Error message : " << tokenQueryErrMsg.getString() << endl;
     }
 }
 
@@ -127,7 +127,7 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
     size_t                              fileCounter = 0;
 
     for(const string& filePath : fileList)
-        headerSourceFileMap.emplace(filePath, make_shared<SourceCode>(filePath, m_compilationArgs, m_argsCount));
+        headerSourceFileMap.emplace(filePath, std::make_shared<SourceCode>(filePath, m_compilationArgs, m_argsCount));
 
     for(const auto& [filePath, SourceCodePtr] : headerSourceFileMap)
     {

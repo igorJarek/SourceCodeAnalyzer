@@ -3,7 +3,8 @@
 #include <string>
 #include <map>
 
-using namespace std;
+using std::map;
+using std::string;
 
 class GlobalColumnDict;
 class FileListColumnDict;

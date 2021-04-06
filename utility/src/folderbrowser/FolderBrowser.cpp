@@ -38,15 +38,15 @@ void FolderBrowser::addIgnoreFilePath(const string& filePath)
 
 void FolderBrowser::startFolderBrowse(const string& folderPath)
 {
-    fs::path path(folderPath);
+    fs::path folderPathFS(folderPath);
 
-    if (fs::exists(path) && fs::is_directory(path))
+    if (fs::exists(folderPathFS) && fs::is_directory(folderPathFS))
     {
-        for (const fs::directory_entry& dirEntry : fs::directory_iterator(path))
+        for (const fs::directory_entry& dirEntry : fs::directory_iterator(folderPathFS))
         {
             const fs::file_status fileStatus = dirEntry.status();
             const fs::path&       path       = dirEntry.path();
-            const fs::path&       filename   = path.filename();
+            //const fs::path&       filename   = path.filename();
 
             if (fs::is_directory(fileStatus))
                 startFolderBrowse(path.string());

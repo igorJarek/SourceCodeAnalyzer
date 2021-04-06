@@ -146,29 +146,29 @@ struct Token
 
     bool       isStartsEqual(const TokenRange& range)
     {
-        const TokenRange tokenRange = getTokenRange();
+        const TokenRange tmpTokenRange = getTokenRange();
 
         return (
-                    tokenRange.startLine == range.startLine &&
-                    tokenRange.startCol  == range.startCol
+                    tmpTokenRange.startLine == range.startLine &&
+                    tmpTokenRange.startCol  == range.startCol
                );
     }
 
     bool       isEndsEqual(const TokenRange& range)
     {
-        const TokenRange tokenRange = getTokenRange();
+        const TokenRange tmpTokenRange = getTokenRange();
 
         return (
-                    tokenRange.endLine == range.endLine &&
-                    tokenRange.endCol  == range.endCol
+                    tmpTokenRange.endLine == range.endLine &&
+                    tmpTokenRange.endCol  == range.endCol
                );
     }
 
     uint32_t         tokenID       = 0;
-    CXTokenKind      tokenKind;
+    CXTokenKind      tokenKind     = CXToken_Comment;
     string           tokenSpelling;
-    CXSourceLocation tokenLocation;
-    CXSourceRange    tokenRange;
+    CXSourceLocation tokenLocation = clang_getNullLocation();
+    CXSourceRange    tokenRange    = clang_getNullRange();
 };
 
 /*         SourceCode         */
@@ -193,10 +193,11 @@ class SourceCode
     private:
         const string&       m_filePath;
 
-        CXIndex             m_index;
-        CXErrorCode         m_compilationErrorCode;
+        CXIndex             m_index                       = nullptr;
+        CXErrorCode         m_compilationErrorCode        = CXError_Success;
         CXTranslationUnit   m_translationUnit;
-        uint32_t            m_compilationErrorCount;
+        uint32_t            m_compilationErrorCount       = 0;
+        uint32_t            m_compilationIgnoreErrorCount = 0;
 
         AST                 m_ast;
         Tokens              m_rawTokens;
