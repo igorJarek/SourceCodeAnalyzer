@@ -27,8 +27,13 @@ private:
 
 private slots:
     void                     folder_path();
+
+    void                     ignoring_path();
+    void                     remove_ignoring_path();
+
     void                     include_path();
     void                     remove_path();
+
     void                     start();
     void                     cancel();
 };

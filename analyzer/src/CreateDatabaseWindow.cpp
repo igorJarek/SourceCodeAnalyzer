@@ -38,6 +38,10 @@ void CreateDatabaseWindow::initUi()
 void CreateDatabaseWindow::initSignalsConnections()
 {
     connect(m_ui.folderPathButton,      SIGNAL(clicked()), this, SLOT(folder_path()));
+
+    connect(m_ui.ignoringFolderButton,       SIGNAL(clicked()), this, SLOT(ignoring_path()));
+    connect(m_ui.removeIgnoringFolderButton, SIGNAL(clicked()), this, SLOT(remove_ignoring_path()));
+
     connect(m_ui.includeFolderButton,   SIGNAL(clicked()), this, SLOT(include_path()));
     connect(m_ui.removeFolderButton,    SIGNAL(clicked()), this, SLOT(remove_path()));
 
@@ -57,6 +61,40 @@ void CreateDatabaseWindow::folder_path()
         folderPath.replace('/', '\\');
         m_analizedFolderPath = folderPath;
         m_ui.folderPathEdit->setText(folderPath);
+    }
+}
+
+void CreateDatabaseWindow::ignoring_path()
+{
+    QFileDialog fileDialog(this);
+    fileDialog.setFileMode(QFileDialog::Directory);
+    fileDialog.setOption(QFileDialog::ShowDirsOnly);
+
+    if(fileDialog.exec())
+    {
+        QString ignoringPath = fileDialog.selectedFiles().first();
+        ignoringPath.replace('/', '\\');
+
+        QList<QTreeWidgetItem*> findDuplicate = m_ui.ignoringFolderTree->findItems(ignoringPath, Qt::MatchExactly, 0); 
+
+        if(findDuplicate.size())
+            QMessageBox::warning(this, "Ignoring Path", ignoringPath + " path exists in ignoring list.", QMessageBox::StandardButton::Ok);
+        else
+        {
+            QTreeWidgetItem* includeItem = new QTreeWidgetItem(m_ui.ignoringFolderTree);
+            includeItem->setText(0, ignoringPath);
+        }
+    }
+}
+
+void CreateDatabaseWindow::remove_ignoring_path()
+{
+    QList<QTreeWidgetItem*> selectedPaths =  m_ui.ignoringFolderTree->selectedItems();
+
+    for(QTreeWidgetItem* selectedPath : selectedPaths)
+    {
+        int index = m_ui.ignoringFolderTree->indexOfTopLevelItem(selectedPath);
+        m_ui.ignoringFolderTree->takeTopLevelItem(index);
     }
 }
 
@@ -111,6 +149,15 @@ void CreateDatabaseWindow::start()
 
     FolderBrowser folderBrowser;
     folderBrowser.setFileTypeBrowser(FileType::SOURCE_AND_HEADER_FILE);
+
+    QTreeWidgetItemIterator ignoringFolderIterator(m_ui.ignoringFolderTree);
+
+    while(*ignoringFolderIterator)
+    {
+        folderBrowser.addIgnoreDirPath((*ignoringFolderIterator)->text(0).toLocal8Bit().constData());
+        ++ignoringFolderIterator;
+    }
+
     folderBrowser.startFolderBrowse(m_analizedFolderPath.toStdString());
 
     int32_t includeCount = m_ui.includeFolderTree->topLevelItemCount() + 1;
