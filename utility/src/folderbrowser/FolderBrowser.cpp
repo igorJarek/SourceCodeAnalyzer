@@ -36,6 +36,11 @@ void FolderBrowser::addIgnoreFilePath(const string& filePath)
     m_ignoredFilesSet.insert(filePath);
 }
 
+void FolderBrowser::addIgnoreDirPath(const string& dirPath)
+{
+    m_ignoredDirsSet.insert(dirPath);
+}
+
 void FolderBrowser::startFolderBrowse(const string& folderPath)
 {
     fs::path folderPathFS(folderPath);
@@ -46,13 +51,18 @@ void FolderBrowser::startFolderBrowse(const string& folderPath)
         {
             const fs::file_status fileStatus = dirEntry.status();
             const fs::path&       path       = dirEntry.path();
-            //const fs::path&       filename   = path.filename();
+            //const fs::path&     filename   = path.filename();
 
             if (fs::is_directory(fileStatus))
-                startFolderBrowse(path.string());
+            {
+                const string dirPath = path.string();
+
+                if(m_ignoredDirsSet.find(dirPath) == m_ignoredDirsSet.end())
+                    startFolderBrowse(dirPath);
+            }
             else if (fs::is_regular_file(fileStatus))
             {
-                const string& fileExtension = path.extension().string();
+                const string fileExtension = path.extension().string();
 
                 if(isSourceFile(fileExtension))
                 {

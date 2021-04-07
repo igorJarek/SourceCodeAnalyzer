@@ -26,7 +26,10 @@ public:
 public:
     void                clearFileList()                                     { m_filesList.clear(); }
     void                setFileTypeBrowser(uint8_t fileType);
+
     void                addIgnoreFilePath(const string& filePath);
+    void                addIgnoreDirPath(const string& dirPath);
+
     void                startFolderBrowse(const string& folderPath);
 
     const list<string>& getFileList() const { return m_filesList; }
@@ -38,7 +41,9 @@ protected:
 
 protected:
     list<string>        m_filesList;
+
     set<string>         m_ignoredFilesSet;
+    set<string>         m_ignoredDirsSet;
 
     uint8_t             m_fileTypeOptions = 0;
 };
