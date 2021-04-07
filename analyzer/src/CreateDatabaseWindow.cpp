@@ -113,16 +113,18 @@ void CreateDatabaseWindow::start()
     folderBrowser.setFileTypeBrowser(FileType::SOURCE_AND_HEADER_FILE);
     folderBrowser.startFolderBrowse(m_analizedFolderPath.toStdString());
 
-    int32_t includeCount = m_ui.includeFolderTree->topLevelItemCount();
+    int32_t includeCount = m_ui.includeFolderTree->topLevelItemCount() + 1;
+    int32_t compilationArgsCount = includeCount * 2;
+
     QScopedArrayPointer<QByteArray>  tmpArgs         = QScopedArrayPointer<QByteArray>(new QByteArray[includeCount]);
-    QScopedArrayPointer<const char*> compilationArgs = QScopedArrayPointer<const char*>(new const char*[includeCount * 2]);
+    QScopedArrayPointer<const char*> compilationArgs = QScopedArrayPointer<const char*>(new const char*[compilationArgsCount]);
 
     QTreeWidgetItemIterator includeFolderIterator(m_ui.includeFolderTree);
     int32_t index = 0;
 
     while(*includeFolderIterator)
     {
-        tmpArgs[index].append((*includeFolderIterator)->text(index).toLocal8Bit().constData());
+        tmpArgs[index].append((*includeFolderIterator)->text(0).toLocal8Bit().constData());
 
         compilationArgs[index * 2 + 0] = "-I";
         compilationArgs[index * 2 + 1] = tmpArgs[index];
@@ -131,7 +133,25 @@ void CreateDatabaseWindow::start()
         ++includeFolderIterator;
     }
 
-    DatabaseBuilder databaseBuilder(database, "Analyzer", "0.1alpha", folderBrowser, compilationArgs.get(), 2);
+    compilationArgs[index * 2 + 0] = "--std";
+
+    if(m_ui.cpp98radiobutton->isChecked())
+        compilationArgs[index * 2 + 1] = "c++98";
+    else if(m_ui.cpp03radiobutton->isChecked())
+        compilationArgs[index * 2 + 1] = "c++03";
+    else if(m_ui.cpp11radiobutton->isChecked())
+        compilationArgs[index * 2 + 1] = "c++11";
+    else if(m_ui.cpp14radiobutton->isChecked())
+        compilationArgs[index * 2 + 1] = "c++14";
+    else if(m_ui.cpp17radiobutton->isChecked())
+        compilationArgs[index * 2 + 1] = "c++17";
+    else
+    {
+        QMessageBox::warning(this, "Analyzed Folder", "Choose C++ standard.", QMessageBox::StandardButton::Ok);
+        return;
+    }
+
+    DatabaseBuilder databaseBuilder(database, "Analyzer", "0.1alpha", folderBrowser, compilationArgs.get(), compilationArgsCount);
 
     QProgressBar* progressBar = m_ui.progressBar;
     progressBar->show();
