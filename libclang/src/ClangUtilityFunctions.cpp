@@ -32,6 +32,8 @@ void dumpAST(uint64_t astExtNode, OutputTree& astOutputTree, const CXCursor& cur
     uint32_t startLine,  startColumn,  startOffset;
     uint32_t endLine,    endColumn,    endOffset;
 
+    CXString            cursorUSR           = _9_getCursorUSR(cursor);
+
     CXCursorKind        cursorKind          = _19_getCursorKind(cursor);
     CXString            kindSpelling        = _17_getCursorKindSpelling(cursorKind);
 
@@ -55,7 +57,7 @@ void dumpAST(uint64_t astExtNode, OutputTree& astOutputTree, const CXCursor& cur
 
     string output;
 
-    output += to_string(kindSpelling) + " (" + to_string(astExtNode + 1) + ") " + " ";
+    output += to_string(kindSpelling) + " (astExt : " + to_string(astExtNode + 1) + ") [USR : " + to_string(cursorUSR) + "] " ;
     output += "<" + to_string(fileName) + ":" + to_string(startLine) + ":" + to_string(startColumn) + ", line:" + to_string(cursorColumn) + ':' + to_string(endColumn) + '>';
     output += ' ' + to_string(cursorSpelling) + " '" + to_string(cursorTypeSpelling) + '\'';
 
@@ -66,8 +68,9 @@ void printCursor(const CXTranslationUnit& translationUnit, OutputTree& astExtOut
 {
     CXCursorKind cursorKind      = _19_getCursorKind(cursor);
     CXString     kindSpelling    = _17_getCursorKindSpelling(cursorKind);
+    CXString     cursorUSR       = _9_getCursorUSR(cursor);
 
-    astExtOutputTree.addString(curLevel, "Cursor : ", kindSpelling);
+    astExtOutputTree.addString(curLevel, "Cursor : ", to_string(kindSpelling) + " [ USR : " + to_string(cursorUSR) + " ]");
 
     _1_printMangling                            (astExtOutputTree, cursor, curLevel);
     _3_printASTIntrospection                    (translationUnit, astExtOutputTree, cursor, curLevel, true);
@@ -92,8 +95,9 @@ uint64_t saveBaseCXCursorInfo(const CXTranslationUnit* translationUnit, const CX
             return 0;
 
         uint64_t startOutLinesCount = treeStaticCursorData.getNodesCount();
+        string   title = to_string(_17_getCursorKindSpelling(cursor->kind)) + " [ " + to_string(_9_getCursorUSR(*cursor)) + " ]"; 
 
-        treeStaticCursorData.addString(0, "-------------------- " + to_string(_17_getCursorKindSpelling(cursor->kind)) + " --------------------");
+        treeStaticCursorData.addString(0, "-------------------- " + title + " --------------------");
 
         if(_19_isInvalid(cursor->kind))
             treeStaticCursorData.addString(0, "Cursor == Invalid");
