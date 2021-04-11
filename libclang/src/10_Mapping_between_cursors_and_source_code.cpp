@@ -2,6 +2,9 @@
 
 void _10_printMappingBetweenCursorsAndSourceCode(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel)
 {
+    if(isOptionNotEnabled(CATEGORY_10))
+        return;
+
     CXSourceLocation cursorLocation = clang_getCursorLocation(cursor);      // 2.
     CXSourceRange    cursorExtent   = clang_getCursorExtent(cursor);        // 3.
 

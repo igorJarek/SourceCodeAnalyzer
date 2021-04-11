@@ -172,6 +172,7 @@
     <ClInclude Include="include\7_Information_for_attributes.h" />
     <ClInclude Include="include\8_File_manipulation_routines.h" />
     <ClInclude Include="include\9_Cross-referencing_in_the_AST.h" />
+    <ClInclude Include="include\ArgsParser.h" />
     <ClInclude Include="include\ClangUtilityFunctions.h" />
     <ClInclude Include="include\Paths.h" />
     <ClInclude Include="include\UtilityFunctions.h" />

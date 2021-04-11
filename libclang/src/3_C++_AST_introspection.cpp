@@ -2,6 +2,9 @@
 
 void _3_printASTIntrospection(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool cursorStopRecursion)
 {
+    if(isOptionNotEnabled(CATEGORY_3))
+        return;
+
     uint32_t isConvertingConstructor = clang_CXXConstructor_isConvertingConstructor(cursor);               // 1.
     uint32_t isCopyConstructor       = clang_CXXConstructor_isCopyConstructor(cursor);                     // 2.
     uint32_t isDefaultConstructor    = clang_CXXConstructor_isDefaultConstructor(cursor);                  // 3.

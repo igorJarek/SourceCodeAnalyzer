@@ -2,6 +2,9 @@
 
 void _19_printCursorManipulations(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool cursorStopRecursion)
 {
+    if(isOptionNotEnabled(CATEGORY_19))
+        return;
+
     uint32_t               hashCursor           = clang_hashCursor(cursor);                                                                                         // 5.
     CXCursorKind           cursorKind           = clang_getCursorKind(cursor);                                                                                      // 6.
     uint32_t               isDeclaration        = clang_isDeclaration(cursorKind);                                                                                  // 7.

@@ -2,6 +2,9 @@
 
 void _7_printInformationForAttributes(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel)
 {
+    if(isOptionNotEnabled(CATEGORY_7))
+        return;
+
     CXType outletCollectionType = clang_getIBOutletCollectionType(cursor);                                                          // 1.
 
     astExtOutputTree.addString(curLevel + 1, "7. Information_for attributes : ");

@@ -2,6 +2,9 @@
 
 void _9_printCrossReferencingInTheAST(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool cursorStopRecursion)
 {
+    if(isOptionNotEnabled(CATEGORY_9))
+        return;
+
     CXString         cursorUSR               = clang_getCursorUSR(cursor);                                                                                      // 1.
     CXString         cursorSpelling          = clang_getCursorSpelling(cursor);                                                                                 // 8.
     CXSourceRange    spellingNameRange       = clang_Cursor_getSpellingNameRange(cursor, 0, 0);                                                                 // 9.    check last 2 parameters

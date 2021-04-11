@@ -3,7 +3,17 @@
 
 CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string& filePath)
 {
-    const string tUnitSavePath{ filePath + TUNIT_BIN_FILE_EXT };
+    string saveFilePath{ filePath + TUNIT_FILE_EXT };
+    string tUnitSavePath{ filePath + TUNIT_BIN_FILE_EXT };
+    string saveFilePathHTML{ saveFilePath + ".html" };
+
+    if(isOptionNotEnabled(CATEGORY_6))
+    {
+        removeFile(saveFilePath);
+        removeFile(tUnitSavePath);
+        removeFile(saveFilePathHTML);
+    }
+
     OutputTree outputTree;
 
     CXTranslationUnit*    translationUnit                      = new CXTranslationUnit;
@@ -20,55 +30,66 @@ CXTranslationUnit* _6_translation_unit_manipulation(CXIndex& index, const string
 
     if (errorCode == CXError_Success)
     {
-        CXString          translationUnitSpelling              = clang_getTranslationUnitSpelling(*translationUnit);                                                // 1.
-        uint32_t          defaultEditingTranslationUnitOptions = clang_defaultEditingTranslationUnitOptions();                                                      // 5.
-        uint32_t          defaultSaveOptions                   = clang_defaultSaveOptions(*translationUnit);                                                        // 9.
-        int32_t           saveTranslationUnit                  = clang_saveTranslationUnit(*translationUnit, tUnitSavePath.c_str(), CXSaveTranslationUnit_None);    // 10.
-        uint32_t          defaultReparseOptions                = clang_defaultReparseOptions(*translationUnit);                                                     // 13.
-        CXTUResourceUsage getCXTUResourceUsage                 = clang_getCXTUResourceUsage(*translationUnit);                                                      // 16.
+        if(isOptionEnabled(CATEGORY_6))
+        {
+            CXString          translationUnitSpelling              = clang_getTranslationUnitSpelling(*translationUnit);                                                // 1.
+            uint32_t          defaultEditingTranslationUnitOptions = clang_defaultEditingTranslationUnitOptions();                                                      // 5.
+            uint32_t          defaultSaveOptions                   = clang_defaultSaveOptions(*translationUnit);                                                        // 9.
+            int32_t           saveTranslationUnit                  = clang_saveTranslationUnit(*translationUnit, tUnitSavePath.c_str(), CXSaveTranslationUnit_None);    // 10.
+            uint32_t          defaultReparseOptions                = clang_defaultReparseOptions(*translationUnit);                                                     // 13.
+            CXTUResourceUsage getCXTUResourceUsage                 = clang_getCXTUResourceUsage(*translationUnit);                                                      // 16.
 
-        CXTargetInfo      translationUnitTargetInfo            = clang_getTranslationUnitTargetInfo(*translationUnit);                                              // 18.
-        CXString          targetInfo_getTriple                 = clang_TargetInfo_getTriple(translationUnitTargetInfo);                                             // 20.
-        int32_t           targetInfo_getPointerWidth           = clang_TargetInfo_getPointerWidth(translationUnitTargetInfo);                                       // 21.
+            CXTargetInfo      translationUnitTargetInfo            = clang_getTranslationUnitTargetInfo(*translationUnit);                                              // 18.
+            CXString          targetInfo_getTriple                 = clang_TargetInfo_getTriple(translationUnitTargetInfo);                                             // 20.
+            int32_t           targetInfo_getPointerWidth           = clang_TargetInfo_getPointerWidth(translationUnitTargetInfo);                                       // 21.
 
-        outputTree.addString(0, "6. Translation Unit Manipulation : ");
+            outputTree.addString(0, "6. Translation Unit Manipulation : ");
 
-        outputTree.addString(1, "clang_parseTranslationUnit2 : ",                errorCode);
-        outputTree.addString(1, "clang_getTranslationUnitSpelling : ",           translationUnitSpelling);
-        outputTree.addString(1, "clang_defaultEditingTranslationUnitOptions : ", defaultEditingTranslationUnitOptions);
-        outputTree.addString(1, "clang_defaultSaveOptions : ",                   defaultSaveOptions);
-        outputTree.addString(1, "clang_saveTranslationUnit : ",                  saveTranslationUnit);
-        outputTree.addString(1, "clang_defaultReparseOptions : ",                defaultReparseOptions);
-        outputTree.addCXTUResourceUsage(1, "clang_getCXTUResourceUsage : ",      getCXTUResourceUsage);
-        outputTree.addString(1, "clang_TargetInfo_getTriple : ",                 targetInfo_getTriple);
-        outputTree.addString(1, "clang_TargetInfo_getPointerWidth : ",           targetInfo_getPointerWidth);
+            outputTree.addString(1, "clang_parseTranslationUnit2 : ",                errorCode);
+            outputTree.addString(1, "clang_getTranslationUnitSpelling : ",           translationUnitSpelling);
+            outputTree.addString(1, "clang_defaultEditingTranslationUnitOptions : ", defaultEditingTranslationUnitOptions);
+            outputTree.addString(1, "clang_defaultSaveOptions : ",                   defaultSaveOptions);
+            outputTree.addString(1, "clang_saveTranslationUnit : ",                  saveTranslationUnit);
+            outputTree.addString(1, "clang_defaultReparseOptions : ",                defaultReparseOptions);
+            outputTree.addCXTUResourceUsage(1, "clang_getCXTUResourceUsage : ",      getCXTUResourceUsage);
+            outputTree.addString(1, "clang_TargetInfo_getTriple : ",                 targetInfo_getTriple);
+            outputTree.addString(1, "clang_TargetInfo_getPointerWidth : ",           targetInfo_getPointerWidth);
 
-        clang_disposeCXTUResourceUsage(getCXTUResourceUsage);                                                                                                       // 17.
-        clang_TargetInfo_dispose(translationUnitTargetInfo);                                                                                                        // 19.
+            clang_disposeCXTUResourceUsage(getCXTUResourceUsage);                                                                                                       // 17.
+            clang_TargetInfo_dispose(translationUnitTargetInfo);                                                                                                        // 19.
+        }
     }
     else
     {
-        outputTree.addString(1, "clang_parseTranslationUnit2 : " , errorCode);
+        if(isOptionEnabled(CATEGORY_6))
+            outputTree.addString(1, "clang_parseTranslationUnit2 : " , errorCode);
 
         delete translationUnit;
         translationUnit = nullptr;
     }
 
-    string saveFilePath{ filePath + TUNIT_FILE_EXT };
-    if (!outputTree.saveToFile(saveFilePath))
-        cout << "Couldn't create file : " << saveFilePath << endl;
+    if(isOptionEnabled(CATEGORY_6))
+    {
+        if (!outputTree.saveToFile(saveFilePath))
+            cout << "Couldn't create file : " << saveFilePath << endl;
 
-    HTMLBuilder htmlBuilder;
-    string tableID{ "TBL" };
+        if(isOptionEnabled(HTML_ENABLED))
+        {
+            HTMLBuilder htmlBuilder;
+            string tableID{ "TBL" };
 
-    htmlBuilder.setIndexTitle(filePath + TUNIT_FILE_EXT + ".html");
-    htmlBuilder.setFileNameHeader(filePath);
-    htmlBuilder.setFilePathHeader(filePath + TUNIT_FILE_EXT + ".html");
+            htmlBuilder.setIndexTitle(saveFilePathHTML);
+            htmlBuilder.setFileNameHeader(filePath);
+            htmlBuilder.setFilePathHeader(saveFilePathHTML);
 
-    htmlBuilder.addTable("Abc", tableID, {"Category", "Function", "Resource Usage"});
-    htmlBuilder.addTableRows(tableID, outputTree);
+            htmlBuilder.addTable("Abc", tableID, {"Category", "Function", "Resource Usage"});
+            htmlBuilder.addTableRows(tableID, outputTree);
 
-    htmlBuilder.saveFile(filePath + TUNIT_FILE_EXT + ".html");
+            htmlBuilder.saveFile(saveFilePathHTML);
+        }
+        else
+            removeFile(saveFilePathHTML);
+    }
 
     return translationUnit;
 }

@@ -3,6 +3,16 @@
 
 void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& filePath)
 {
+    string saveFilePath{ filePath + DIAGN_FILE_EXT };
+    string saveFilePathHTML{ saveFilePath + ".html" };
+
+    if(isOptionNotEnabled(CATEGORY_2))
+    {
+        removeFile(saveFilePath);
+        removeFile(saveFilePathHTML);
+        return;
+    }
+
     OutputTree outputTree;
 
     uint32_t        errorNumber      = clang_getNumDiagnostics(translationUnit);                                                                                                   // 6.
@@ -34,21 +44,25 @@ void _2_diagnostic_reporting(CXTranslationUnit& translationUnit, const string& f
     if(errorNumberInSet)
         clang_disposeDiagnosticSet(diagnosticSet);                                                                                                                                 // 4.
 
-    string saveFilePath{ filePath + DIAGN_FILE_EXT };
     if(!outputTree.saveToFile(saveFilePath))
         cout << "Couldn't save file : " << saveFilePath << endl;
 
-    HTMLBuilder htmlBuilder;
-    string tableID{ "TBL" };
+    if(isOptionEnabled(HTML_ENABLED))
+    {
+        HTMLBuilder htmlBuilder;
+        string tableID{ "TBL" };
 
-    htmlBuilder.setIndexTitle(saveFilePath + ".html");
-    htmlBuilder.setFileNameHeader(saveFilePath);
-    htmlBuilder.setFilePathHeader(saveFilePath + ".html");
+        htmlBuilder.setIndexTitle(saveFilePathHTML);
+        htmlBuilder.setFileNameHeader(saveFilePath);
+        htmlBuilder.setFilePathHeader(saveFilePathHTML);
 
-    htmlBuilder.addTable("Diagnostic", tableID, outputTree);
+        htmlBuilder.addTable("Diagnostic", tableID, outputTree);
 
-    if(!htmlBuilder.saveFile(saveFilePath + ".html"))
-        cout << "Couldn't save HTML file : " << saveFilePath + ".html" << endl;
+        if(!htmlBuilder.saveFile(saveFilePathHTML))
+            cout << "Couldn't save HTML file : " << saveFilePathHTML << endl;
+    }
+    else
+        removeFile(saveFilePathHTML);
 }
 
 void _2_printDiagnostic(OutputTree& outputTree, const CXDiagnostic& currentDiagnostic)

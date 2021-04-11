@@ -4,6 +4,18 @@
 
 #include "UtilityFunctions.h"
 
+#include <filesystem>
+
+bool isOptionEnabled(uint32_t categoryMask)
+{
+    return g_appOptions & categoryMask;
+}
+
+bool isOptionNotEnabled(uint32_t categoryMask)
+{
+    return !(g_appOptions & categoryMask);
+}
+
 int64_t countStringLines(const string& str)
 {
     int64_t lines{ 0 };
@@ -143,26 +155,34 @@ void processFile(const string& absoluteFilePath)
         ret = clientData.astOutputTree.saveToFile(absoluteFilePath + AST_FILE_EXT);
         ret = clientData.astExtOutputTree.saveToFile(absoluteFilePath + AST_EXT_FILE_EXT);
 
-        HTMLBuilder htmlBuilder;
-        string tableID{ "TBL" };
+        if(isOptionEnabled(HTML_ENABLED))
+        {
+            HTMLBuilder htmlBuilder;
+            string tableID{ "TBL" };
 
-        htmlBuilder.setIndexTitle(absoluteFilePath + AST_FILE_EXT);
-        htmlBuilder.setFileNameHeader(extractFileName(absoluteFilePath));
-        htmlBuilder.setFilePathHeader(absoluteFilePath);
+            htmlBuilder.setIndexTitle(absoluteFilePath + AST_FILE_EXT);
+            htmlBuilder.setFileNameHeader(extractFileName(absoluteFilePath));
+            htmlBuilder.setFilePathHeader(absoluteFilePath);
 
-        htmlBuilder.addTable("Abstract Syntax Tree", tableID, clientData.astOutputTree);
+            htmlBuilder.addTable("Abstract Syntax Tree", tableID, clientData.astOutputTree);
 
-        ret = htmlBuilder.saveFile(absoluteFilePath + AST_FILE_EXT + ".html");
+            ret = htmlBuilder.saveFile(absoluteFilePath + AST_FILE_EXT + ".html");
 
-        htmlBuilder.clear();
+            htmlBuilder.clear();
 
-        htmlBuilder.setIndexTitle(absoluteFilePath + AST_EXT_FILE_EXT);
-        htmlBuilder.setFileNameHeader(extractFileName(absoluteFilePath));
-        htmlBuilder.setFilePathHeader(absoluteFilePath);
+            htmlBuilder.setIndexTitle(absoluteFilePath + AST_EXT_FILE_EXT);
+            htmlBuilder.setFileNameHeader(extractFileName(absoluteFilePath));
+            htmlBuilder.setFilePathHeader(absoluteFilePath);
 
-        htmlBuilder.addTable("Extended Abstract Syntax Tree", tableID, clientData.astExtOutputTree);
+            htmlBuilder.addTable("Extended Abstract Syntax Tree", tableID, clientData.astExtOutputTree);
 
-        ret = htmlBuilder.saveFile(absoluteFilePath + AST_EXT_FILE_EXT + ".html");
+            ret = htmlBuilder.saveFile(absoluteFilePath + AST_EXT_FILE_EXT + ".html");
+        }
+        else
+        {
+            removeFile(absoluteFilePath + AST_FILE_EXT + ".html");
+            removeFile(absoluteFilePath + AST_EXT_FILE_EXT + ".html");
+        }
     }
 
     clang_disposeIndex(index);
@@ -181,4 +201,12 @@ bool saveToFile(const string& path, const stringstream& data)
     }
     else
         return false;
+}
+
+void removeFile(const string& path)
+{
+    std::filesystem::path removeFilePath(path);
+
+    if(std::filesystem::exists(removeFilePath))
+        std::filesystem::remove(removeFilePath);
 }

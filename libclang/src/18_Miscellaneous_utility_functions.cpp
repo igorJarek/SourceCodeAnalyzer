@@ -2,6 +2,9 @@
 
 void _18_printMiscellaneousUtilityFunctions(OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel)
 {
+    if(isOptionNotEnabled(CATEGORY_18))
+        return;
+
     astExtOutputTree.addString(curLevel + 1, "18. Miscellaneous utility functions : ");
 
     CXEvalResult         evalResult     = clang_Cursor_Evaluate(cursor);                    // 4.

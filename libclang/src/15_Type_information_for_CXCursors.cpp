@@ -2,6 +2,9 @@
 
 void _15_printTypeInformationForCXCursors(const CXTranslationUnit& translationUnit, OutputTree& astExtOutputTree, const CXCursor& cursor, uint32_t curLevel, bool cursorStopRecursion)
 {
+    if(isOptionNotEnabled(CATEGORY_15))
+        return;
+
     CXType                      cursorType                              = clang_getCursorType                           (cursor);                           // 1
     CXString                    typeSpelling                            = clang_getTypeSpelling                         (cursorType);                       // 2.
 

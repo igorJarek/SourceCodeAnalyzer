@@ -3,6 +3,16 @@
 
 void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string& filePath)
 {
+    string saveFilePath{ filePath + FILE_FILE_EXT };
+    string saveFilePathHTML{ saveFilePath + ".html" };
+
+    if(isOptionNotEnabled(CATEGORY_8))
+    {
+        removeFile(saveFilePath);
+        removeFile(saveFilePathHTML);
+        return;
+    }
+
     OutputTree outputTree;
 
     outputTree.addString(0, "8. File manipulation routines : ");
@@ -40,22 +50,26 @@ void _8_file_manipulation(const CXTranslationUnit& translationUnit, const string
         outputTree.addValue(2, fileContents);
     }
 
-    string saveFilePath{ filePath + FILE_FILE_EXT };
     if(!outputTree.saveToFile(saveFilePath))
         cout << "Couldn't save file : " << saveFilePath << endl;
 
-    HTMLBuilder htmlBuilder;
-    string tableID{ "TBL" };
+    if(isOptionEnabled(HTML_ENABLED))
+    {
+        HTMLBuilder htmlBuilder;
+        string tableID{ "TBL" };
 
-    htmlBuilder.setIndexTitle(saveFilePath + ".html");
-    htmlBuilder.setFileNameHeader(filePath);
-    htmlBuilder.setFilePathHeader(saveFilePath + ".html");
+        htmlBuilder.setIndexTitle(saveFilePathHTML);
+        htmlBuilder.setFileNameHeader(filePath);
+        htmlBuilder.setFilePathHeader(saveFilePathHTML);
 
-    htmlBuilder.addTable("File Informations", tableID, {"Category", "Functions", "File Content"});
-    htmlBuilder.addTableRows(tableID, outputTree);
+        htmlBuilder.addTable("File Informations", tableID, {"Category", "Functions", "File Content"});
+        htmlBuilder.addTableRows(tableID, outputTree);
 
-    if(!htmlBuilder.saveFile(saveFilePath + ".html"))
-        cout << "Couldn't save HTML file : " << saveFilePath + ".html" << endl;
+        if(!htmlBuilder.saveFile(saveFilePathHTML))
+            cout << "Couldn't save HTML file : " << saveFilePathHTML << endl;
+    }
+    else
+        removeFile(saveFilePathHTML);
 }
 
 CXString        _8_getFileName                      (CXFile SFile)

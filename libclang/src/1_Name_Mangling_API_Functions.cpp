@@ -2,6 +2,9 @@
 
 void _1_printMangling(OutputTree& astExtOutputTree, const CXCursor& cursor, const uint32_t curLevel)
 {
+    if(isOptionNotEnabled(CATEGORY_1))
+        return;
+
     CXString     mangling     = clang_Cursor_getMangling(cursor);                                             // 1.
     CXStringSet* CXXManglings = clang_Cursor_getCXXManglings(cursor);                                         // 2.
 
