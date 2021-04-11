@@ -10,13 +10,6 @@ using std::string;
 using std::list;
 using std::set;
 
-enum FileType : uint8_t
-{
-    SOURCE_FILE             = (1 << 0),
-    HEADER_FILE             = (1 << 1),
-    SOURCE_AND_HEADER_FILE  = SOURCE_FILE | HEADER_FILE
-};
-
 class FolderBrowser
 {
 public:
@@ -24,26 +17,31 @@ public:
     ~FolderBrowser();
 
 public:
-    void                clearFileList()                                     { m_filesList.clear(); }
-    void                setFileTypeBrowser(uint8_t fileType);
+    void                startFolderBrowse(const string& folderPath);
+
+    void                clearLists()
+    { 
+        m_sourceFilesList.clear(); 
+        m_headerFilesList.clear(); 
+    }
 
     void                addIgnoreFilePath(const string& filePath);
     void                addIgnoreDirPath(const string& dirPath);
 
-    void                startFolderBrowse(const string& folderPath);
+    const list<string>& getSourceFileList()  const { return m_sourceFilesList; }
+    size_t              getSourceFileCount() const { return m_sourceFilesList.size(); }
 
-    const list<string>& getFileList() const { return m_filesList; }
-    size_t              getFileCount() const                                { return m_filesList.size(); }
+    const list<string>& getHeaderFileList()  const { return m_headerFilesList; }
+    size_t              getHeaderFileCount() const { return m_headerFilesList.size(); }
 
 protected:
     bool                isHeaderFile(const string& extension);
     bool                isSourceFile(const string& extension);
 
 protected:
-    list<string>        m_filesList;
+    list<string>        m_sourceFilesList;
+    list<string>        m_headerFilesList;
 
     set<string>         m_ignoredFilesSet;
     set<string>         m_ignoredDirsSet;
-
-    uint8_t             m_fileTypeOptions = 0;
 };

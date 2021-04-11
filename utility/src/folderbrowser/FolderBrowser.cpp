@@ -26,11 +26,6 @@ bool FolderBrowser::isSourceFile(const string& extension)
         return false;
 }
 
-void FolderBrowser::setFileTypeBrowser(uint8_t fileType)
-{
-    m_fileTypeOptions = fileType;
-}
-
 void FolderBrowser::addIgnoreFilePath(const string& filePath)
 {
     m_ignoredFilesSet.insert(filePath);
@@ -51,7 +46,6 @@ void FolderBrowser::startFolderBrowse(const string& folderPath)
         {
             const fs::file_status fileStatus = dirEntry.status();
             const fs::path&       path       = dirEntry.path();
-            //const fs::path&     filename   = path.filename();
 
             if (fs::is_directory(fileStatus))
             {
@@ -66,23 +60,17 @@ void FolderBrowser::startFolderBrowse(const string& folderPath)
 
                 if(isSourceFile(fileExtension))
                 {
-                    if(m_fileTypeOptions & SOURCE_FILE)
-                    {
-                        string filePath = path.string();
+                    string filePath = path.string();
 
-                        if(m_ignoredFilesSet.find(filePath) == m_ignoredFilesSet.end())
-                            m_filesList.push_back(filePath);
-                    }
+                    if(m_ignoredFilesSet.find(filePath) == m_ignoredFilesSet.end())
+                        m_sourceFilesList.push_back(filePath);
                 }
                 else if(isHeaderFile(fileExtension))
                 {
-                    if(m_fileTypeOptions & HEADER_FILE)
-                    {
-                        string filePath = path.string();
+                    string filePath = path.string();
 
-                        if(m_ignoredFilesSet.find(filePath) == m_ignoredFilesSet.end())
-                            m_filesList.push_back(filePath);
-                    }
+                    if(m_ignoredFilesSet.find(filePath) == m_ignoredFilesSet.end())
+                        m_headerFilesList.push_back(filePath);
                 }
             }
         }
