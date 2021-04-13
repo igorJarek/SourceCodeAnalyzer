@@ -171,35 +171,49 @@ struct Token
     CXSourceRange    tokenRange    = clang_getNullRange();
 };
 
-/*         SourceCode         */
+/*         HeaderFile         */
 
-class SourceCode
+class HeaderFile
 {
-    public:
-        SourceCode(const string& filePath, const char* compilation_args[], uint16_t argsCount);
-        ~SourceCode();
+public:
+    HeaderFile(const string& filePath, const char* compilation_args[] = nullptr, uint16_t argsCount = 0);
+    ~HeaderFile();
 
-        static int64_t countFileLines(const string& filePath);
-        static int64_t countFileLineColumns(const string& filePath, int64_t line);
+    static int64_t countFileLines(const string& filePath);
+    static int64_t countFileLineColumns(const string& filePath, int64_t line);
 
-    public:
-        CXTranslationUnit&  getTranslationUnit() { return m_translationUnit; }
+public:
+    CXTranslationUnit&  getTranslationUnit() { return m_translationUnit; }
 
-        AST&                getAST()          { return m_ast; }
-        const list<Token>&  getTokens() const { return m_tokens; }
-        list<Token>&        getTokens()       { return m_tokens; }
+    const list<Token>&  getTokens() const { return m_tokens; }
+    list<Token>&        getTokens()       { return m_tokens; }
+
+protected:
+    const string&       m_filePath;
+
+    CXTranslationUnit   m_translationUnit;
+    CXIndex             m_index                       = nullptr;
+    CXErrorCode         m_compilationErrorCode        = CXError_Success;
+    uint32_t            m_compilationErrorCount       = 0;
+    uint32_t            m_compilationIgnoreErrorCount = 0;
+
+    Tokens              m_rawTokens;
+    list<Token>         m_tokens;
+};
+
+/*         SourceFile         */
+
+class SourceFile : public HeaderFile
+{
+public:
+    SourceFile(const string& filePath, const char* compilation_args[], uint16_t argsCount);
+    ~SourceFile();
+
+public:
+    AST&                getAST()          { return m_ast; }
+
+protected:
+    AST                 m_ast;
 
 
-    private:
-        const string&       m_filePath;
-
-        CXIndex             m_index                       = nullptr;
-        CXErrorCode         m_compilationErrorCode        = CXError_Success;
-        CXTranslationUnit   m_translationUnit;
-        uint32_t            m_compilationErrorCount       = 0;
-        uint32_t            m_compilationIgnoreErrorCount = 0;
-
-        AST                 m_ast;
-        Tokens              m_rawTokens;
-        list<Token>         m_tokens;
 };

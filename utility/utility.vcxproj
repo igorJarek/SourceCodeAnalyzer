@@ -30,7 +30,7 @@
     <ClInclude Include="include\LibClangStruct2Str\LibClangStruct2Str.h" />
     <ClInclude Include="include\LibClangStruct2Str\PrintingPolicy.h" />
     <ClInclude Include="include\OutputTree\OutputTree.h" />
-    <ClInclude Include="include\SourceCode\SourceCode.h" />
+    <ClInclude Include="include\SourceFile\SourceFile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DatabaseBuilder\DatabaseBuilder.cpp" />
@@ -40,7 +40,7 @@
     <ClCompile Include="src\Html\Html.cpp" />
     <ClCompile Include="src\LibClangStruct2Str\LibClangStruct2Str.cpp" />
     <ClCompile Include="src\OutputTree\OutputTree.cpp" />
-    <ClCompile Include="src\SourceCode\SourceCode.cpp" />
+    <ClCompile Include="src\SourceFile\SourceFile.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

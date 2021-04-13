@@ -122,20 +122,27 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
         return;
     }
 
-    const list<string>&                 fileList    = m_folderBrowser.getFileList();
-    map<string, shared_ptr<SourceCode>> headerSourceFileMap;
+    const list<string>&                 headerFileList = m_folderBrowser.getHeaderFileList();
+    const list<string>&                 sourceFileList = m_folderBrowser.getSourceFileList();
+
+    map<string, shared_ptr<HeaderFile>> headerFileMap;
+    map<string, shared_ptr<SourceFile>> sourceFileMap;
+
     size_t                              fileCounter = 0;
 
-    for(const string& filePath : fileList)
-        headerSourceFileMap.emplace(filePath, std::make_shared<SourceCode>(filePath, m_compilationArgs, m_argsCount));
+    for(const string& filePath : headerFileList)
+        headerFileMap.emplace(filePath, std::make_shared<HeaderFile>(filePath));
 
-    for(const auto& [filePath, SourceCodePtr] : headerSourceFileMap)
+    for(const string& filePath : sourceFileList)
+        sourceFileMap.emplace(filePath, std::make_shared<SourceFile>(filePath, m_compilationArgs, m_argsCount));
+
+    for(const auto& [filePath, SourceFilePtr] : sourceFileMap)
     {
-        buildState(filePath, fileCounter++, m_folderBrowser.getFileCount());
+        buildState(filePath, fileCounter++, m_folderBrowser.getSourceFileCount());
 
-        shared_ptr<SourceCode>   sourceCode = SourceCodePtr;
-        AST&                     ast        = sourceCode->getAST();
-        list<Token>&             tokens     = sourceCode->getTokens();
+        shared_ptr<SourceFile> sourceFile = SourceFilePtr;
+        AST&                   ast        = sourceFile->getAST();
+        list<Token>&           tokens     = sourceFile->getTokens();
 
         createDatabaseTables(filePath);
 
@@ -149,7 +156,7 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
 
         ast.traversingAST
         (
-            [this, &tokens, &headerSourceFileMap](shared_ptr<ASTNode> astNode) -> void
+            [this, &tokens, &sourceFileMap](shared_ptr<ASTNode> astNode) -> void
             {
                 CXCursor     cursor     = astNode->cursor;
                 CXCursorKind cursorKind = clang_getCursorKind(cursor);
@@ -159,6 +166,15 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                 {
                     if(clang_isCursorDefinition(cursor))
                     {
+                        //if(isHeader())
+                        //{
+                        
+                        //}
+                        //else if(isSource())
+                        //{
+                            
+                        //}
+
                         DatabaseBuilderFunction dbFunction;
                         dbFunction.functionID = m_database.allocFunctionsID();
                         dbFunction.functionName = to_string(clang_getCursorSpelling(cursor));
@@ -189,39 +205,6 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                     {
                         if(!clang_equalCursors(cursor, cursorRef))
                         {
-                            if(clang_isCursorDefinition(cursorRef))
-                            {
-                                if(cursorRefKind == CXCursor_FunctionDecl) // template after included is function
-                                {
-                                    DatabaseBuilderFunction dbFunction;
-                                    dbFunction.functionID = m_database.allocFunctionsID();
-                                    dbFunction.functionName = to_string(clang_getCursorSpelling(cursorRef));
-                                    dbFunction.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursorRef)); 
-                                    dbFunction.functionDefRange.setCXSourceRange(clang_getCursorExtent(cursorRef));
-
-                                    map<string, shared_ptr<SourceCode>>::iterator refFileTokensIter = headerSourceFileMap.find(dbFunction.functionNamePos.fileName);
-                                    if(refFileTokensIter != headerSourceFileMap.end())
-                                    {
-                                        list<Token>& refFileTokens = refFileTokensIter->second->getTokens();
-
-                                        for(Token& token : refFileTokens)
-                                        {
-                                            if(token.tokenID == 0)
-                                                token.tokenID = m_database.allocTokenID();
-
-                                            if(token.getTokenPos() == dbFunction.functionNamePos)
-                                                dbFunction.functionNameTokenID = token.tokenID;
-                                            else if(token.isStartsEqual(dbFunction.functionDefRange))
-                                                dbFunction.openDefinitionTokenID = token.tokenID;
-                                            else if(token.isEndsEqual(dbFunction.functionDefRange))
-                                                dbFunction.closeDefinitionTokenID = token.tokenID;
-                                        }
-
-                                        m_functionsMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbFunction} );
-                                    }
-                                }
-                            }
-
                             DatabaseBuilderCalling dbCalling;
                             dbCalling.callingID = m_database.allocCallingID();
                             dbCalling.functionName = to_string(clang_getCursorSpelling(cursor));
@@ -233,9 +216,7 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                                     dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(memberRefExp->cursor));
                             }
                             else
-                            {
                                 dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
-                            }
 
                             for(Token& token : tokens)
                             {
@@ -252,7 +233,7 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
         );
     }
 
-    for(const string& filePath : fileList)
+    for(const string& filePath : sourceFileList)
     {
         for(auto& [usr, dbCalling] : m_callingMap)
         {
@@ -276,39 +257,4 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                 createInsertFunctionsTableData(filePath, dbFunction);
         }
     }
-
-    /*
-    for(const string& filePath : fileList)
-    {
-        cout << "Result " << filePath << " : " << endl; 
-
-        for(const auto& [usr, dbCalling] : m_callingMap)
-        {
-            if(dbCalling.functionNamePos.fileName == filePath)
-            {
-                map<string, DatabaseBuilderFunction>::iterator it = m_functionsMap.find(usr);
-                if(it != m_functionsMap.end())
-                {
-                    cout << "\tInvoke : " << endl;
-                    cout << "\t\tFunctionName : " << dbCalling.functionName << ' ' << endl;
-                    cout << "\t\tFunctionPath : " << dbCalling.functionNamePos.fileName << endl;
-                    cout << "\t\tTokenID : " << dbCalling.functionNameTokenID << endl;
-                    cout << "\t\tUSR : " << usr << endl;
-                }
-            }
-        }
-
-        for(const auto& [usr, dbFunction] : m_functionsMap)
-        {
-            if(dbFunction.functionNamePos.fileName == filePath)
-            {
-                cout << "\tDefinition : " << endl;
-                cout << "\t\tFunctionName : " << dbFunction.functionName << ' ' << endl;
-                cout << "\t\tFunctionPath : " << dbFunction.functionNamePos.fileName << endl;
-                cout << "\t\tTokenID : " << dbFunction.functionNameTokenID << endl;
-                cout << "\t\tUSR : " << usr << endl;
-            }
-        }
-    }
-    */
 }
