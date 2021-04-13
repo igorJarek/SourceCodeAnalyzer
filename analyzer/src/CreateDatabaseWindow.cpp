@@ -148,7 +148,6 @@ void CreateDatabaseWindow::start()
     Database& database = *m_app.getDatabase();
 
     FolderBrowser folderBrowser;
-    folderBrowser.setFileTypeBrowser(FileType::SOURCE_AND_HEADER_FILE);
 
     QTreeWidgetItemIterator ignoringFolderIterator(m_ui.ignoringFolderTree);
 
@@ -203,7 +202,7 @@ void CreateDatabaseWindow::start()
     QProgressBar* progressBar = m_ui.progressBar;
     progressBar->show();
     progressBar->setMinimum(0);
-    progressBar->setMaximum(folderBrowser.getFileCount());
+    progressBar->setMaximum(folderBrowser.getSourceFileCount());
     progressBar->setValue(0);
 
     QLabel* label = m_ui.analyzedFilePath;
