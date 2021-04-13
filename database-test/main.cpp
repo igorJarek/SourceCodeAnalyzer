@@ -13,9 +13,8 @@ int main()
     const char* COMPILATION_ARGS[2] = { ARGS_INCLUDE_PREFIX, ARGS_INCLUDE_PATH };
 
     FolderBrowser folderBrowser;
-    folderBrowser.clearFileList();
-    folderBrowser.setFileTypeBrowser(FileType::SOURCE_AND_HEADER_FILE);
     folderBrowser.addIgnoreFilePath("..\\lib\\src\\TestPrimitives.cpp");
+    folderBrowser.addIgnoreFilePath("..\\lib\\include\\TestPrimitives.h");
     folderBrowser.startFolderBrowse(LIB_PATH);
 
     Database database;
