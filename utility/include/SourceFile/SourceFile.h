@@ -15,56 +15,6 @@ using std::to_string;
 using std::shared_ptr;
 using std::function;
 
-/*         AST         */
-
-struct ASTNode
-{
-    shared_ptr<ASTNode>       findChild(enum CXCursorKind cursorKind);
-
-    shared_ptr<ASTNode>       parent;
-    list<shared_ptr<ASTNode>> childrens;
-
-    CXCursor                  cursor;
-};
-
-struct AST
-{
-    public:
-        AST();
-        ~AST();
-
-    public:
-        uint32_t getNodesCount() const { return m_nodes; }
-
-        void     addCXCursor(uint32_t level, CXCursor cursor);
-        void     traversingAST(function<void (shared_ptr<ASTNode>)> traversingFunc);
-
-        uint32_t getNestingLevel()      const { return m_nestingLevel; }
-        void     increaseNestingLevel()       { m_nestingLevel++; }
-        void     decreaseNestingLevel()       { m_nestingLevel--; }
-
-    private:
-        void     traversingNode(function<void (shared_ptr<ASTNode>)> traversingFunc, shared_ptr<ASTNode>& node);
-
-    private:
-        shared_ptr<ASTNode> m_root;
-        uint32_t            m_nodes = 0;
-
-        uint32_t            m_nestingLevel = 0;
-};
-
-/*         ClientData         */
-
-class ClientData
-{
-public:
-    ClientData(AST* ast) :
-        m_ast(ast) 
-    { }
-
-    AST* m_ast;
-};
-
 /*         Tokens         */
 
 struct TokenPos
@@ -171,6 +121,30 @@ struct Token
     CXSourceRange    tokenRange    = clang_getNullRange();
 };
 
+/*         TraversingClientData         */
+
+struct TraversingClientData
+{
+    TraversingClientData(function<void (CXCursor cursor)> traversingFunc) :
+        m_traversingFunc(traversingFunc)
+    { }
+
+    function<void (CXCursor cursor)> m_traversingFunc;
+};
+
+/*         FindClientData         */
+
+struct FindClientData
+{
+    FindClientData(enum CXCursorKind cursorKind, function<void (CXCursor cursor)> foundCursor) :
+        m_cursorKind(cursorKind),
+        m_foundCursor(foundCursor)
+    { }
+
+    enum CXCursorKind                m_cursorKind;
+    function<void (CXCursor cursor)> m_foundCursor;
+};
+
 /*         HeaderFile         */
 
 class HeaderFile
@@ -210,10 +184,10 @@ public:
     ~SourceFile();
 
 public:
-    AST&                getAST()          { return m_ast; }
+    void traversingAST(function<void (CXCursor cursor)> traversingFunc);
+    void findCursor(CXCursor cursor, enum CXCursorKind cursorKind, function<void (CXCursor cursor)> foundCursor);
 
 protected:
-    AST                 m_ast;
-
-
+    static CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client_data);
+    static CXChildVisitResult findVisitor(CXCursor cursor, CXCursor parent, CXClientData client_data);
 };

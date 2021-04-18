@@ -141,7 +141,6 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
         buildState(filePath, fileCounter++, m_folderBrowser.getSourceFileCount());
 
         shared_ptr<SourceFile> sourceFile = SourceFilePtr;
-        AST&                   ast        = sourceFile->getAST();
         list<Token>&           tokens     = sourceFile->getTokens();
 
         createDatabaseTables(filePath);
@@ -154,11 +153,10 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
             createInsertTokensTableData(filePath, token);
         }
 
-        ast.traversingAST
+        sourceFile->traversingAST
         (
-            [this, &tokens, &sourceFileMap](shared_ptr<ASTNode> astNode) -> void
+            [this, &sourceFile, &tokens, &sourceFileMap](CXCursor cursor) -> void
             {
-                CXCursor     cursor     = astNode->cursor;
                 CXCursorKind cursorKind = clang_getCursorKind(cursor);
 
                 if(cursorKind == CXCursor_FunctionDecl ||
@@ -166,15 +164,6 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                 {
                     if(clang_isCursorDefinition(cursor))
                     {
-                        //if(isHeader())
-                        //{
-                        
-                        //}
-                        //else if(isSource())
-                        //{
-                            
-                        //}
-
                         DatabaseBuilderFunction dbFunction;
                         dbFunction.functionID = m_database.allocFunctionsID();
                         dbFunction.functionName = to_string(clang_getCursorSpelling(cursor));
@@ -211,9 +200,12 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
 
                             if(cursorRefKind == CXCursor_CXXMethod)
                             {
-                                shared_ptr<ASTNode> memberRefExp = astNode->findChild(CXCursor_MemberRefExpr);
-                                if(memberRefExp)
-                                    dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(memberRefExp->cursor));
+                                sourceFile->findCursor(cursor, CXCursor_MemberRefExpr,
+                                    [&dbCalling](CXCursor cursor) -> void
+                                    {
+                                        dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
+                                    }
+                                );
                             }
                             else
                                 dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));

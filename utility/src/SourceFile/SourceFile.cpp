@@ -2,72 +2,6 @@
 
 #include <fstream>
 
-CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data);
-
-shared_ptr<ASTNode> ASTNode::findChild(enum CXCursorKind cursorKind)
-{
-    for(shared_ptr<ASTNode> elem : childrens)
-    {
-        if(elem->cursor.kind == cursorKind)
-            return elem;
-        else
-        {
-            shared_ptr<ASTNode> found = elem->findChild(cursorKind);
-            if(found)
-                return found;
-        }
-    }
-
-    return nullptr;
-}
-
-AST::AST()
-{
-    m_root = std::make_shared<ASTNode>();
-    m_root->parent = nullptr;
-}
-
-AST::~AST()
-{
-    
-}
-
-void AST::addCXCursor(uint32_t level, CXCursor cursor)
-{
-    shared_ptr<ASTNode> currentNode = m_root;
-
-    for(uint32_t indexLevel = 0; indexLevel < level; ++indexLevel)
-    {
-        if(!currentNode->childrens.empty())
-            currentNode = currentNode->childrens.back();
-    }
-
-    shared_ptr<ASTNode> newNode = std::make_shared<ASTNode>();
-    newNode->parent = currentNode;
-    newNode->cursor = cursor;
-
-    currentNode->childrens.push_back(newNode);
-
-    ++m_nodes;
-}
-
-void AST::traversingAST(function<void (shared_ptr<ASTNode>)> traversingFunc)
-{
-    auto& rootChildren = m_root->childrens;
-    for(auto& elem : rootChildren)
-        traversingNode(traversingFunc, elem);
-}
-
-void AST::traversingNode(function<void (shared_ptr<ASTNode>)> traversingFunc, shared_ptr<ASTNode>& node)
-{
-    if(traversingFunc)
-        traversingFunc(node);
-
-    auto& nodeChildren = node->childrens;
-    for(auto& elem : nodeChildren)
-        traversingNode(traversingFunc, elem);
-}
-
 /*         HeaderFile         */
 
 HeaderFile::HeaderFile(const string& filePath, const char* compilation_args[], uint16_t argsCount) :
@@ -228,16 +162,6 @@ SourceFile::SourceFile(const string& filePath, const char* compilation_args[], u
 
         stream.close();
     }
-
-    // AST
-
-    if (m_compilationErrorCode == CXError_Success /* && m_compilationErrorCount == 0 */)
-    {
-        ClientData clientData(&m_ast);
-
-        CXCursor cursor = clang_getTranslationUnitCursor(m_translationUnit);
-        clang_visitChildren(cursor, visitor, &clientData);
-    }
 }
 
 SourceFile::~SourceFile()
@@ -245,18 +169,41 @@ SourceFile::~SourceFile()
 
 }
 
-CXChildVisitResult visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
+void SourceFile::traversingAST(function<void (CXCursor cursor)> traversingFunc)
 {
-    ClientData* clientDataPtr = reinterpret_cast<ClientData*>(client_data);
-    AST* ast    = clientDataPtr->m_ast;
+    if (m_compilationErrorCode == CXError_Success /* && m_compilationErrorCount == 0 */)
+    {
+        TraversingClientData traversingClientData(traversingFunc);
 
-    ast->addCXCursor(ast->getNestingLevel(), cursor);
+        CXCursor cursor = clang_getTranslationUnitCursor(m_translationUnit);
+        clang_visitChildren(cursor, visitor, &traversingClientData);
+    }
+}
 
-    ast->increaseNestingLevel();
+void SourceFile::findCursor(CXCursor cursor, enum CXCursorKind cursorKind, function<void (CXCursor cursor)> foundCursor)
+{
+    FindClientData findClientData(cursorKind, foundCursor);
 
-    clang_visitChildren(cursor, visitor, client_data);
+    clang_visitChildren(cursor, findVisitor, &findClientData);
+}
 
-    ast->decreaseNestingLevel();
+CXChildVisitResult SourceFile::visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
+{
+    TraversingClientData* traversingClientDataPtr = reinterpret_cast<TraversingClientData*>(client_data);
 
-    return CXChildVisit_Continue;
+    traversingClientDataPtr->m_traversingFunc(cursor);
+    return CXChildVisit_Recurse;
+}
+
+CXChildVisitResult SourceFile::findVisitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
+{
+    FindClientData* findClientDataPtr = reinterpret_cast<FindClientData*>(client_data);
+
+    if(cursor.kind == findClientDataPtr->m_cursorKind)
+    {
+        findClientDataPtr->m_foundCursor(cursor);
+        return CXChildVisit_Break;
+    }
+
+    return CXChildVisit_Recurse;
 }
