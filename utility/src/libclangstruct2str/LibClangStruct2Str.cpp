@@ -2,6 +2,11 @@
 
 namespace std
 {
+    string to_string(const std::filesystem::path& path)
+    {
+        return path.string();
+    }
+
     string to_string(const string& string)
     {
         return string;

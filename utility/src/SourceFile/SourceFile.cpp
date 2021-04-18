@@ -118,6 +118,18 @@ int64_t HeaderFile::countFileLineColumns(const string& filePath, int64_t line)
     return columns;
 }
 
+SourceFileType HeaderFile::getSourceFileType(const string& filePath)
+{
+    const string extension = filePath.substr(filePath.find_last_of('.') + 1);
+
+    if(extension == "h" || extension == "hpp")
+        return SourceFileType::HEADER_FILE;
+    else if(extension == "c" || extension == "cpp")
+        return SourceFileType::SOURCE_FILE;
+    else
+        return SourceFileType::UNKNOWN;
+}
+
 /*         SourceFile         */
 
 SourceFile::SourceFile(const string& filePath, const char* compilation_args[], uint16_t argsCount) :

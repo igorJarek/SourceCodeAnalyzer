@@ -8,12 +8,22 @@
 #include <string>
 #include <memory>
 #include <functional>
+#include <filesystem>
 
 using std::list;
 using std::string;
 using std::to_string;
 using std::shared_ptr;
 using std::function;
+namespace fs = std::filesystem;
+
+enum class SourceFileType
+{
+    HEADER_FILE,
+    SOURCE_FILE,
+
+    UNKNOWN
+};
 
 /*         Tokens         */
 
@@ -30,7 +40,7 @@ struct TokenPos
         CXFile file;
         clang_getExpansionLocation(location, &file, &linePos, &colPos, nullptr);
 
-        fileName = to_string(clang_getFileName(file)); 
+        fileName = fs::path(to_string(clang_getFileName(file))).make_preferred();
     }
 
     bool operator==(const TokenPos& right) const
@@ -38,7 +48,7 @@ struct TokenPos
         return linePos == right.linePos && colPos == right.colPos;
     }
 
-    string   fileName;
+    fs::path fileName;
 
     uint32_t linePos = 0;
     uint32_t colPos  = 0;
@@ -62,10 +72,10 @@ struct TokenRange
         clang_getExpansionLocation(locStart, &file,   &startLine, &startCol, nullptr);
         clang_getExpansionLocation(locEnd,   nullptr, &endLine,   &endCol,   nullptr);
 
-        fileName = to_string(clang_getFileName(file)); 
+        fileName = fs::path(to_string(clang_getFileName(file))).make_preferred();
     }
 
-    string   fileName;
+    fs::path fileName;
 
     uint32_t startLine = 0;
     uint32_t startCol  = 0;
@@ -91,10 +101,10 @@ struct Token
 
     }
 
-    TokenPos   getTokenPos()      { return TokenPos(tokenLocation);  }
-    TokenRange getTokenRange()    { return TokenRange(tokenRange);   }
+    TokenPos   getTokenPos()   const { return TokenPos(tokenLocation); }
+    TokenRange getTokenRange() const { return TokenRange(tokenRange);  }
 
-    bool       isStartsEqual(const TokenRange& range)
+    bool       isStartsEqual(const TokenRange& range) const
     {
         const TokenRange tmpTokenRange = getTokenRange();
 
@@ -104,7 +114,7 @@ struct Token
                );
     }
 
-    bool       isEndsEqual(const TokenRange& range)
+    bool       isEndsEqual(const TokenRange& range) const
     {
         const TokenRange tmpTokenRange = getTokenRange();
 
@@ -153,8 +163,9 @@ public:
     HeaderFile(const string& filePath, const char* compilation_args[] = nullptr, uint16_t argsCount = 0);
     ~HeaderFile();
 
-    static int64_t countFileLines(const string& filePath);
-    static int64_t countFileLineColumns(const string& filePath, int64_t line);
+    static int64_t      countFileLines(const string& filePath);
+    static int64_t      countFileLineColumns(const string& filePath, int64_t line);
+    static SourceFileType getSourceFileType(const string& filePath);
 
 public:
     CXTranslationUnit&  getTranslationUnit() { return m_translationUnit; }

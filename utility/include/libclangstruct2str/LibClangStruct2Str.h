@@ -3,11 +3,13 @@
 #include "clang-c/Index.h"
 #include "clang-c/Documentation.h"
 #include <string>
+#include <filesystem>
 
 using std::string;
 
 namespace std
 {
+    string to_string(const std::filesystem::path&             path);
     string to_string(const string&                            string);
     string to_string(const char*                              cstring);
 

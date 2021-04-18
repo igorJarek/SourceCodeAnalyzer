@@ -131,17 +131,11 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
     size_t                              fileCounter = 0;
 
     for(const string& filePath : headerFileList)
-        headerFileMap.emplace(filePath, std::make_shared<HeaderFile>(filePath));
-
-    for(const string& filePath : sourceFileList)
-        sourceFileMap.emplace(filePath, std::make_shared<SourceFile>(filePath, m_compilationArgs, m_argsCount));
-
-    for(const auto& [filePath, SourceFilePtr] : sourceFileMap)
     {
-        buildState(filePath, fileCounter++, m_folderBrowser.getSourceFileCount());
+        shared_ptr headerfile = std::make_shared<HeaderFile>(filePath);
+        headerFileMap.emplace(filePath, headerfile);
 
-        shared_ptr<SourceFile> sourceFile = SourceFilePtr;
-        list<Token>&           tokens     = sourceFile->getTokens();
+        list<Token>& tokens = headerfile->getTokens();
 
         createDatabaseTables(filePath);
 
@@ -152,10 +146,30 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
 
             createInsertTokensTableData(filePath, token);
         }
+    }
+
+    for(const string& filePath : sourceFileList)
+        sourceFileMap.emplace(filePath, std::make_shared<SourceFile>(filePath, m_compilationArgs, m_argsCount));
+
+    for(const auto& [filePath, SourceFilePtr] : sourceFileMap)
+    {
+        buildState(filePath, fileCounter++, m_folderBrowser.getSourceFileCount());
+
+        shared_ptr<SourceFile> sourceFile = SourceFilePtr;
+
+        createDatabaseTables(filePath);
+
+        for(Token& token : sourceFile->getTokens())
+        {
+            if(token.tokenID == 0)
+                token.tokenID = m_database.allocTokenID();
+
+            createInsertTokensTableData(filePath, token);
+        }
 
         sourceFile->traversingAST
         (
-            [this, &sourceFile, &tokens, &sourceFileMap](CXCursor cursor) -> void
+            [this, &sourceFile, &headerFileMap](CXCursor cursor) -> void
             {
                 CXCursorKind cursorKind = clang_getCursorKind(cursor);
 
@@ -164,23 +178,22 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                 {
                     if(clang_isCursorDefinition(cursor))
                     {
-                        DatabaseBuilderFunction dbFunction;
-                        dbFunction.functionID = m_database.allocFunctionsID();
-                        dbFunction.functionName = to_string(clang_getCursorSpelling(cursor));
-                        dbFunction.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
-                        dbFunction.functionDefRange.setCXSourceRange(clang_getCursorExtent(cursor));
+                        DatabaseBuilderFunction dbFunction(m_database, cursor);
 
-                        for(Token& token : tokens)
+                        if(dbFunction.sourceFileType == SourceFileType::HEADER_FILE)
                         {
-                            if(token.getTokenPos() == dbFunction.functionNamePos)
-                                dbFunction.functionNameTokenID = token.tokenID;
-                            else if(token.isStartsEqual(dbFunction.functionDefRange))
-                                dbFunction.openDefinitionTokenID = token.tokenID;
-                            else if(token.isEndsEqual(dbFunction.functionDefRange))
-                                dbFunction.closeDefinitionTokenID = token.tokenID;
+                            map<string, shared_ptr<HeaderFile>>::iterator it = headerFileMap.find(dbFunction.functionNamePos.fileName.string());
+                            if(it != headerFileMap.end())
+                            {
+                                dbFunction.fillTokensInfo(it->second->getTokens());
+                                m_functionsMap.insert( {to_string(clang_getCursorUSR(cursor)), dbFunction} );
+                            }
                         }
-
-                        m_functionsMap.insert( {to_string(clang_getCursorUSR(cursor)), dbFunction} );
+                        else if(dbFunction.sourceFileType == SourceFileType::SOURCE_FILE)
+                        {
+                            dbFunction.fillTokensInfo(sourceFile->getTokens());
+                            m_functionsMap.insert( {to_string(clang_getCursorUSR(cursor)), dbFunction} );
+                        }
                     }
                 }
                 else if(cursorKind == CXCursor_CallExpr)
@@ -194,6 +207,22 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                     {
                         if(!clang_equalCursors(cursor, cursorRef))
                         {
+                            if(clang_isCursorDefinition(cursorRef))
+                            {
+                                if(cursorRefKind == CXCursor_FunctionDecl ||
+                                   cursorRefKind == CXCursor_CXXMethod)
+                                {
+                                    DatabaseBuilderFunction dbFunction(m_database, cursorRef);
+
+                                    map<string, shared_ptr<HeaderFile>>::iterator it = headerFileMap.find(dbFunction.functionNamePos.fileName.string());
+                                    if(it != headerFileMap.end())
+                                    {
+                                        dbFunction.fillTokensInfo(it->second->getTokens());
+                                        m_functionsMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbFunction} );
+                                    }
+                                }
+                            }
+
                             DatabaseBuilderCalling dbCalling;
                             dbCalling.callingID = m_database.allocCallingID();
                             dbCalling.functionName = to_string(clang_getCursorSpelling(cursor));
@@ -210,13 +239,7 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                             else
                                 dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
 
-                            for(Token& token : tokens)
-                            {
-                                if(token.tokenSpelling == dbCalling.functionName)
-                                if(token.getTokenPos() == dbCalling.functionNamePos)
-                                    dbCalling.functionNameTokenID = token.tokenID;
-                            }
-
+                            dbCalling.fillTokensInfo(sourceFile->getTokens());
                             m_callingMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbCalling} );
                         }
                     }
@@ -226,6 +249,31 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
     }
 
     for(const string& filePath : sourceFileList)
+    {
+        for(auto& [usr, dbCalling] : m_callingMap)
+        {
+            if(dbCalling.functionNamePos.fileName == filePath)
+            {
+                map<string, DatabaseBuilderFunction>::iterator it = m_functionsMap.find(usr);
+                if(it != m_functionsMap.end())
+                {
+                    const DatabaseBuilderFunction& definition = it->second;
+                    dbCalling.functionDefinitionID = definition.functionID;
+                    dbCalling.functionDefinitionPath = definition.functionNamePos.fileName;
+
+                    createInsertCallingTableData(filePath, dbCalling);
+                }
+            }
+        }
+
+        for(const auto& [usr, dbFunction] : m_functionsMap)
+        {
+            if(dbFunction.functionNamePos.fileName == filePath)
+                createInsertFunctionsTableData(filePath, dbFunction);
+        }
+    }
+
+    for(const string& filePath : headerFileList)
     {
         for(auto& [usr, dbCalling] : m_callingMap)
         {

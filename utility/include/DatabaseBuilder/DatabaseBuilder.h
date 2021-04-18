@@ -14,11 +14,21 @@ using std::to_string;
 
 struct DatabaseBuilderCalling
 {
+    void fillTokensInfo(const list<Token>& tokens)
+    {
+        for(const Token& token : tokens)
+        {
+            if(token.tokenSpelling == functionName)
+            if(token.getTokenPos() == functionNamePos)
+                functionNameTokenID = token.tokenID;
+        }
+    }
+
     // DB Elements
     uint32_t callingID            = 0; 
     uint32_t functionNameTokenID  = 0;
     uint32_t functionDefinitionID = 0;
-    string   functionDefinitionPath;
+    fs::path functionDefinitionPath;
 
     //uint32_t openingArgumentsBracketTokenID;
     //uint32_t closingArgumentsBracketTokenID;
@@ -30,17 +40,43 @@ struct DatabaseBuilderCalling
 
 struct DatabaseBuilderFunction
 {
-    // DB Elements
-    uint32_t functionID               = 0;
-    uint32_t functionNameTokenID      = 0;
+    DatabaseBuilderFunction(Database& database, CXCursor cursor)
+    {
+        functionID = database.allocFunctionsID();
+        functionName = to_string(clang_getCursorSpelling(cursor));
+        functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
+        functionDefRange.setCXSourceRange(clang_getCursorExtent(cursor));
 
-    uint32_t openDefinitionTokenID    = 0;
-    uint32_t closeDefinitionTokenID   = 0;
+        sourceFileType = HeaderFile::getSourceFileType(functionNamePos.fileName.string());
+    }
+
+    void fillTokensInfo(const list<Token>& tokens)
+    {
+        for(const Token& token : tokens)
+        {
+            if(token.getTokenPos() == functionNamePos)
+                functionNameTokenID = token.tokenID;
+
+            else if(token.isStartsEqual(functionDefRange))
+                openDefinitionTokenID = token.tokenID;
+
+            else if(token.isEndsEqual(functionDefRange))
+                closeDefinitionTokenID = token.tokenID;
+        }
+    }
+
+    // DB Elements
+    uint32_t       functionID               = 0;
+    uint32_t       functionNameTokenID      = 0;
+
+    uint32_t       openDefinitionTokenID    = 0;
+    uint32_t       closeDefinitionTokenID   = 0;
 
     // Internal Use
-    string     functionName;
-    TokenPos   functionNamePos; 
-    TokenRange functionDefRange; 
+    SourceFileType sourceFileType = SourceFileType::UNKNOWN;
+    string         functionName;
+    TokenPos       functionNamePos;
+    TokenRange     functionDefRange;
 };
 
 class DatabaseBuilder
