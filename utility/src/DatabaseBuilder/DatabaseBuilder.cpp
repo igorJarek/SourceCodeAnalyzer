@@ -169,7 +169,7 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
 
         sourceFile->traversingAST
         (
-            [this, &sourceFile, &headerFileMap](CXCursor cursor) -> void
+            [this, &sourceFile, &headerFileMap](CXCursor cursor) -> CXChildVisitResult
             {
                 CXCursorKind cursorKind = clang_getCursorKind(cursor);
 
@@ -244,6 +244,8 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
                         }
                     }
                 }
+
+                return CXChildVisit_Recurse;
             }
         );
     }

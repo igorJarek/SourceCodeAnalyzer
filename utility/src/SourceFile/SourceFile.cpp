@@ -181,7 +181,7 @@ SourceFile::~SourceFile()
 
 }
 
-void SourceFile::traversingAST(function<void (CXCursor cursor)> traversingFunc)
+void SourceFile::traversingAST(function<CXChildVisitResult (CXCursor cursor)> traversingFunc)
 {
     if (m_compilationErrorCode == CXError_Success /* && m_compilationErrorCount == 0 */)
     {
@@ -202,9 +202,7 @@ void SourceFile::findCursor(CXCursor cursor, enum CXCursorKind cursorKind, funct
 CXChildVisitResult SourceFile::visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
 {
     TraversingClientData* traversingClientDataPtr = reinterpret_cast<TraversingClientData*>(client_data);
-
-    traversingClientDataPtr->m_traversingFunc(cursor);
-    return CXChildVisit_Recurse;
+    return traversingClientDataPtr->m_traversingFunc(cursor);
 }
 
 CXChildVisitResult SourceFile::findVisitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)

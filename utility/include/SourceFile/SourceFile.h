@@ -135,11 +135,11 @@ struct Token
 
 struct TraversingClientData
 {
-    TraversingClientData(function<void (CXCursor cursor)> traversingFunc) :
+    TraversingClientData(function<CXChildVisitResult (CXCursor cursor)> traversingFunc) :
         m_traversingFunc(traversingFunc)
     { }
 
-    function<void (CXCursor cursor)> m_traversingFunc;
+    function<CXChildVisitResult (CXCursor cursor)> m_traversingFunc;
 };
 
 /*         FindClientData         */
@@ -195,7 +195,7 @@ public:
     ~SourceFile();
 
 public:
-    void traversingAST(function<void (CXCursor cursor)> traversingFunc);
+    void traversingAST(function<CXChildVisitResult (CXCursor cursor)> traversingFunc);
     void findCursor(CXCursor cursor, enum CXCursorKind cursorKind, function<void (CXCursor cursor)> foundCursor);
 
 protected:
