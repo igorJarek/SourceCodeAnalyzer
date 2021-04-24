@@ -192,9 +192,16 @@ void SourceFile::traversingAST(function<CXChildVisitResult (CXCursor cursor)> tr
     }
 }
 
+void SourceFile::traversingCursor(CXCursor cursor, function<CXChildVisitResult (CXCursor cursor)> traversingFunc)
+{
+    TraversingClientData traversingClientData(traversingFunc);
+
+    clang_visitChildren(cursor, visitor, &traversingClientData);
+}
+
 void SourceFile::findCursor(CXCursor cursor, enum CXCursorKind cursorKind, function<void (CXCursor cursor)> foundCursor)
 {
-    FindClientData findClientData(cursorKind, foundCursor);
+    FindCursorClientData findClientData(cursorKind, foundCursor);
 
     clang_visitChildren(cursor, findVisitor, &findClientData);
 }
@@ -202,16 +209,17 @@ void SourceFile::findCursor(CXCursor cursor, enum CXCursorKind cursorKind, funct
 CXChildVisitResult SourceFile::visitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
 {
     TraversingClientData* traversingClientDataPtr = reinterpret_cast<TraversingClientData*>(client_data);
+
     return traversingClientDataPtr->m_traversingFunc(cursor);
 }
 
 CXChildVisitResult SourceFile::findVisitor(CXCursor cursor, CXCursor /* parent */, CXClientData client_data)
 {
-    FindClientData* findClientDataPtr = reinterpret_cast<FindClientData*>(client_data);
+    FindCursorClientData* findCursorClientData = reinterpret_cast<FindCursorClientData*>(client_data);
 
-    if(cursor.kind == findClientDataPtr->m_cursorKind)
+    if(cursor.kind == findCursorClientData->m_cursorKind)
     {
-        findClientDataPtr->m_foundCursor(cursor);
+        findCursorClientData->m_foundCursor(cursor);
         return CXChildVisit_Break;
     }
 

@@ -106,6 +106,108 @@ void DatabaseBuilder::createInsertFunctionsTableData(const string& filePath, con
     }
 }
 
+CXChildVisitResult DatabaseBuilder::classDef(CXCursor cursor, shared_ptr<SourceFile> sourceFile)
+{
+    if(clang_isCursorDefinition(cursor))
+    {
+        sourceFile->traversingCursor(cursor,
+            [this](CXCursor cursor) -> CXChildVisitResult
+            {
+                CXCursorKind cursorKind = clang_getCursorKind(cursor);
+
+                
+
+                return CXChildVisit_Recurse;
+            }
+        );
+
+        return CXChildVisit_Continue;
+    }
+
+    return CXChildVisit_Recurse;
+}
+
+CXChildVisitResult DatabaseBuilder::functionDef(CXCursor cursor, shared_ptr<SourceFile> sourceFile)
+{
+    if(clang_isCursorDefinition(cursor))
+    {
+        DatabaseBuilderFunction dbFunction(m_database, cursor);
+
+        if(dbFunction.sourceFileType == SourceFileType::HEADER_FILE)
+        {
+            map<string, shared_ptr<HeaderFile>>::iterator it = m_headerFileMap.find(dbFunction.functionNamePos.fileName.string());
+            if(it != m_headerFileMap.end())
+            {
+                dbFunction.fillTokensInfo(it->second->getTokens());
+                m_functionsMap.insert( {to_string(clang_getCursorUSR(cursor)), dbFunction} );
+            }
+        }
+        else if(dbFunction.sourceFileType == SourceFileType::SOURCE_FILE)
+        {
+            dbFunction.fillTokensInfo(sourceFile->getTokens());
+            m_functionsMap.insert( {to_string(clang_getCursorUSR(cursor)), dbFunction} );
+        }
+    }
+
+    return CXChildVisit_Recurse;
+}
+
+CXChildVisitResult DatabaseBuilder::methodDef(CXCursor cursor, shared_ptr<SourceFile> sourceFile)
+{
+    return functionDef(cursor, sourceFile);
+}
+
+CXChildVisitResult DatabaseBuilder::callExp(CXCursor cursor, shared_ptr<SourceFile> sourceFile)
+{
+    CXCursor     cursorRef     = clang_getCursorReferenced(cursor);
+    CXCursorKind cursorRefKind = clang_getCursorKind(cursorRef);
+
+    if(!clang_isInvalid(cursorRefKind)        &&
+        cursorRefKind != CXCursor_Constructor &&
+        cursorRefKind != CXCursor_Destructor)
+    {
+        if(!clang_equalCursors(cursor, cursorRef))
+        {
+            if(clang_isCursorDefinition(cursorRef))
+            {
+                if(cursorRefKind == CXCursor_FunctionDecl ||
+                    cursorRefKind == CXCursor_CXXMethod)
+                {
+                    DatabaseBuilderFunction dbFunction(m_database, cursorRef);
+
+                    map<string, shared_ptr<HeaderFile>>::iterator it = m_headerFileMap.find(dbFunction.functionNamePos.fileName.string());
+                    if(it != m_headerFileMap.end())
+                    {
+                        dbFunction.fillTokensInfo(it->second->getTokens());
+                        m_functionsMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbFunction} );
+                    }
+                }
+            }
+
+            DatabaseBuilderCalling dbCalling;
+            dbCalling.callingID = m_database.allocCallingID();
+            dbCalling.functionName = to_string(clang_getCursorSpelling(cursor));
+
+            if(cursorRefKind == CXCursor_CXXMethod)
+            {
+                sourceFile->findCursor(cursor, CXCursor_MemberRefExpr,
+                    [&dbCalling](CXCursor cursor) -> void
+                    {
+                        dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
+                    }
+                );
+            }
+            else
+                dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
+
+            dbCalling.fillTokensInfo(sourceFile->getTokens());
+            m_callingMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbCalling} );
+        }
+    }
+
+    return CXChildVisit_Recurse;
+}
+
 void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_t fileIndex, size_t fileCount)> buildState)
 {
     string dbErrMsg = m_database.createGlobalTable(clang_getClangVersion(), m_appName, m_appVersion);
@@ -122,18 +224,15 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
         return;
     }
 
-    const list<string>&                 headerFileList = m_folderBrowser.getHeaderFileList();
-    const list<string>&                 sourceFileList = m_folderBrowser.getSourceFileList();
+    const list<string>& headerFileList = m_folderBrowser.getHeaderFileList();
+    const list<string>& sourceFileList = m_folderBrowser.getSourceFileList();
 
-    map<string, shared_ptr<HeaderFile>> headerFileMap;
-    map<string, shared_ptr<SourceFile>> sourceFileMap;
-
-    size_t                              fileCounter = 0;
+    size_t              fileCounter = 0;
 
     for(const string& filePath : headerFileList)
     {
         shared_ptr headerfile = std::make_shared<HeaderFile>(filePath);
-        headerFileMap.emplace(filePath, headerfile);
+        m_headerFileMap.emplace(filePath, headerfile);
 
         list<Token>& tokens = headerfile->getTokens();
 
@@ -149,9 +248,9 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
     }
 
     for(const string& filePath : sourceFileList)
-        sourceFileMap.emplace(filePath, std::make_shared<SourceFile>(filePath, m_compilationArgs, m_argsCount));
+        m_sourceFileMap.emplace(filePath, std::make_shared<SourceFile>(filePath, m_compilationArgs, m_argsCount));
 
-    for(const auto& [filePath, SourceFilePtr] : sourceFileMap)
+    for(const auto& [filePath, SourceFilePtr] : m_sourceFileMap)
     {
         buildState(filePath, fileCounter++, m_folderBrowser.getSourceFileCount());
 
@@ -169,83 +268,27 @@ void DatabaseBuilder::buildDatabase(function<void (const string& filePath, size_
 
         sourceFile->traversingAST
         (
-            [this, &sourceFile, &headerFileMap](CXCursor cursor) -> CXChildVisitResult
+            [this, &sourceFile](CXCursor cursor) -> CXChildVisitResult
             {
                 CXCursorKind cursorKind = clang_getCursorKind(cursor);
 
-                if(cursorKind == CXCursor_FunctionDecl ||
-                   cursorKind == CXCursor_CXXMethod)
+                switch(cursorKind)
                 {
-                    if(clang_isCursorDefinition(cursor))
-                    {
-                        DatabaseBuilderFunction dbFunction(m_database, cursor);
+                    case CXCursor_ClassDecl:
+                        return classDef(cursor, sourceFile);
 
-                        if(dbFunction.sourceFileType == SourceFileType::HEADER_FILE)
-                        {
-                            map<string, shared_ptr<HeaderFile>>::iterator it = headerFileMap.find(dbFunction.functionNamePos.fileName.string());
-                            if(it != headerFileMap.end())
-                            {
-                                dbFunction.fillTokensInfo(it->second->getTokens());
-                                m_functionsMap.insert( {to_string(clang_getCursorUSR(cursor)), dbFunction} );
-                            }
-                        }
-                        else if(dbFunction.sourceFileType == SourceFileType::SOURCE_FILE)
-                        {
-                            dbFunction.fillTokensInfo(sourceFile->getTokens());
-                            m_functionsMap.insert( {to_string(clang_getCursorUSR(cursor)), dbFunction} );
-                        }
-                    }
+                    case CXCursor_FunctionDecl:
+                        return functionDef(cursor, sourceFile);
+
+                    case CXCursor_CXXMethod:
+                        return methodDef(cursor, sourceFile);
+
+                    case CXCursor_CallExpr:
+                        return callExp(cursor, sourceFile);
+
+                    default:
+                        return CXChildVisit_Recurse;
                 }
-                else if(cursorKind == CXCursor_CallExpr)
-                {
-                    CXCursor              cursorRef     = clang_getCursorReferenced(cursor);
-                    CXCursorKind          cursorRefKind = clang_getCursorKind(cursorRef);
-
-                    if(!clang_isInvalid(cursorRefKind)        &&
-                        cursorRefKind != CXCursor_Constructor &&
-                        cursorRefKind != CXCursor_Destructor)
-                    {
-                        if(!clang_equalCursors(cursor, cursorRef))
-                        {
-                            if(clang_isCursorDefinition(cursorRef))
-                            {
-                                if(cursorRefKind == CXCursor_FunctionDecl ||
-                                   cursorRefKind == CXCursor_CXXMethod)
-                                {
-                                    DatabaseBuilderFunction dbFunction(m_database, cursorRef);
-
-                                    map<string, shared_ptr<HeaderFile>>::iterator it = headerFileMap.find(dbFunction.functionNamePos.fileName.string());
-                                    if(it != headerFileMap.end())
-                                    {
-                                        dbFunction.fillTokensInfo(it->second->getTokens());
-                                        m_functionsMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbFunction} );
-                                    }
-                                }
-                            }
-
-                            DatabaseBuilderCalling dbCalling;
-                            dbCalling.callingID = m_database.allocCallingID();
-                            dbCalling.functionName = to_string(clang_getCursorSpelling(cursor));
-
-                            if(cursorRefKind == CXCursor_CXXMethod)
-                            {
-                                sourceFile->findCursor(cursor, CXCursor_MemberRefExpr,
-                                    [&dbCalling](CXCursor cursor) -> void
-                                    {
-                                        dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
-                                    }
-                                );
-                            }
-                            else
-                                dbCalling.functionNamePos.setCXSourceLocation(clang_getCursorLocation(cursor));
-
-                            dbCalling.fillTokensInfo(sourceFile->getTokens());
-                            m_callingMap.insert( {to_string(clang_getCursorUSR(cursorRef)), dbCalling} );
-                        }
-                    }
-                }
-
-                return CXChildVisit_Recurse;
             }
         );
     }

@@ -79,11 +79,20 @@ struct DatabaseBuilderFunction
     TokenRange     functionDefRange;
 };
 
+class DatabaseBuilderClass
+{
+    
+};
+
 class DatabaseBuilder
 {
     public:
-        using CallingMap   = map<string, DatabaseBuilderCalling>;
-        using FunctionsMap = map<string, DatabaseBuilderFunction>;
+        using CallingMap    = map<string, DatabaseBuilderCalling>;
+        using FunctionsMap  = map<string, DatabaseBuilderFunction>;
+        using ClassesMap    = map<string, DatabaseBuilderClass>;
+
+        using HeaderFileMap = map<string, shared_ptr<HeaderFile>>;
+        using SourceFileMap = map<string, shared_ptr<SourceFile>>;
 
     public:
         DatabaseBuilder(Database& database,
@@ -95,14 +104,20 @@ class DatabaseBuilder
     public:
         void buildDatabase(function<void (const string& filePath, size_t fileIndex, size_t fileCount)> buildState);
 
-    private:
+    protected:
+        CXChildVisitResult classDef(CXCursor cursor, shared_ptr<SourceFile> sourceFile);
+        CXChildVisitResult functionDef(CXCursor cursor, shared_ptr<SourceFile> sourceFile);
+        CXChildVisitResult methodDef(CXCursor cursor, shared_ptr<SourceFile> sourceFile);
+        CXChildVisitResult callExp(CXCursor cursor, shared_ptr<SourceFile> sourceFile);
+
+    protected:
         void createDatabaseTables(const string& filePath);
 
         void createInsertTokensTableData(const string& filePath, const Token& token);
         void createInsertCallingTableData(const string& filePath, const DatabaseBuilderCalling& calling);
         void createInsertFunctionsTableData(const string& filePath, const DatabaseBuilderFunction& function);
 
-    private:
+    protected:
         const string&        m_appName;
         const string&        m_appVersion;
         const FolderBrowser& m_folderBrowser;
@@ -110,6 +125,11 @@ class DatabaseBuilder
         uint32_t             m_argsCount       = 0;
 
         Database&            m_database;
+
+        HeaderFileMap        m_headerFileMap;
+        SourceFileMap        m_sourceFileMap;
+
+        ClassesMap           m_classesMap;
         CallingMap           m_callingMap;
         FunctionsMap         m_functionsMap;
 };

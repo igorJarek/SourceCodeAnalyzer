@@ -144,9 +144,9 @@ struct TraversingClientData
 
 /*         FindClientData         */
 
-struct FindClientData
+struct FindCursorClientData
 {
-    FindClientData(enum CXCursorKind cursorKind, function<void (CXCursor cursor)> foundCursor) :
+    FindCursorClientData(enum CXCursorKind cursorKind, function<void (CXCursor cursor)> foundCursor) :
         m_cursorKind(cursorKind),
         m_foundCursor(foundCursor)
     { }
@@ -196,6 +196,7 @@ public:
 
 public:
     void traversingAST(function<CXChildVisitResult (CXCursor cursor)> traversingFunc);
+    void traversingCursor(CXCursor cursor, function<CXChildVisitResult (CXCursor cursor)> traversingFunc);
     void findCursor(CXCursor cursor, enum CXCursorKind cursorKind, function<void (CXCursor cursor)> foundCursor);
 
 protected:
